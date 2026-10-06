@@ -1,7 +1,6 @@
 "use client";
 
 import type { Product } from "@spree/sdk";
-import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { memo } from "react";
@@ -127,8 +126,7 @@ export const ProductCard = memo(function ProductCard({
 
       {/* Buy Action Button */}
       <div className="p-3.5 pt-0">
-        <div className="w-full mt-2 bg-stone-900 group-hover:bg-amber-900 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-2xs">
-          <ShoppingBag className="w-3.5 h-3.5 text-amber-300" />
+        <div className="w-full mt-2 bg-stone-900 group-hover:bg-amber-900 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center transition-colors shadow-2xs">
           <span>Buy</span>
         </div>
       </div>

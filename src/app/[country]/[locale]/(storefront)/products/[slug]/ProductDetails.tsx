@@ -7,7 +7,6 @@ import {
   CircleCheckBig,
   CircleX,
   Loader2,
-  ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -246,10 +245,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                       Adding...
                     </>
                   ) : isPurchasable ? (
-                    <>
-                      <ShoppingBag className="w-5 h-5 mr-2 text-amber-300" />
-                      Buy
-                    </>
+                    "Buy"
                   ) : (
                     "Sold"
                   )}
