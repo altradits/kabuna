@@ -81,9 +81,6 @@ export const ProductCard = memo(function ProductCard({
               {t("sale")}
             </span>
           )}
-          <span className="absolute top-2 right-2 bg-stone-900/80 backdrop-blur-xs text-amber-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">
-            Grade 1
-          </span>
         </div>
 
         {/* Content */}
