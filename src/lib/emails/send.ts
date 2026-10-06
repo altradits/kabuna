@@ -46,7 +46,7 @@ async function sendEmailDev({ to, subject, react }: SendEmailOptions) {
   fs.writeFileSync(filepath, html);
 
   console.log("\n╭──────────────────────────────────────────────");
-  console.log(`│ 📧 Email Preview (dev mode — not sent)`);
+  console.log(`│ [Email Preview] (dev mode — not sent)`);
   console.log("├──────────────────────────────────────────────");
   console.log(`│ To:      ${to}`);
   console.log(`│ Subject: ${subject}`);

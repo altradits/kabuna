@@ -31,19 +31,19 @@ RESET="\033[0m"
 
 ensure_docker_daemon() {
     if ! docker info >/dev/null 2>&1; then
-        echo -e "  ${YELLOW}⚠️  Docker daemon is not running. Starting Docker Desktop...${RESET}"
+        echo -e "  ${YELLOW}[WARN] Docker daemon is not running. Starting Docker Desktop...${RESET}"
         open -a Docker 2>/dev/null || true
         local max_wait=30
         local count=0
         while [ $count -lt $max_wait ]; do
             if docker info >/dev/null 2>&1; then
-                echo -e "  ${GREEN}✅ Docker daemon is now running and responsive.${RESET}"
+                echo -e "  ${GREEN}[OK] Docker daemon is now running and responsive.${RESET}"
                 return 0
             fi
             count=$((count + 1))
             sleep 2
         done
-        echo -e "  ${RED}❌ Docker daemon could not be reached. Please launch Docker Desktop.${RESET}"
+        echo -e "  ${RED}[ERROR] Docker daemon could not be reached. Please launch Docker Desktop.${RESET}"
         exit 1
     fi
 }
@@ -56,8 +56,8 @@ kill_port_processes() {
     pids_3001=$(lsof -ti :${STOREFRONT_PORT} 2>/dev/null || true)
 
     if [ -n "$pids_3001" ]; then
-        echo -e "  ${YELLOW}⚠️  Port ${STOREFRONT_PORT} is currently in use by PID(s): ${pids_3001}${RESET}"
-        echo -e "  ${RED}🛑 Terminating existing storefront process(es)...${RESET}"
+        echo -e "  ${YELLOW}[WARN] Port ${STOREFRONT_PORT} is currently in use by PID(s): ${pids_3001}${RESET}"
+        echo -e "  ${RED}[STOP] Terminating existing storefront process(es)...${RESET}"
         for pid in $pids_3001; do
             kill -9 "$pid" 2>/dev/null || true
         done
@@ -67,13 +67,13 @@ kill_port_processes() {
         local remaining_3001
         remaining_3001=$(lsof -ti :${STOREFRONT_PORT} 2>/dev/null || true)
         if [ -n "$remaining_3001" ]; then
-            echo -e "  ${YELLOW}⚠️  Force killing lingering process(es): ${remaining_3001}${RESET}"
+            echo -e "  ${YELLOW}[WARN] Force killing lingering process(es): ${remaining_3001}${RESET}"
             kill -9 $remaining_3001 2>/dev/null || true
             sleep 1
         fi
-        echo -e "  ${GREEN}✅ Port ${STOREFRONT_PORT} is now cleared and available.${RESET}"
+        echo -e "  ${GREEN}[OK] Port ${STOREFRONT_PORT} is now cleared and available.${RESET}"
     else
-        echo -e "  ${GREEN}✅ Port ${STOREFRONT_PORT} is available.${RESET}"
+        echo -e "  ${GREEN}[OK] Port ${STOREFRONT_PORT} is available.${RESET}"
     fi
 }
 
@@ -81,7 +81,7 @@ clean_locks() {
     echo ""
     echo -e "${BOLD}${CYAN}==> [2/5] Cleaning stale locks & temporary files...${RESET}"
     rm -f .next/lock .next/dev/lock 2>/dev/null || true
-    echo -e "  ${GREEN}✅ Dev locks cleaned.${RESET}"
+    echo -e "  ${GREEN}[OK] Dev locks cleaned.${RESET}"
 }
 
 restart_docker() {
@@ -90,15 +90,15 @@ restart_docker() {
     ensure_docker_daemon
 
     if [ ! -f "$COMPOSE_FILE" ]; then
-        echo -e "  ${RED}❌ Docker compose file not found at ${COMPOSE_FILE}!${RESET}"
+        echo -e "  ${RED}[ERROR] Docker compose file not found at ${COMPOSE_FILE}!${RESET}"
         exit 1
     fi
 
-    echo -e "  🔄 Restarting Spree Commerce services (postgres, redis, web)..."
+    echo -e "  [RESTART] Restarting Spree Commerce services (postgres, redis, web)..."
     docker compose -f "$COMPOSE_FILE" restart
-    echo -e "  ⏳ Awaiting healthy state..."
+    echo -e "  [WAIT] Awaiting healthy state..."
     docker compose -f "$COMPOSE_FILE" up -d --wait
-    echo -e "  ${GREEN}✅ Docker backend containers restarted and healthy.${RESET}"
+    echo -e "  ${GREEN}[OK] Docker backend containers restarted and healthy.${RESET}"
 }
 
 display_status() {
@@ -149,7 +149,7 @@ display_status() {
 
     echo ""
     echo -e "${BOLD}${MAGENTA}========================================================================${RESET}"
-    echo -e "${BOLD}${MAGENTA}       ☕  KABUNA ETHIOPIAN SPECIALTY COFFEE - STATUS DASHBOARD        ${RESET}"
+    echo -e "${BOLD}${MAGENTA}       KABUNA ETHIOPIAN SPECIALTY COFFEE - STATUS DASHBOARD            ${RESET}"
     echo -e "${BOLD}${MAGENTA}========================================================================${RESET}"
     echo -e "  ${BOLD}Spree Backend API:${RESET}     http://localhost:${BACKEND_PORT}  [${backend_status}]"
     echo -e "  ${BOLD}Spree Health Check:${RESET}    http://localhost:${BACKEND_PORT}/up"
@@ -164,9 +164,9 @@ display_status() {
 
 start_storefront() {
     echo -e "${BOLD}${CYAN}==> [5/5] Launching Kabuna Next.js Storefront on http://localhost:${STOREFRONT_PORT}...${RESET}"
-    echo -e "  ☕ Starting Turbopack dev server..."
-    echo -e "  🌍 Storefront URL: ${BOLD}${GREEN}http://localhost:${STOREFRONT_PORT}/us/en${RESET}"
-    echo -e "  ℹ️  Press ${BOLD}Ctrl+C${RESET} at any time to gracefully stop."
+    echo -e "  [START] Starting Turbopack dev server..."
+    echo -e "  [URL] Storefront URL: ${BOLD}${GREEN}http://localhost:${STOREFRONT_PORT}/us/en${RESET}"
+    echo -e "  [INFO] Press ${BOLD}Ctrl+C${RESET} at any time to gracefully stop."
     echo ""
     exec pnpm run dev
 }
@@ -182,19 +182,23 @@ case "$MODE" in
         display_status
         start_storefront
         ;;
+    restart)
+        kill_port_processes
+        clean_locks
+        restart_docker
+        display_status
+        start_storefront
+        ;;
     status)
         display_status
         ;;
-    kill)
+    clean)
         kill_port_processes
         clean_locks
-        ;;
-    restart-docker)
-        restart_docker
-        display_status
+        echo -e "  ${GREEN}[OK] Cleaned and stopped.${RESET}"
         ;;
     *)
-        echo "Usage: $0 [run|status|kill|restart-docker]"
+        echo "Usage: $0 {run|restart|status|clean}"
         exit 1
         ;;
 esac

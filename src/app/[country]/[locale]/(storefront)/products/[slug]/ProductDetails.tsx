@@ -6,15 +6,8 @@ import {
   ChevronUp,
   CircleCheckBig,
   CircleX,
-  Coffee,
-  Flame,
-  Info,
   Loader2,
-  MapPin,
-  ShieldCheck,
   ShoppingBag,
-  Sparkles,
-  Truck,
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -171,8 +164,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
         {/* Product Info & Buy Box */}
         <div className="flex flex-col">
           {/* Quality Badge */}
-          <div className="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide uppercase shadow-2xs mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+          <div className="inline-flex items-center self-start px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide uppercase shadow-2xs mb-3">
             <span>Ethiopian Specialty • Grade 1 • ካቡና</span>
           </div>
 
@@ -267,17 +259,19 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
             {/* Confidence & Freshness badges right below buy button */}
             <div className="mt-4 pt-3 border-t border-stone-200/60 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
-              <div className="flex flex-col items-center gap-1">
-                <Flame className="w-4 h-4 text-amber-700" />
-                <span>Fresh Roast</span>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold text-stone-800">
+                  Fresh Roast
+                </span>
+                <span className="text-[10px] text-stone-400">Weekly</span>
               </div>
-              <div className="flex flex-col items-center gap-1">
-                <Truck className="w-4 h-4 text-amber-700" />
-                <span>Dispatched 24h</span>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold text-stone-800">Dispatched</span>
+                <span className="text-[10px] text-stone-400">Within 24h</span>
               </div>
-              <div className="flex flex-col items-center gap-1">
-                <ShieldCheck className="w-4 h-4 text-amber-700" />
-                <span>SCA 87+</span>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold text-stone-800">Specialty</span>
+                <span className="text-[10px] text-stone-400">SCA 87+</span>
               </div>
             </div>
           </div>
@@ -292,10 +286,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                   onClick={() => toggleSection("description")}
                   className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Coffee className="w-4 h-4 text-amber-800" />
-                    <span>Story</span>
-                  </div>
+                  <span>Story</span>
                   {expandedSections.description ? (
                     <ChevronUp className="w-4 h-4 text-stone-500" />
                   ) : (
@@ -322,10 +313,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 onClick={() => toggleSection("brewing")}
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
-                <div className="flex items-center gap-2.5">
-                  <Flame className="w-4 h-4 text-amber-800" />
-                  <span>Brewing</span>
-                </div>
+                <span>Brewing</span>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
@@ -384,10 +372,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 onClick={() => toggleSection("terroir")}
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
-                <div className="flex items-center gap-2.5">
-                  <MapPin className="w-4 h-4 text-amber-800" />
-                  <span>Terroir</span>
-                </div>
+                <span>Terroir</span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
@@ -442,10 +427,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 onClick={() => toggleSection("details")}
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
-                <div className="flex items-center gap-2.5">
-                  <Info className="w-4 h-4 text-amber-800" />
-                  <span>Specs</span>
-                </div>
+                <span>Specs</span>
                 {expandedSections.details ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (

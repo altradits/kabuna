@@ -1,4 +1,3 @@
-import { Flame, HeartHandshake, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -57,17 +56,14 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
             {/* Specialty Coffee Value Badges */}
             <div className="mt-6 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-stone-300">
               <div className="flex items-center gap-1.5 bg-stone-900/80 border border-stone-800 px-3 py-1.5 rounded-lg">
-                <Flame className="w-4 h-4 text-amber-400" />
                 <span className="font-semibold text-amber-200">SCA 87+</span>
                 <span>Specialty Grade</span>
               </div>
               <div className="flex items-center gap-1.5 bg-stone-900/80 border border-stone-800 px-3 py-1.5 rounded-lg">
-                <HeartHandshake className="w-4 h-4 text-amber-400" />
                 <span className="font-semibold text-amber-200">100%</span>
                 <span>Direct Trade</span>
               </div>
               <div className="flex items-center gap-1.5 bg-stone-900/80 border border-stone-800 px-3 py-1.5 rounded-lg">
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
                 <span className="font-semibold text-amber-200">
                   Fresh Roast
                 </span>

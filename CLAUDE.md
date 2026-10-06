@@ -37,16 +37,16 @@ React 19 provides better patterns for many cases where `useEffect` was previousl
 
 **1. Transforming data for rendering**
 ```typescript
-// ❌ Bad - useEffect for derived state
+// [Bad] Bad - useEffect for derived state
 const [fullName, setFullName] = useState("");
 useEffect(() => {
   setFullName(`${firstName} ${lastName}`);
 }, [firstName, lastName]);
 
-// ✅ Good - compute during render
+// [Good] Good - compute during render
 const fullName = `${firstName} ${lastName}`;
 
-// ✅ Good - useMemo for expensive calculations
+// [Good] Good - useMemo for expensive calculations
 const sortedProducts = useMemo(
   () => products.sort((a, b) => a.price - b.price),
   [products]
@@ -55,15 +55,15 @@ const sortedProducts = useMemo(
 
 **2. Resetting state when props change**
 ```typescript
-// ❌ Bad - useEffect to reset state
+// [Bad] Bad - useEffect to reset state
 useEffect(() => {
   setSelectedVariant(null);
 }, [productId]);
 
-// ✅ Good - use key to reset component state
+// [Good] Good - use key to reset component state
 <ProductDetails key={productId} product={product} />
 
-// ✅ Good - compute initial state from props
+// [Good] Good - compute initial state from props
 const [selectedVariant, setSelectedVariant] = useState(() => {
   return product.default_variant || product.variants[0];
 });
@@ -71,36 +71,36 @@ const [selectedVariant, setSelectedVariant] = useState(() => {
 
 **3. Fetching data in response to user events**
 ```typescript
-// ❌ Bad - useEffect triggered by state
+// [Bad] Bad - useEffect triggered by state
 const [query, setQuery] = useState("");
 useEffect(() => {
   fetchResults(query);
 }, [query]);
 
-// ✅ Good - fetch in event handler
+// [Good] Good - fetch in event handler
 const handleSearch = async (searchQuery: string) => {
   setQuery(searchQuery);
   const results = await fetchResults(searchQuery);
   setResults(results);
 };
 
-// ✅ Better - use Server Actions
+// [Good] Better - use Server Actions
 const [results, searchAction] = useActionState(searchProducts, []);
 ```
 
 **4. Initializing the application**
 ```typescript
-// ❌ Bad - useEffect for one-time init
+// [Bad] Bad - useEffect for one-time init
 useEffect(() => {
   loadAnalytics();
 }, []);
 
-// ✅ Good - module-level initialization
+// [Good] Good - module-level initialization
 if (typeof window !== "undefined") {
   loadAnalytics();
 }
 
-// ✅ Good - check if already initialized
+// [Good] Good - check if already initialized
 let didInit = false;
 function App() {
   if (!didInit) {
@@ -121,7 +121,7 @@ function App() {
 ### Use Server Components by Default
 
 ```typescript
-// ✅ Good - Server Component (default, no "use client")
+// [Good] Good - Server Component (default, no "use client")
 // src/app/[country]/[locale]/(storefront)/products/page.tsx
 import { getProducts } from "@/lib/data/products";
 
@@ -177,7 +177,7 @@ function AddToCartButton({ variantId }: { variantId: string }) {
 ### Use React 19 `use()` for Promises
 
 ```typescript
-// ✅ Good - use() with Suspense
+// [Good] Good - use() with Suspense
 import { use, Suspense } from "react";
 
 interface ProductDetailsProps {
@@ -204,7 +204,7 @@ function ProductPage({ id }: { id: string }) {
 ### Prefer useActionState for Forms
 
 ```typescript
-// ✅ Good - useActionState for form handling
+// [Good] Good - useActionState for form handling
 "use client";
 
 import { useActionState } from "react";
@@ -232,7 +232,7 @@ function ProfileForm({ user }: { user: User }) {
 ### Use useOptimistic for Instant UI Updates
 
 ```typescript
-// ✅ Good - optimistic updates
+// [Good] Good - optimistic updates
 import { useOptimistic } from "react";
 
 interface CartItemProps {
@@ -277,7 +277,7 @@ app/[country]/[locale]/
 ### Parallel Data Fetching
 
 ```typescript
-// ✅ Good - parallel fetches
+// [Good] Good - parallel fetches
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -451,7 +451,7 @@ For component-local state, prefer:
 ### URL State for Filters
 
 ```typescript
-// ✅ Good - filters in URL
+// [Good] Good - filters in URL
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
@@ -590,11 +590,11 @@ Biome is configured in `biome.json` using default formatting rules:
 ### Template Literals
 
 ```typescript
-// ✅ Good - use template literals for string interpolation
+// [Good] Good - use template literals for string interpolation
 const message = `Hello, ${name}!`;
 const path = `${basePath}/products/${slug}`;
 
-// ❌ Bad - string concatenation
+// [Bad] Bad - string concatenation
 const message = "Hello, " + name + "!";
 const path = basePath + "/products/" + slug;
 ```
@@ -604,15 +604,15 @@ const path = basePath + "/products/" + slug;
 Biome warns about unused variables and imports. Remove them or prefix with underscore if intentionally unused:
 
 ```typescript
-// ✅ Good - remove unused imports
+// [Good] Good - remove unused imports
 import { useState } from "react";
 
-// ✅ Good - prefix intentionally unused params
+// [Good] Good - prefix intentionally unused params
 const handleClick = (_event: MouseEvent) => {
   // event not needed but required by type
 };
 
-// ❌ Bad - unused import
+// [Bad] Bad - unused import
 import { useState, useEffect } from "react"; // useEffect not used
 ```
 

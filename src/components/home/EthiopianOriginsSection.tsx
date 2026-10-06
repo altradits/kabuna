@@ -1,10 +1,3 @@
-import {
-  Coffee,
-  Flame,
-  HeartHandshake,
-  Mountain,
-  Sparkles,
-} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -88,8 +81,7 @@ export function EthiopianOriginsSection({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-3">
-            <Mountain className="w-3.5 h-3.5 text-amber-700" />
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-3">
             Terroir & Micro-climates of Ethiopia
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
@@ -189,8 +181,7 @@ export function EthiopianOriginsSection({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent" />
                 <div className="absolute bottom-3 left-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/80 text-white text-xs font-semibold backdrop-blur-md">
-                    <Sparkles className="w-3.5 h-3.5" />
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-500/80 text-white text-xs font-semibold backdrop-blur-md">
                     የቡና ማፍላት ሥነ-ሥርዓት
                   </span>
                 </div>
@@ -240,8 +231,8 @@ export function EthiopianOriginsSection({
         {/* Brand Promises Bar */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 border-t border-neutral-200">
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-amber-100 text-amber-900 shrink-0">
-              <Coffee className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-sm">
+              01
             </div>
             <div>
               <h4 className="font-bold text-neutral-900">
@@ -255,8 +246,8 @@ export function EthiopianOriginsSection({
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-amber-100 text-amber-900 shrink-0">
-              <HeartHandshake className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-sm">
+              02
             </div>
             <div>
               <h4 className="font-bold text-neutral-900">
@@ -270,8 +261,8 @@ export function EthiopianOriginsSection({
           </div>
 
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-amber-100 text-amber-900 shrink-0">
-              <Flame className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-sm">
+              03
             </div>
             <div>
               <h4 className="font-bold text-neutral-900">
