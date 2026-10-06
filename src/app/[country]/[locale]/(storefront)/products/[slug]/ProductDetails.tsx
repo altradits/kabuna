@@ -1,7 +1,21 @@
 "use client";
 
 import type { Media, Product, Variant } from "@spree/sdk";
-import { CircleCheckBig, CircleX, Loader2, ShoppingBag } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  CircleCheckBig,
+  CircleX,
+  Coffee,
+  Flame,
+  Info,
+  Loader2,
+  MapPin,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Truck,
+} from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
@@ -27,6 +41,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const { currency } = useStore();
   const t = useTranslations("products");
   const tw = useTranslations("wholesale");
+
   // Non-null inside a HiddenPricingProvider (wholesale `prices_hidden`, guest
   // view): prices are null on purpose, and ordering is gated behind sign-in.
   const hiddenPricing = useHiddenPricing();
@@ -48,12 +63,28 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
     if (hasVariants) {
       return variants.find((v) => v.purchasable) || variants[0];
     }
-    // For products without variants, use default variant
     return product.default_variant || null;
   });
 
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  // Accordion state: keep compact so users can click to buy, revealing full details on demand
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({
+    description: false,
+    brewing: false,
+    terroir: false,
+    details: false,
+  });
+
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   // Track product view (analytics - client-only side effect)
   useEffect(() => {
@@ -127,8 +158,8 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8  py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
         {/* Media Gallery */}
         <div>
           <MediaGallery
@@ -138,14 +169,23 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
           />
         </div>
 
-        {/* Product Info */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+        {/* Product Info & Buy Box */}
+        <div className="flex flex-col">
+          {/* Quality Badge */}
+          <div className="inline-flex items-center gap-1.5 self-start px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide uppercase shadow-2xs mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+            <span>Ethiopian Specialty • Grade 1 • ካቡና</span>
+          </div>
 
-          {/* Price */}
-          <div className="mt-4 flex items-center gap-4">
+          {/* Product Name */}
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight">
+            {product.name}
+          </h1>
+
+          {/* Price & Sale */}
+          <div className="mt-3 flex items-baseline gap-3 flex-wrap">
             {displayPrice ? (
-              <span className="text-3xl font-bold text-gray-900">
+              <span className="text-3xl font-extrabold text-stone-900">
                 {displayPrice}
               </span>
             ) : (
@@ -153,26 +193,22 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
             )}
             {onSale && strikethroughPrice && (
               <>
-                <span className="text-xl text-gray-500 line-through">
+                <span className="text-lg text-stone-400 line-through">
                   {strikethroughPrice}
                 </span>
-                <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
+                <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-0.5 rounded shadow-2xs">
                   {t("sale")}
                 </span>
               </>
             )}
-          </div>
-
-          {/* Stock Status */}
-          <div className="mt-4">
             {inStock ? (
-              <span className="inline-flex items-center gap-1.5 text-green-600">
-                <CircleCheckBig className="w-5 h-5" />
-                {t("inStock")}
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full ml-auto sm:ml-0">
+                <CircleCheckBig className="w-3.5 h-3.5" />
+                {t("inStock")} • Roasted Weekly
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 text-red-600">
-                <CircleX className="w-5 h-5" />
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full ml-auto sm:ml-0">
+                <CircleX className="w-3.5 h-3.5" />
                 {t("outOfStock")}
               </span>
             )}
@@ -180,7 +216,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
           {/* Variant Picker */}
           {hasVariants && optionTypes.length > 0 && (
-            <div className="mt-8">
+            <div className="mt-6 border-t border-stone-100 pt-5">
               <VariantPicker
                 variants={variants}
                 optionTypes={optionTypes}
@@ -190,38 +226,39 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
             </div>
           )}
 
-          {/* Quantity & Add to Cart */}
-          <div className="mt-8">
+          {/* Quantity & Direct Buy Action Box */}
+          <div className="mt-6 p-4 rounded-xl bg-stone-50 border border-stone-200/80 shadow-2xs">
             {pricesHidden ? (
-              // Guest on a prices-hidden channel: no pricing, no ordering —
-              // route them through the wholesale sign-in first.
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="w-full">
                 <Link href={hiddenPricing.signInHref}>
                   {tw("hiddenPrice.signInToOrder")}
                 </Link>
               </Button>
             ) : (
-              <div className="flex gap-4">
-                <QuantityPickerField
-                  quantity={quantity}
-                  onQuantityChange={setQuantity}
-                  size="lg"
-                />
+              <div className="flex flex-col sm:flex-row gap-3 items-stretch">
+                <div className="self-center sm:self-auto">
+                  <QuantityPickerField
+                    quantity={quantity}
+                    onQuantityChange={setQuantity}
+                    size="lg"
+                  />
+                </div>
 
-                {/* Add to Cart Button */}
+                {/* Primary Buy / Add to Cart Button */}
                 <Button
                   size="lg"
                   onClick={handleAddToCart}
                   disabled={loading || !isPurchasable}
+                  className="flex-1 bg-amber-900 hover:bg-amber-800 text-amber-50 font-bold h-12 text-base shadow-md transition-all active:scale-[0.99]"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="animate-spin h-5 w-5" />
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
                       {t("adding")}
                     </>
                   ) : isPurchasable ? (
                     <>
-                      <ShoppingBag className="w-5 h-5" />
+                      <ShoppingBag className="w-5 h-5 mr-2 text-amber-300" />
                       {t("addToCart")}
                     </>
                   ) : (
@@ -230,48 +267,234 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 </Button>
               </div>
             )}
+
+            {/* Confidence & Freshness badges right below buy button */}
+            <div className="mt-4 pt-3 border-t border-stone-200/60 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
+              <div className="flex flex-col items-center gap-1">
+                <Flame className="w-4 h-4 text-amber-700" />
+                <span>Freshly Roasted</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <Truck className="w-4 h-4 text-amber-700" />
+                <span>Dispatched in 24h</span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <ShieldCheck className="w-4 h-4 text-amber-700" />
+                <span>SCA 87+ Guarantee</span>
+              </div>
+            </div>
           </div>
 
-          {/* Description */}
-          {product.description_html && (
-            <div className="mt-10 border-t pt-8">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">
-                {t("description")}
-              </h2>
-              {/* Description is admin-authored HTML from the Spree CMS backend (trusted source) */}
-              <div
-                className="text-gray-600 prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: product.description_html,
-                }}
-              />
+          {/* Collapsible Disclosures: Click to reveal product details */}
+          <div className="mt-8 space-y-3">
+            {/* 1. Flavor Profile & Coffee Story */}
+            {product.description_html && (
+              <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
+                <button
+                  type="button"
+                  onClick={() => toggleSection("description")}
+                  className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Coffee className="w-4 h-4 text-amber-800" />
+                    <span>Flavor Notes & Coffee Story</span>
+                  </div>
+                  {expandedSections.description ? (
+                    <ChevronUp className="w-4 h-4 text-stone-500" />
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
+                      <span>Click to read</span>
+                      <ChevronDown className="w-4 h-4 text-amber-800" />
+                    </div>
+                  )}
+                </button>
+
+                {expandedSections.description && (
+                  <div className="px-5 pb-5 pt-1 border-t border-stone-100 text-stone-600 text-sm leading-relaxed prose prose-sm max-w-none">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: product.description_html,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 2. Traditional Buna & Brewing Guide */}
+            <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
+              <button
+                type="button"
+                onClick={() => toggleSection("brewing")}
+                className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Flame className="w-4 h-4 text-amber-800" />
+                  <span>Brewing Guide & Recommended Methods</span>
+                </div>
+                {expandedSections.brewing ? (
+                  <ChevronUp className="w-4 h-4 text-stone-500" />
+                ) : (
+                  <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
+                    <span>Click to reveal</span>
+                    <ChevronDown className="w-4 h-4 text-amber-800" />
+                  </div>
+                )}
+              </button>
+
+              {expandedSections.brewing && (
+                <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                        Pour-Over (V60 / Kalita)
+                      </h4>
+                      <p className="text-xs text-stone-600">
+                        Ratio: 1:16 (15g coffee / 240g water). Temp: 92–94°C.
+                        Accentuates delicate floral aromatics and fruit acidity.
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                        Traditional Buna (Jebena)
+                      </h4>
+                      <p className="text-xs text-stone-600">
+                        Fine grind, bring to a slow boil in Jebena pot, rest for
+                        sediment settling, and serve in traditional cini cups.
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                        Aeropress & Cold Brew
+                      </h4>
+                      <p className="text-xs text-stone-600">
+                        Inverted Aeropress or 16-hour cold steep to extract rich
+                        peach and blueberry compote sweetness.
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                        Espresso Extraction
+                      </h4>
+                      <p className="text-xs text-stone-600">
+                        1:2 to 1:2.2 ratio in 28–30 seconds. Produces vibrant
+                        citrus crema with velvety berry sweetness.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
 
-          {/* Custom Fields */}
-          <ProductCustomFields customFields={product.custom_fields} />
+            {/* 3. Terroir & Origin Transparency */}
+            <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
+              <button
+                type="button"
+                onClick={() => toggleSection("terroir")}
+                className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <MapPin className="w-4 h-4 text-amber-800" />
+                  <span>Origin, Terroir & Processing Details</span>
+                </div>
+                {expandedSections.terroir ? (
+                  <ChevronUp className="w-4 h-4 text-stone-500" />
+                ) : (
+                  <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
+                    <span>Click to reveal</span>
+                    <ChevronDown className="w-4 h-4 text-amber-800" />
+                  </div>
+                )}
+              </button>
 
-          {/* Product Details */}
-          <div className="mt-8 border-t pt-8">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              {t("details")}
-            </h2>
-            <dl className="space-y-3">
-              {sku && (
-                <div className="flex">
-                  <dt className="w-32 text-gray-500 text-sm">{t("sku")}</dt>
-                  <dd className="text-gray-900 text-sm">{sku}</dd>
+              {expandedSections.terroir && (
+                <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm">
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    <div>
+                      <dt className="text-xs font-medium text-stone-500">
+                        Country & Region
+                      </dt>
+                      <dd className="text-xs font-bold text-stone-900">
+                        Ethiopian Highlands
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-medium text-stone-500">
+                        Elevation
+                      </dt>
+                      <dd className="text-xs font-bold text-stone-900">
+                        1,850m – 2,300m
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-medium text-stone-500">
+                        Varietals
+                      </dt>
+                      <dd className="text-xs font-bold text-stone-900">
+                        100% Indigenous Heirloom
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-medium text-stone-500">
+                        Quality Grade
+                      </dt>
+                      <dd className="text-xs font-bold text-stone-900">
+                        Specialty Grade 1 (SCA 87+)
+                      </dd>
+                    </div>
+                  </dl>
                 </div>
               )}
-              {selectedVariant?.options_text && (
-                <div className="flex">
-                  <dt className="w-32 text-gray-500 text-sm">{t("options")}</dt>
-                  <dd className="text-gray-900 text-sm">
-                    {selectedVariant.options_text}
-                  </dd>
+            </div>
+
+            {/* 4. Specifications & SKU */}
+            <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
+              <button
+                type="button"
+                onClick={() => toggleSection("details")}
+                className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Info className="w-4 h-4 text-amber-800" />
+                  <span>Product Specifications & SKU</span>
+                </div>
+                {expandedSections.details ? (
+                  <ChevronUp className="w-4 h-4 text-stone-500" />
+                ) : (
+                  <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
+                    <span>Click to reveal</span>
+                    <ChevronDown className="w-4 h-4 text-amber-800" />
+                  </div>
+                )}
+              </button>
+
+              {expandedSections.details && (
+                <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
+                  <ProductCustomFields customFields={product.custom_fields} />
+
+                  <dl className="space-y-2 pt-2 border-t border-stone-100">
+                    {sku && (
+                      <div className="flex justify-between">
+                        <dt className="text-xs text-stone-500">{t("sku")}</dt>
+                        <dd className="text-xs font-semibold text-stone-900">
+                          {sku}
+                        </dd>
+                      </div>
+                    )}
+                    {selectedVariant?.options_text && (
+                      <div className="flex justify-between">
+                        <dt className="text-xs text-stone-500">
+                          {t("options")}
+                        </dt>
+                        <dd className="text-xs font-semibold text-stone-900">
+                          {selectedVariant.options_text}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
                 </div>
               )}
-            </dl>
+            </div>
           </div>
         </div>
       </div>

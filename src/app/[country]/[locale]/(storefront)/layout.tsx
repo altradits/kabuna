@@ -4,6 +4,8 @@ import { connection } from "next/server";
 import { cache, Suspense } from "react";
 import { Footer, FooterCategoryLinks } from "@/components/layout/Footer";
 import { Header, HeaderMobileMenu } from "@/components/layout/Header";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { Navbar } from "@/components/layout/Navbar";
 import { getCategories } from "@/lib/data/categories";
 
 interface StorefrontLayoutProps {
@@ -145,6 +147,7 @@ export default async function StorefrontLayout({
           </Suspense>
         }
       />
+      <Navbar basePath={basePath} />
       <Suspense fallback={null}>
         <StorefrontCategoryNavigation
           basePath={basePath}
@@ -152,7 +155,7 @@ export default async function StorefrontLayout({
           locale={locale}
         />
       </Suspense>
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-16 md:pb-0">{children}</main>
       <Footer
         basePath={basePath}
         locale={locale as Locale}
@@ -166,6 +169,7 @@ export default async function StorefrontLayout({
           </Suspense>
         }
       />
+      <MobileBottomNav basePath={basePath} />
     </>
   );
 }

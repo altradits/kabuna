@@ -58,29 +58,36 @@ export function SearchToggle({
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center h-full w-full">
-            {/* Left section */}
-            <div className="flex items-center flex-1">{left}</div>
+          <div className="flex items-center justify-between h-full w-full gap-4">
+            {/* Left section: mobile hamburger + Brand Logo */}
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+              <div className="md:hidden">{left}</div>
+              <div className="flex items-center min-w-0">{center}</div>
+            </div>
 
-            {/* Center section */}
-            <div className="flex justify-center min-w-0">{center}</div>
+            {/* Desktop Search bar */}
+            <div className="hidden md:flex flex-1 max-w-lg mx-4">
+              <SearchBar basePath={basePath} />
+            </div>
 
-            {/* Right section */}
-            <div className="flex items-center flex-1 justify-end space-x-2">
+            {/* Right section: preferences, account, search trigger, cart */}
+            <div className="flex items-center justify-end space-x-1 sm:space-x-2 shrink-0">
               {rightStart}
 
-              {/* Search toggle */}
-              <Button
-                ref={searchTriggerRef}
-                variant="ghost"
-                size="icon-lg"
-                onClick={() => setSearchOpen(true)}
-                aria-label={t("openSearch")}
-                aria-expanded={searchOpen}
-                aria-controls="search-overlay"
-              >
-                <Search className="size-5" />
-              </Button>
+              {/* Mobile-only Search button */}
+              <div className="md:hidden">
+                <Button
+                  ref={searchTriggerRef}
+                  variant="ghost"
+                  size="icon-lg"
+                  onClick={() => setSearchOpen(true)}
+                  aria-label={t("openSearch")}
+                  aria-expanded={searchOpen}
+                  aria-controls="search-overlay"
+                >
+                  <Search className="size-5" />
+                </Button>
+              </div>
 
               {rightEnd}
             </div>

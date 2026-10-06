@@ -1,4 +1,11 @@
-import { Coffee, MapPin, Sparkles } from "lucide-react";
+import {
+  Coffee,
+  Flame,
+  HeartHandshake,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -16,111 +23,180 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
   });
 
   return (
-    <section className="relative overflow-hidden border-b border-amber-900/10 bg-linear-to-b from-amber-50/60 via-stone-50 to-white min-h-[560px] flex items-center">
-      {/* Background Coffee Imagery with warm ambient blend */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1920&q=80"
-          alt="Ethiopian specialty roasted coffee beans"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center opacity-10"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-amber-50/80 via-stone-50/90 to-white" />
-      </div>
-
-      {/* Decorative ambient coffee steam glow */}
+    <section className="relative overflow-hidden bg-stone-950 text-stone-100 border-b border-amber-950/40 min-h-[620px] flex items-center">
+      {/* Ambient background glows */}
       <div
-        className="absolute top-0 right-1/4 -mt-16 w-96 h-96 rounded-full bg-amber-200/30 blur-3xl pointer-events-none"
+        className="absolute top-1/4 left-0 w-96 h-96 rounded-full bg-amber-600/15 blur-3xl pointer-events-none"
         aria-hidden="true"
       />
       <div
-        className="absolute bottom-0 left-10 w-72 h-72 rounded-full bg-amber-400/10 blur-2xl pointer-events-none"
+        className="absolute bottom-0 right-10 w-96 h-96 rounded-full bg-orange-600/10 blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-0 right-1/3 w-80 h-80 rounded-full bg-amber-400/10 blur-3xl pointer-events-none"
         aria-hidden="true"
       />
 
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Top Origin Tag */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100/80 border border-amber-200 text-amber-900 text-xs font-semibold tracking-wide uppercase shadow-2xs mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-            <span>Direct Trade • Ethiopian Heirloom Arabica • ካቡና</span>
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column: Compelling Copy & Conversion CTAs */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
+            {/* Origin & Heritage Pill */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-inner mb-6">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>የኢትዮጵያ ምርጥ ቡና • Specialty Grade 1 Ethiopian Coffee</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+              Taste the Birthplace of Coffee,{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500">
+                Freshly Roasted.
+              </span>
+            </h1>
+
+            {/* Targeted Subtitle */}
+            <p className="mt-5 text-base sm:text-lg md:text-xl text-stone-300 max-w-2xl leading-relaxed">
+              {t("heroDescription") ||
+                "Hand-picked heirloom Arabica from generational family farms across Yirgacheffe, Guji, Sidama, and Harrar. Sourced direct-trade, roasted to order, and shipped fresh to your cup."}
+            </p>
+
+            {/* Specialty Coffee Value Badges */}
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-stone-300">
+              <div className="flex items-center gap-1.5 bg-stone-900/80 border border-stone-800 px-3 py-1.5 rounded-lg">
+                <Flame className="w-4 h-4 text-amber-400" />
+                <span className="font-semibold text-amber-200">SCA 87+</span>
+                <span>Specialty Grade</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-stone-900/80 border border-stone-800 px-3 py-1.5 rounded-lg">
+                <HeartHandshake className="w-4 h-4 text-amber-400" />
+                <span className="font-semibold text-amber-200">100%</span>
+                <span>Direct Trade</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-stone-900/80 border border-stone-800 px-3 py-1.5 rounded-lg">
+                <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <span className="font-semibold text-amber-200">
+                  Fresh Roast
+                </span>
+                <span>Within 48h</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-8 flex flex-wrap gap-3 sm:gap-4 w-full sm:w-auto">
+              <Button
+                size="lg"
+                asChild
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 h-12 text-base shadow-lg shadow-amber-500/20 flex-1 sm:flex-initial"
+              >
+                <Link href={`${basePath}/products`}>
+                  <Coffee className="w-4 h-4 mr-2" />
+                  {t("shopNow") || "Shop All Varieties"}
+                </Link>
+              </Button>
+
+              <Button
+                variant="outline"
+                size="lg"
+                asChild
+                className="border-stone-700 bg-stone-900/70 hover:bg-stone-800 text-stone-100 font-semibold h-12 text-base flex-1 sm:flex-initial"
+              >
+                <Link href={`${basePath}/c/single-origin`}>
+                  <MapPin className="w-4 h-4 mr-2 text-amber-400" />
+                  Explore Origins
+                </Link>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="lg"
+                asChild
+                className="text-stone-300 hover:text-amber-300 hover:bg-stone-900 font-semibold h-12 text-base w-full sm:w-auto"
+              >
+                <Link href={`${basePath}/c/buna-ceremony`}>
+                  Buna Ceremony Starter Kit &rarr;
+                </Link>
+              </Button>
+            </div>
           </div>
 
-          {/* Main Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-stone-900 leading-[1.15]">
-            From the Cradle of Coffee,{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-800 via-amber-700 to-amber-900">
-              Roasted for Your Cup.
-            </span>
-          </h1>
+          {/* Right Column: Attention-Grabbing Hero Image Card */}
+          <div className="lg:col-span-5 relative mt-6 lg:mt-0">
+            <div className="relative mx-auto max-w-md lg:max-w-none rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl shadow-amber-950/50 bg-stone-900 group">
+              {/* Image Aspect Box */}
+              <div className="relative aspect-[4/3] sm:aspect-[1/1] w-full overflow-hidden">
+                <Image
+                  src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85"
+                  alt="Authentic Ethiopian specialty coffee freshly brewed"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 550px"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent" />
 
-          {/* Subtitle */}
-          <p className="mt-6 text-base sm:text-lg md:text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed">
-            {t("heroDescription") ||
-              "Single-origin specialty coffees sourced directly from generational smallholder farms across Yirgacheffe, Guji, Sidama, Harrar, and Limu."}
-          </p>
+                {/* Top Corner Badge */}
+                <div className="absolute top-3 right-3 bg-stone-900/90 backdrop-blur-md border border-amber-400/40 text-amber-300 text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  In Stock • Fresh Roast
+                </div>
+              </div>
 
-          {/* Primary Action Buttons */}
-          <div className="mt-10 flex justify-center gap-4 flex-wrap">
-            <Button
-              size="lg"
-              asChild
-              className="bg-amber-900 hover:bg-amber-800 text-amber-50 shadow-md font-semibold px-8 h-12 text-base"
-            >
-              <Link href={`${basePath}/products`}>
-                <Coffee className="w-4 h-4 mr-2" />
-                {t("shopNow")}
-              </Link>
-            </Button>
-
-            <Button
-              variant="outline"
-              size="lg"
-              asChild
-              className="border-stone-300 bg-white/80 hover:bg-stone-100 text-stone-800 font-semibold h-12 text-base"
-            >
-              <Link href={`${basePath}/c/single-origin`}>
-                <MapPin className="w-4 h-4 mr-2 text-amber-700" />
-                Explore Origins
-              </Link>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="lg"
-              asChild
-              className="text-stone-700 hover:text-amber-900 hover:bg-amber-50 font-semibold h-12 text-base"
-            >
-              <Link href={`${basePath}/c/buna-ceremony`}>
-                Buna Ceremony Sets &rarr;
-              </Link>
-            </Button>
+              {/* Floating Featured Bean Info inside the card bottom */}
+              <div className="p-5 bg-stone-900/95 backdrop-blur-md border-t border-stone-800">
+                <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider mb-1">
+                  <span>Featured Lot</span>
+                  <span className="text-stone-400">SCA 88.5 pts</span>
+                </div>
+                <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
+                  Yirgacheffe Misty Valley (Grade 1 Natural)
+                </h3>
+                <p className="mt-1 text-xs text-stone-300 line-clamp-1">
+                  Aromatics: Jasmine floral, ripe blueberry & bergamot citrus.
+                </p>
+                <div className="mt-3 flex items-center justify-between pt-3 border-t border-stone-800/80">
+                  <span className="text-sm font-bold text-amber-300">
+                    $22.00
+                  </span>
+                  <Link
+                    href={`${basePath}/products/yirgacheffe-misty-valley-grade-1`}
+                    className="text-xs font-semibold text-white hover:text-amber-300 flex items-center gap-1"
+                  >
+                    Buy This Roast &rarr;
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Micro-origin Pill Bar */}
-          <div className="mt-14 pt-8 border-t border-stone-200/80 flex items-center justify-center gap-3 sm:gap-6 flex-wrap text-xs sm:text-sm font-semibold text-stone-600">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-600" />
-              <span>Yirgacheffe (Floral)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-orange-600" />
-              <span>Guji (Stone Fruit)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-rose-600" />
-              <span>Sidama (Sweet Berry)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-stone-700" />
-              <span>Harrar (Wild Mocha)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-600" />
-              <span>Kaffa (Forest Wild)</span>
-            </div>
+        {/* Micro-origin Pill Bar */}
+        <div className="mt-12 pt-8 border-t border-stone-800/80 flex items-center justify-center gap-3 sm:gap-6 flex-wrap text-xs sm:text-sm font-semibold text-stone-400">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-amber-400" />
+            <span className="text-stone-300">Yirgacheffe</span>
+            <span className="text-stone-500">(Floral & Bergamot)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-orange-400" />
+            <span className="text-stone-300">Guji</span>
+            <span className="text-stone-500">(Peach & Nectar)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-rose-400" />
+            <span className="text-stone-300">Sidama</span>
+            <span className="text-stone-500">(Sweet Strawberry)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-amber-600" />
+            <span className="text-stone-300">Harrar</span>
+            <span className="text-stone-500">(Wild Mocha)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="text-stone-300">Kaffa</span>
+            <span className="text-stone-500">(Ancient Forest)</span>
           </div>
         </div>
       </div>
