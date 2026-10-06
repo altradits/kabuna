@@ -18,8 +18,17 @@ vi.mock("@/components/layout/Footer", () => ({
   FooterCategoryLinks: () => null,
 }));
 
+vi.mock("@/components/layout/Navbar", () => ({
+  Navbar: () => null,
+}));
+vi.mock("@/components/layout/MobileBottomNav", () => ({
+  MobileBottomNav: () => null,
+}));
+
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { Navbar } from "@/components/layout/Navbar";
 import StorefrontLayout from "./layout";
 
 interface LayoutElementProps {
@@ -39,15 +48,18 @@ describe("StorefrontLayout", () => {
 
     expect(layout.type).toBe(Fragment);
 
-    const [header, hiddenNavigation, main, footer] = Children.toArray(
-      layout.props.children,
-    ) as ReactElement<LayoutElementProps>[];
+    const [header, navbar, hiddenNavigation, main, footer, mobileBottomNav] =
+      Children.toArray(
+        layout.props.children,
+      ) as ReactElement<LayoutElementProps>[];
 
     expect(header.type).toBe(Header);
+    expect(navbar.type).toBe(Navbar);
     expect(hiddenNavigation.type).toBe(Suspense);
     expect(main.type).toBe("main");
     expect(main.props.children).toBe(content);
     expect(footer.type).toBe(Footer);
+    expect(mobileBottomNav.type).toBe(MobileBottomNav);
 
     const mobileNavigation = header.props.mobileNavigation;
     const categoryLinks = footer.props.categoryLinks;

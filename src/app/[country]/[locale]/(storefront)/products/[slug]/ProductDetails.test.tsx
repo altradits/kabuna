@@ -1,5 +1,6 @@
 import type { Product } from "@spree/sdk";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { PRODUCT_PAGE_EXPAND } from "@/lib/data/cached";
 import { ProductDetails } from "./ProductDetails";
@@ -74,7 +75,8 @@ describe("ProductDetails", () => {
     expect(PRODUCT_PAGE_EXPAND).toContain("default_variant");
   });
 
-  it("shows the master SKU when a product has no custom variants", () => {
+  it("shows the master SKU when a product has no custom variants", async () => {
+    const user = userEvent.setup();
     render(
       <ProductDetails
         product={productWithoutCustomVariants}
@@ -82,6 +84,7 @@ describe("ProductDetails", () => {
       />,
     );
 
+    await user.click(screen.getByRole("button", { name: "Specs" }));
     expect(screen.getByText("sku")).toBeInTheDocument();
     expect(screen.getByText("MASTER-SKU-001")).toBeInTheDocument();
   });

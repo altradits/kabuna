@@ -40,7 +40,7 @@ describe("MobileMenu", () => {
 
     const menu = screen.getByRole("dialog", { name: "Menu" });
     const wholesale = within(menu).getByRole("link", { name: "Wholesale" });
-    const myAccount = within(menu).getByRole("link", { name: "My Account" });
+    const myAccount = within(menu).getByRole("link", { name: "Account" });
     const regionPreferences = within(menu).getByRole("button", {
       name: "Region and language",
     });
@@ -69,8 +69,9 @@ describe("MobileMenu", () => {
     expect(
       within(menu).queryByRole("link", { name: "Wholesale" }),
     ).not.toBeInTheDocument();
-    expect(
-      within(menu).getByRole("link", { name: "My Account" }),
-    ).toHaveAttribute("href", "/us/en/account");
+    expect(within(menu).getByRole("link", { name: "Account" })).toHaveAttribute(
+      "href",
+      "/us/en/account",
+    );
   });
 });

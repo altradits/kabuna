@@ -89,10 +89,6 @@ export function MobileMenu({
   const linkClass =
     "text-left text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg px-3 py-2.5 text-base transition-colors";
 
-  // Shared button style for items with children (chevron)
-  const categoryButtonClass =
-    "flex items-center justify-between w-full text-left text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg px-3 py-2.5 text-base transition-colors";
-
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       {/* Animated hamburger / X button — two-phase animation matching Lottie reference */}
@@ -165,22 +161,28 @@ export function MobileMenu({
             {t("menu")}
           </span>
           {/* Back button + category name — visible on sub-panels */}
-          <button
-            type="button"
-            onClick={popPanel}
-            className={`flex items-center gap-2 text-gray-700 hover:text-gray-900 text-base font-semibold cursor-pointer transition-all duration-300 ease-in-out absolute left-4 ${
+          <div
+            className={`flex items-center gap-2 text-gray-700 text-base font-semibold transition-all duration-300 ease-in-out absolute left-4 ${
               currentPanel.kind !== "main"
                 ? "translate-x-0 opacity-100"
                 : "translate-x-8 opacity-0 pointer-events-none"
             }`}
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>
+            <button
+              type="button"
+              onClick={popPanel}
+              className="flex items-center gap-1.5 text-gray-700 hover:text-gray-900 font-semibold cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back</span>
+            </button>
+            <span className="text-stone-300">/</span>
+            <span className="text-stone-900 font-medium truncate max-w-[180px]">
               {currentPanel.kind === "category"
                 ? currentPanel.category.name
                 : ""}
             </span>
-          </button>
+          </div>
           <Button
             variant="ghost"
             size="icon-sm"
@@ -214,19 +216,31 @@ export function MobileMenu({
                 onClick={() => setOpen(false)}
                 className={linkClass}
               >
-                Products
+                Shop
               </Link>
               {rootCategories.map((category) =>
                 category.children && category.children.length > 0 ? (
-                  <button
+                  <div
                     key={category.id}
-                    type="button"
-                    onClick={() => pushPanel({ kind: "category", category })}
-                    className={categoryButtonClass}
+                    className="flex items-center justify-between w-full rounded-lg hover:bg-gray-50"
                   >
-                    <span>{category.name}</span>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
-                  </button>
+                    <Link
+                      href={`${basePath}/c/${category.permalink}`}
+                      onClick={() => setOpen(false)}
+                      className={`${linkClass} flex-1`}
+                    >
+                      {category.name}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => pushPanel({ kind: "category", category })}
+                      aria-label="Explore"
+                      className="p-2.5 text-amber-800 hover:text-amber-950 cursor-pointer flex items-center gap-1 text-xs font-semibold uppercase tracking-wider"
+                    >
+                      <span>Explore</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 ) : (
                   <Link
                     key={category.id}
@@ -288,32 +302,48 @@ export function MobileMenu({
                 className={`absolute inset-0 flex flex-col bg-white transition-transform duration-300 ease-in-out ${translateClass}`}
               >
                 {/* Back button (mobile only — desktop uses the global header) */}
-                <div className="md:hidden px-4 py-2 border-b border-gray-200">
+                <div className="md:hidden px-4 py-2 border-b border-gray-200 flex items-center gap-2">
                   <button
                     type="button"
                     onClick={popPanel}
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 py-2 text-base font-medium"
+                    className="flex items-center gap-1.5 text-gray-700 hover:text-gray-900 py-2 text-base font-semibold cursor-pointer"
                   >
                     <ArrowLeft className="w-5 h-5" />
-                    <span>{panel.category.name}</span>
+                    <span>Back</span>
                   </button>
+                  <span className="text-stone-300">/</span>
+                  <span className="text-stone-900 font-medium truncate">
+                    {panel.category.name}
+                  </span>
                 </div>
 
                 {/* Children */}
                 <nav className="flex flex-col gap-1 px-4 flex-1 overflow-y-auto pt-2">
                   {panel.category.children?.map((child) =>
                     child.children && child.children.length > 0 ? (
-                      <button
+                      <div
                         key={child.id}
-                        type="button"
-                        onClick={() =>
-                          pushPanel({ kind: "category", category: child })
-                        }
-                        className={categoryButtonClass}
+                        className="flex items-center justify-between w-full rounded-lg hover:bg-gray-50"
                       >
-                        <span>{child.name}</span>
-                        <ChevronRight className="w-4 h-4 text-gray-400" />
-                      </button>
+                        <Link
+                          href={`${basePath}/c/${child.permalink}`}
+                          onClick={() => handleOpenChange(false)}
+                          className={`${linkClass} flex-1`}
+                        >
+                          {child.name}
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            pushPanel({ kind: "category", category: child })
+                          }
+                          aria-label="Explore"
+                          className="p-2.5 text-amber-800 hover:text-amber-950 cursor-pointer flex items-center gap-1 text-xs font-semibold uppercase tracking-wider"
+                        >
+                          <span>Explore</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     ) : (
                       <Link
                         key={child.id}
