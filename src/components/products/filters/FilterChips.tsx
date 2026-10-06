@@ -104,7 +104,7 @@ export function FilterChips({
         </span>
       ))}
       <Button variant="link" size="sm" onClick={onClearAll}>
-        {t("clearAll")}
+        Clear
       </Button>
     </div>
   );

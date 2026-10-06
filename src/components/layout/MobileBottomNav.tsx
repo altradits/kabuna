@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  Coffee,
+  Compass,
+  Grid,
   Home,
-  Mountain,
+  Package,
   Search,
   ShoppingBag,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -40,26 +40,26 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
     {
       label: "Shop",
       href: `${basePath}/products`,
-      icon: Coffee,
+      icon: Grid,
       active: isActive(`${basePath}/products`),
     },
     {
       label: "Origins",
       href: `${basePath}/c/single-origin`,
-      icon: Mountain,
+      icon: Compass,
       active: isActive(`${basePath}/c/single-origin`),
     },
     {
       label: "Ceremony",
       href: `${basePath}/c/buna-ceremony`,
-      icon: Sparkles,
+      icon: Package,
       active: isActive(`${basePath}/c/buna-ceremony`),
     },
   ];
 
   return (
     <>
-      {/* Mobile Bottom Navigation Bar (Fixed & Thumb-friendly) */}
+      {/* Mobile Bottom Navigation Bar */}
       <nav
         aria-label="Mobile Navigation"
         className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/90 py-1.5 px-2 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)] pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))]"
@@ -89,7 +89,7 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            aria-label="Search coffee"
+            aria-label="Search"
             className="flex flex-col items-center justify-center py-1 px-2 rounded-lg text-stone-500 hover:text-stone-900 font-medium transition-colors min-w-[54px]"
           >
             <Search className="w-5 h-5 mb-0.5" />
@@ -100,7 +100,7 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
           <button
             type="button"
             onClick={openCart}
-            aria-label="Open cart"
+            aria-label="Cart"
             className="relative flex flex-col items-center justify-center py-1 px-2 rounded-lg text-stone-600 hover:text-stone-900 font-medium transition-colors min-w-[54px]"
           >
             <div className="relative">

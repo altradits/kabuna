@@ -59,9 +59,7 @@ export async function WholesaleSection({
                 asChild
                 className="bg-white text-slate-900 hover:bg-slate-200"
               >
-                <Link href={`${basePath}/wholesale`}>
-                  {t("wholesaleCtaPrimary")}
-                </Link>
+                <Link href={`${basePath}/wholesale`}>Portal</Link>
               </Button>
               <Button
                 variant="outline"
@@ -69,9 +67,7 @@ export async function WholesaleSection({
                 asChild
                 className="border-slate-600 bg-transparent text-slate-100 hover:bg-slate-800 hover:text-white"
               >
-                <Link href={`${basePath}/wholesale/apply`}>
-                  {t("wholesaleCtaSecondary")}
-                </Link>
+                <Link href={`${basePath}/wholesale/apply`}>Apply</Link>
               </Button>
             </div>
           </div>

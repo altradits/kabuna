@@ -1,4 +1,3 @@
-import { Coffee, Flame, Leaf, Mountain, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 interface NavbarProps {
@@ -10,12 +9,10 @@ export function Navbar({ basePath }: NavbarProps) {
     {
       label: "All Varieties",
       href: `${basePath}/products`,
-      icon: Coffee,
     },
     {
       label: "Single Origin",
       href: `${basePath}/c/single-origin`,
-      icon: Mountain,
     },
     {
       label: "Yirgacheffe",
@@ -38,20 +35,17 @@ export function Navbar({ basePath }: NavbarProps) {
       href: `${basePath}/c/single-origin/limu-kaffa`,
     },
     {
-      label: "Buna Ceremony Sets",
+      label: "Buna Ceremony",
       href: `${basePath}/c/buna-ceremony`,
-      icon: Sparkles,
       highlight: true,
     },
     {
       label: "Roast Profiles",
       href: `${basePath}/c/roast-profiles`,
-      icon: Flame,
     },
     {
       label: "Green Coffee",
       href: `${basePath}/c/green-coffee`,
-      icon: Leaf,
     },
   ];
 
@@ -66,19 +60,12 @@ export function Navbar({ basePath }: NavbarProps) {
             <Link
               key={link.label}
               href={link.href}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap inline-flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap inline-flex items-center ${
                 link.highlight
                   ? "bg-amber-600/20 text-amber-300 hover:bg-amber-600/30 hover:text-amber-200 font-bold border border-amber-500/30"
                   : "hover:bg-stone-800 hover:text-amber-400 text-stone-300"
               }`}
             >
-              {link.icon && (
-                <link.icon
-                  className={`w-3.5 h-3.5 ${
-                    link.highlight ? "text-amber-400" : "text-amber-600"
-                  }`}
-                />
-              )}
               <span>{link.label}</span>
             </Link>
           ))}

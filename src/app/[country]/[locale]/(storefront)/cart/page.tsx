@@ -80,9 +80,7 @@ export default function CartPage() {
           <p className="mt-2 text-gray-500">{t("emptyCartDescription")}</p>
           <div className="mt-6">
             <Button size="lg" asChild>
-              <Link href={`${basePath}/products`}>
-                {tc("continueShopping")}
-              </Link>
+              <Link href={`${basePath}/products`}>Shop</Link>
             </Button>
           </div>
         </div>
@@ -233,13 +231,11 @@ export default function CartPage() {
                 <>
                   <Button size="lg" asChild className="w-full">
                     <Link href={`${basePath}/checkout/${cart.id}`}>
-                      {t("proceedToCheckout")}
+                      Checkout
                     </Link>
                   </Button>
                   <Button variant="link" asChild className="w-full">
-                    <Link href={`${basePath}/products`}>
-                      {tc("continueShopping")}
-                    </Link>
+                    <Link href={`${basePath}/products`}>Shop</Link>
                   </Button>
                 </>
               )}

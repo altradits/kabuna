@@ -125,11 +125,11 @@ export const ProductCard = memo(function ProductCard({
         </div>
       </div>
 
-      {/* Buy / View Action Button */}
+      {/* Buy Action Button */}
       <div className="p-3.5 pt-0">
         <div className="w-full mt-2 bg-stone-900 group-hover:bg-amber-900 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-2xs">
           <ShoppingBag className="w-3.5 h-3.5 text-amber-300" />
-          <span>Buy / Details &rarr;</span>
+          <span>Buy</span>
         </div>
       </div>
     </div>

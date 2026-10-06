@@ -251,7 +251,7 @@ export function SearchBar({ basePath, autoFocus, onNavigate }: SearchBarProps) {
                       }}
                       className="w-full p-3 text-sm text-primary hover:bg-gray-50 text-center font-medium"
                     >
-                      {t("viewAllResultsFor", { query: query.trim() })}
+                      Results &rarr;
                     </button>
                   </li>
                 )}

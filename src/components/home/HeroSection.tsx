@@ -1,11 +1,4 @@
-import {
-  Coffee,
-  Flame,
-  HeartHandshake,
-  MapPin,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { Flame, HeartHandshake, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -23,7 +16,7 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
   });
 
   return (
-    <section className="relative overflow-hidden bg-stone-950 text-stone-100 border-b border-amber-950/40 min-h-[620px] flex items-center">
+    <section className="relative overflow-hidden bg-stone-950 text-stone-100 border-b border-amber-950/40 min-h-[600px] flex items-center">
       {/* Ambient background glows */}
       <div
         className="absolute top-1/4 left-0 w-96 h-96 rounded-full bg-amber-600/15 blur-3xl pointer-events-none"
@@ -40,11 +33,10 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          {/* Left Column: Compelling Copy & Conversion CTAs */}
+          {/* Left Column: Copy & One-Word Action Buttons */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Origin & Heritage Pill */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-inner mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>የኢትዮጵያ ምርጥ ቡና • Specialty Grade 1 Ethiopian Coffee</span>
             </div>
 
@@ -56,7 +48,7 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
               </span>
             </h1>
 
-            {/* Targeted Subtitle */}
+            {/* Subtitle */}
             <p className="mt-5 text-base sm:text-lg md:text-xl text-stone-300 max-w-2xl leading-relaxed">
               {t("heroDescription") ||
                 "Hand-picked heirloom Arabica from generational family farms across Yirgacheffe, Guji, Sidama, and Harrar. Sourced direct-trade, roasted to order, and shipped fresh to your cup."}
@@ -83,48 +75,39 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons: strictly ONE word per button */}
             <div className="mt-8 flex flex-wrap gap-3 sm:gap-4 w-full sm:w-auto">
               <Button
                 size="lg"
                 asChild
-                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 h-12 text-base shadow-lg shadow-amber-500/20 flex-1 sm:flex-initial"
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-8 h-12 text-base shadow-lg shadow-amber-500/20 flex-1 sm:flex-initial"
               >
-                <Link href={`${basePath}/products`}>
-                  <Coffee className="w-4 h-4 mr-2" />
-                  {t("shopNow") || "Shop All Varieties"}
-                </Link>
+                <Link href={`${basePath}/products`}>Shop</Link>
               </Button>
 
               <Button
                 variant="outline"
                 size="lg"
                 asChild
-                className="border-stone-700 bg-stone-900/70 hover:bg-stone-800 text-stone-100 font-semibold h-12 text-base flex-1 sm:flex-initial"
+                className="border-stone-700 bg-stone-900/70 hover:bg-stone-800 text-stone-100 font-semibold px-8 h-12 text-base flex-1 sm:flex-initial"
               >
-                <Link href={`${basePath}/c/single-origin`}>
-                  <MapPin className="w-4 h-4 mr-2 text-amber-400" />
-                  Explore Origins
-                </Link>
+                <Link href={`${basePath}/c/single-origin`}>Explore</Link>
               </Button>
 
               <Button
                 variant="ghost"
                 size="lg"
                 asChild
-                className="text-stone-300 hover:text-amber-300 hover:bg-stone-900 font-semibold h-12 text-base w-full sm:w-auto"
+                className="text-stone-300 hover:text-amber-300 hover:bg-stone-900 font-semibold px-8 h-12 text-base w-full sm:w-auto"
               >
-                <Link href={`${basePath}/c/buna-ceremony`}>
-                  Buna Ceremony Starter Kit &rarr;
-                </Link>
+                <Link href={`${basePath}/c/buna-ceremony`}>Ceremony</Link>
               </Button>
             </div>
           </div>
 
-          {/* Right Column: Attention-Grabbing Hero Image Card */}
+          {/* Right Column: Hero Image Card */}
           <div className="lg:col-span-5 relative mt-6 lg:mt-0">
             <div className="relative mx-auto max-w-md lg:max-w-none rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl shadow-amber-950/50 bg-stone-900 group">
-              {/* Image Aspect Box */}
               <div className="relative aspect-[4/3] sm:aspect-[1/1] w-full overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85"
@@ -136,14 +119,12 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent" />
 
-                {/* Top Corner Badge */}
                 <div className="absolute top-3 right-3 bg-stone-900/90 backdrop-blur-md border border-amber-400/40 text-amber-300 text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   In Stock • Fresh Roast
                 </div>
               </div>
 
-              {/* Floating Featured Bean Info inside the card bottom */}
               <div className="p-5 bg-stone-900/95 backdrop-blur-md border-t border-stone-800">
                 <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider mb-1">
                   <span>Featured Lot</span>
@@ -163,7 +144,7 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
                     href={`${basePath}/products/yirgacheffe-misty-valley-grade-1`}
                     className="text-xs font-semibold text-white hover:text-amber-300 flex items-center gap-1"
                   >
-                    Buy This Roast &rarr;
+                    Buy
                   </Link>
                 </div>
               </div>

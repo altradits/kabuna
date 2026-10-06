@@ -136,7 +136,7 @@ export function CartDrawer() {
                 className="text-primary hover:text-primary font-medium"
                 onClick={closeCart}
               >
-                {tc("continueShopping")}
+                Shop
               </Link>
             </div>
           ) : (
@@ -283,7 +283,7 @@ export function CartDrawer() {
                 </Button>
                 <Button size="lg" className="w-full" variant="link" asChild>
                   <Link href={`${basePath}/cart`} onClick={closeCart}>
-                    {t("viewCart")}
+                    Cart
                   </Link>
                 </Button>
               </div>

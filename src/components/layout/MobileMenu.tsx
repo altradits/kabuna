@@ -214,7 +214,7 @@ export function MobileMenu({
                 onClick={() => setOpen(false)}
                 className={linkClass}
               >
-                {t("allProducts")}
+                Products
               </Link>
               {rootCategories.map((category) =>
                 category.children && category.children.length > 0 ? (
@@ -261,7 +261,7 @@ export function MobileMenu({
                     href={`${basePath}/account`}
                     className={`${linkClass} block`}
                   >
-                    {t("myAccount")}
+                    Account
                   </Link>
                 </SheetClose>
               </div>

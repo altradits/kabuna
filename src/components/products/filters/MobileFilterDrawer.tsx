@@ -151,11 +151,11 @@ export function MobileFilterDrawer({
         <div className="border-t border-gray-200 p-4 space-y-2">
           {stagedCount > 0 && (
             <Button variant="ghost" className="w-full" onClick={handleClearAll}>
-              {t("clearAllFiltersCount", { count: stagedCount })}
+              Clear
             </Button>
           )}
           <Button className="w-full" onClick={handleApply}>
-            {t("showResults")}
+            Apply
           </Button>
         </div>
       </SheetContent>

@@ -40,7 +40,6 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const { addItem } = useCart();
   const { currency } = useStore();
   const t = useTranslations("products");
-  const tw = useTranslations("wholesale");
 
   // Non-null inside a HiddenPricingProvider (wholesale `prices_hidden`, guest
   // view): prices are null on purpose, and ordering is gated behind sign-in.
@@ -204,7 +203,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
             {inStock ? (
               <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full ml-auto sm:ml-0">
                 <CircleCheckBig className="w-3.5 h-3.5" />
-                {t("inStock")} • Roasted Weekly
+                {t("inStock")}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full ml-auto sm:ml-0">
@@ -230,9 +229,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
           <div className="mt-6 p-4 rounded-xl bg-stone-50 border border-stone-200/80 shadow-2xs">
             {pricesHidden ? (
               <Button asChild size="lg" className="w-full">
-                <Link href={hiddenPricing.signInHref}>
-                  {tw("hiddenPrice.signInToOrder")}
-                </Link>
+                <Link href={hiddenPricing.signInHref}>Login</Link>
               </Button>
             ) : (
               <div className="flex flex-col sm:flex-row gap-3 items-stretch">
@@ -244,7 +241,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                   />
                 </div>
 
-                {/* Primary Buy / Add to Cart Button */}
+                {/* Primary Buy Button: Strictly ONE word */}
                 <Button
                   size="lg"
                   onClick={handleAddToCart}
@@ -254,15 +251,15 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                   {loading ? (
                     <>
                       <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                      {t("adding")}
+                      Adding...
                     </>
                   ) : isPurchasable ? (
                     <>
                       <ShoppingBag className="w-5 h-5 mr-2 text-amber-300" />
-                      {t("addToCart")}
+                      Buy
                     </>
                   ) : (
-                    t("outOfStock")
+                    "Sold"
                   )}
                 </Button>
               </div>
@@ -272,22 +269,22 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
             <div className="mt-4 pt-3 border-t border-stone-200/60 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
               <div className="flex flex-col items-center gap-1">
                 <Flame className="w-4 h-4 text-amber-700" />
-                <span>Freshly Roasted</span>
+                <span>Fresh Roast</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <Truck className="w-4 h-4 text-amber-700" />
-                <span>Dispatched in 24h</span>
+                <span>Dispatched 24h</span>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <ShieldCheck className="w-4 h-4 text-amber-700" />
-                <span>SCA 87+ Guarantee</span>
+                <span>SCA 87+</span>
               </div>
             </div>
           </div>
 
-          {/* Collapsible Disclosures: Click to reveal product details */}
+          {/* Collapsible Disclosures: One-word button labels */}
           <div className="mt-8 space-y-3">
-            {/* 1. Flavor Profile & Coffee Story */}
+            {/* 1. Story */}
             {product.description_html && (
               <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
                 <button
@@ -297,15 +294,12 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 >
                   <div className="flex items-center gap-2.5">
                     <Coffee className="w-4 h-4 text-amber-800" />
-                    <span>Flavor Notes & Coffee Story</span>
+                    <span>Story</span>
                   </div>
                   {expandedSections.description ? (
                     <ChevronUp className="w-4 h-4 text-stone-500" />
                   ) : (
-                    <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
-                      <span>Click to read</span>
-                      <ChevronDown className="w-4 h-4 text-amber-800" />
-                    </div>
+                    <ChevronDown className="w-4 h-4 text-amber-800" />
                   )}
                 </button>
 
@@ -321,7 +315,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               </div>
             )}
 
-            {/* 2. Traditional Buna & Brewing Guide */}
+            {/* 2. Brewing */}
             <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
               <button
                 type="button"
@@ -330,15 +324,12 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               >
                 <div className="flex items-center gap-2.5">
                   <Flame className="w-4 h-4 text-amber-800" />
-                  <span>Brewing Guide & Recommended Methods</span>
+                  <span>Brewing</span>
                 </div>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
-                  <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
-                    <span>Click to reveal</span>
-                    <ChevronDown className="w-4 h-4 text-amber-800" />
-                  </div>
+                  <ChevronDown className="w-4 h-4 text-amber-800" />
                 )}
               </button>
 
@@ -386,7 +377,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               )}
             </div>
 
-            {/* 3. Terroir & Origin Transparency */}
+            {/* 3. Terroir */}
             <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
               <button
                 type="button"
@@ -395,15 +386,12 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               >
                 <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-amber-800" />
-                  <span>Origin, Terroir & Processing Details</span>
+                  <span>Terroir</span>
                 </div>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
-                  <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
-                    <span>Click to reveal</span>
-                    <ChevronDown className="w-4 h-4 text-amber-800" />
-                  </div>
+                  <ChevronDown className="w-4 h-4 text-amber-800" />
                 )}
               </button>
 
@@ -447,7 +435,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               )}
             </div>
 
-            {/* 4. Specifications & SKU */}
+            {/* 4. Specs */}
             <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
               <button
                 type="button"
@@ -456,15 +444,12 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               >
                 <div className="flex items-center gap-2.5">
                   <Info className="w-4 h-4 text-amber-800" />
-                  <span>Product Specifications & SKU</span>
+                  <span>Specs</span>
                 </div>
                 {expandedSections.details ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
-                  <div className="flex items-center gap-1.5 text-xs text-amber-800 font-semibold">
-                    <span>Click to reveal</span>
-                    <ChevronDown className="w-4 h-4 text-amber-800" />
-                  </div>
+                  <ChevronDown className="w-4 h-4 text-amber-800" />
                 )}
               </button>
 

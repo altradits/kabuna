@@ -38,7 +38,7 @@ export function PasswordResetEmail({
 
           <Section style={buttonSection}>
             <Button href={resetUrl} style={button}>
-              Reset Password
+              Reset
             </Button>
           </Section>
 
