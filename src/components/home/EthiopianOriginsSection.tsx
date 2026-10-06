@@ -79,11 +79,7 @@ export function EthiopianOriginsSection({
   return (
     <section className="py-20 bg-neutral-50/50 border-b border-neutral-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-3">
-            Terroir & Micro-climates of Ethiopia
-          </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
             Explore Ethiopian Coffee Origins
           </h2>
@@ -224,54 +220,6 @@ export function EthiopianOriginsSection({
               >
                 Get Traditional Jebena Kit &rarr;
               </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Brand Promises Bar */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 border-t border-neutral-200">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-sm">
-              01
-            </div>
-            <div>
-              <h4 className="font-bold text-neutral-900">
-                SCA 87+ Specialty Grade
-              </h4>
-              <p className="mt-1 text-sm text-neutral-600">
-                Only the finest hand-picked Grade 1 & 2 micro-lots, screened for
-                defects and density.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-sm">
-              02
-            </div>
-            <div>
-              <h4 className="font-bold text-neutral-900">
-                Direct Farmer Trade
-              </h4>
-              <p className="mt-1 text-sm text-neutral-600">
-                We work directly with farmer unions in Oromia and Sidama, paying
-                premium prices well above fair trade standards.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 text-sm">
-              03
-            </div>
-            <div>
-              <h4 className="font-bold text-neutral-900">
-                Fresh Roasted to Order
-              </h4>
-              <p className="mt-1 text-sm text-neutral-600">
-                Craft roasted in small batches to highlight intrinsic terroir
-                notes, never over-roasted.
-              </p>
             </div>
           </div>
         </div>

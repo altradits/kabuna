@@ -113,8 +113,8 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   ],
 };
 
-export function getCoffeeImageKey(slugOrName?: string | null): string {
-  if (!slugOrName) return "yirgacheffe";
+export function getCoffeeImageKey(slugOrName?: string | null): string | null {
+  if (!slugOrName) return null;
   const s = slugOrName.toLowerCase();
   if (s.includes("yirga")) return "yirgacheffe";
   if (s.includes("guji")) return "guji";
@@ -132,16 +132,20 @@ export function getCoffeeImageKey(slugOrName?: string | null): string {
     return "ceremony";
   if (s.includes("espresso")) return "espresso";
   if (s.includes("drip") || s.includes("maker")) return "drip";
-  return "yirgacheffe";
+  if (s.includes("coffee") || s.includes("bean") || s.includes("roast"))
+    return "yirgacheffe";
+  return null;
 }
 
-export function getCoffeeImage(slugOrName?: string | null): string {
+export function getCoffeeImage(slugOrName?: string | null): string | null {
   const key = getCoffeeImageKey(slugOrName);
+  if (!key) return null;
   return COFFEE_IMAGE_GALLERIES[key]?.[0] || DEFAULT_COFFEE_IMAGE;
 }
 
 export function getCoffeeGalleryImages(slugOrName?: string | null): string[] {
   const key = getCoffeeImageKey(slugOrName);
+  if (!key) return [DEFAULT_COFFEE_IMAGE];
   return COFFEE_IMAGE_GALLERIES[key] || [DEFAULT_COFFEE_IMAGE];
 }
 
@@ -352,7 +356,7 @@ export const KABUNA_CATEGORIES: Category[] = [
     "cat_green_coffee",
     "Green Coffee (Unroasted)",
     "green-coffee",
-    "Direct-trade Grade 1 raw green coffee beans for craft roasters and home roasting.",
+    "Direct-trade raw green coffee beans for craft roasters and home roasting.",
   ),
 ];
 
@@ -416,7 +420,7 @@ function createProduct(
 export const KABUNA_PRODUCTS: Product[] = [
   createProduct(
     "prod_yirgacheffe",
-    "Yirgacheffe Misty Valley (Grade 1 Natural)",
+    "Yirgacheffe Misty Valley Natural",
     "yirgacheffe-misty-valley-grade-1",
     "Hand-picked from smallholder plots in the high-elevation Gedeo zone (1,950m - 2,200m). Dried slowly on raised African beds under mountain mist and sunshine. Features intoxicating jasmine aromas, bright bergamot tea, and luscious blueberry finish. Roasted light-medium to preserve its aromatic delicacy.",
     2200,
@@ -430,7 +434,7 @@ export const KABUNA_PRODUCTS: Product[] = [
   ),
   createProduct(
     "prod_guji",
-    "Guji Highland Amber (Grade 1 Washed)",
+    "Guji Highland Amber Washed",
     "guji-highland-amber-grade-1",
     "Grown in deep red volcanic soils across the majestic forested ridges of Shakiso and Uraga at 2,050 - 2,300 meters. Washed in mountain spring waters. Exceptionally clean and tea-like with notes of orange blossom honey, white peach, and fresh lemon verbena.",
     2400,
@@ -439,7 +443,7 @@ export const KABUNA_PRODUCTS: Product[] = [
   ),
   createProduct(
     "prod_sidama",
-    "Sidama Bensa Sun-Dried (Grade 1)",
+    "Sidama Bensa Sun-Dried",
     "sidama-bensa-sun-dried-grade-1",
     "A stunning micro-lot from generational farmers in Bensa, Sidama. Ripe cherries are meticulously hand-sorted before laying on raised beds for 21 days. Deep and jammy sweetness, reminiscent of ripe strawberry compote, milk chocolate, and unrefined cane sugar.",
     2100,
@@ -466,7 +470,7 @@ export const KABUNA_PRODUCTS: Product[] = [
   ),
   createProduct(
     "prod_limu",
-    "Limu Forest Reserve (Grade 2 Washed)",
+    "Limu Forest Reserve Washed",
     "limu-forest-reserve-washed",
     "Sourced from the lush cloud forests of Limu Kosa, southwestern Ethiopia. Pure spring water washing yields sweet baked apple notes, cedar, toffee, and a round, silky mouthfeel with gentle malic acidity.",
     2000,

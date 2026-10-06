@@ -162,11 +162,6 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
         {/* Product Info & Buy Box */}
         <div className="flex flex-col">
-          {/* Quality Badge */}
-          <div className="inline-flex items-center self-start px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-semibold tracking-wide uppercase shadow-2xs mb-3">
-            <span>Ethiopian Specialty • Grade 1 • ካቡና</span>
-          </div>
-
           {/* Product Name */}
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight">
             {product.name}
@@ -252,24 +247,6 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 </Button>
               </div>
             )}
-
-            {/* Confidence & Freshness badges right below buy button */}
-            <div className="mt-4 pt-3 border-t border-stone-200/60 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
-              <div className="flex flex-col items-center">
-                <span className="font-semibold text-stone-800">
-                  Fresh Roast
-                </span>
-                <span className="text-[10px] text-stone-400">Weekly</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="font-semibold text-stone-800">Dispatched</span>
-                <span className="text-[10px] text-stone-400">Within 24h</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="font-semibold text-stone-800">Specialty</span>
-                <span className="text-[10px] text-stone-400">SCA 87+</span>
-              </div>
-            </div>
           </div>
 
           {/* Collapsible Disclosures: One-word button labels */}
@@ -361,14 +338,14 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               )}
             </div>
 
-            {/* 3. Terroir */}
+            {/* 3. Origin */}
             <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
               <button
                 type="button"
                 onClick={() => toggleSection("terroir")}
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
-                <span>Terroir</span>
+                <span>Origin</span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
@@ -408,7 +385,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                         Quality Grade
                       </dt>
                       <dd className="text-xs font-bold text-stone-900">
-                        Specialty Grade 1 (SCA 87+)
+                        Specialty Grade
                       </dd>
                     </div>
                   </dl>
