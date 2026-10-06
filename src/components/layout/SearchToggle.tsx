@@ -25,6 +25,8 @@ interface SearchToggleProps {
   left: ReactNode;
   /** Center slot (e.g. logo) */
   center: ReactNode;
+  /** Navigation links slot (e.g. Shop, Origins, Roasts, Ceremony, Wholesale) */
+  navLinks?: ReactNode;
   /** Rendered before the search button in the right section */
   rightStart: ReactNode;
   /** Rendered after the search button in the right section */
@@ -35,6 +37,7 @@ export function SearchToggle({
   basePath,
   left,
   center,
+  navLinks,
   rightStart,
   rightEnd,
 }: SearchToggleProps) {
@@ -58,14 +61,26 @@ export function SearchToggle({
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center justify-between h-full w-full gap-4">
+          <div className="flex items-center justify-between h-full w-full gap-2 lg:gap-4">
             {/* Left section: mobile hamburger + Brand Logo */}
             <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               <div className="md:hidden">{left}</div>
               <div className="flex items-center min-w-0">{center}</div>
             </div>
 
-            {/* Right section: preferences, account, search trigger, cart */}
+            {/* Desktop Navigation Links: Shop, Origins, Roasts, Ceremony, Wholesale */}
+            {navLinks && (
+              <div className="hidden md:flex items-center gap-0.5 lg:gap-1 shrink-0">
+                {navLinks}
+              </div>
+            )}
+
+            {/* Desktop Search Bar: Search... */}
+            <div className="hidden md:flex flex-1 max-w-xs lg:max-w-sm mx-1 lg:mx-3 min-w-[140px]">
+              <SearchBar basePath={basePath} />
+            </div>
+
+            {/* Right section: currency, account, search trigger (mobile), cart */}
             <div className="flex items-center justify-end space-x-1 sm:space-x-2 shrink-0">
               {rightStart}
 

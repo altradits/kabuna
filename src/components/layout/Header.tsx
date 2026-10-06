@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { CartButton } from "@/components/layout/CartButton";
+import { HeaderNavLinks } from "@/components/layout/Navbar";
 import { SearchToggle } from "@/components/layout/SearchToggle";
 import { Button } from "@/components/ui/button";
 import { isWholesaleEnabled } from "@/lib/spree";
@@ -65,7 +66,6 @@ export async function Header({
   mobileNavigation,
 }: HeaderProps) {
   const t = await getTranslations({ locale, namespace: "header" });
-  const wholesaleEnabled = isWholesaleEnabled();
 
   return (
     <SearchToggle
@@ -76,26 +76,17 @@ export async function Header({
           <Image
             src="/kabuna-logo.svg"
             alt={storeName}
-            width={160}
-            height={36}
-            className="h-9 w-auto object-contain"
+            width={140}
+            height={32}
+            className="h-8 w-auto object-contain"
             fetchPriority="high"
             loading="eager"
           />
         </Link>
       }
+      navLinks={<HeaderNavLinks basePath={basePath} />}
       rightStart={
-        <div className="hidden lg:flex lg:items-center lg:gap-1">
-          {/* Trade portal entry point — understated, secondary to the catalog nav.
-              Only shown when the wholesale addon is enabled. */}
-          {wholesaleEnabled && (
-            <Link
-              href={`${basePath}/wholesale`}
-              className="px-2 py-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors whitespace-nowrap"
-            >
-              {t("wholesale")}
-            </Link>
-          )}
+        <div className="hidden md:flex items-center">
           <LazyRegionPreferences variant="header" />
         </div>
       }

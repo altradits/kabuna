@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SearchBar } from "@/components/search/SearchBar";
 
 interface NavbarProps {
   basePath: string;
 }
 
-export function Navbar({ basePath }: NavbarProps) {
+export function HeaderNavLinks({ basePath }: { basePath: string }) {
   const pathname = usePathname();
 
   const isOriginsActive = pathname.startsWith(`${basePath}/c/single-origin`);
@@ -22,7 +21,7 @@ export function Navbar({ basePath }: NavbarProps) {
   const isWholesaleActive = pathname.startsWith(`${basePath}/wholesale`);
 
   const linkBaseClasses =
-    "px-3 py-1.5 rounded-lg text-xs md:text-sm transition-all duration-150 whitespace-nowrap inline-flex items-center cursor-pointer";
+    "px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm transition-all duration-150 whitespace-nowrap inline-flex items-center cursor-pointer";
   const linkInactiveClasses =
     "text-stone-700 hover:text-stone-950 hover:bg-stone-100/80 font-medium";
   const linkActiveClass =
@@ -31,109 +30,57 @@ export function Navbar({ basePath }: NavbarProps) {
   return (
     <nav
       aria-label="Store navigation"
-      className="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs"
+      className="flex items-center gap-0.5 lg:gap-1"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Desktop Navigation & Search Row — aligned in the exact same line */}
-        <div className="hidden md:flex items-center justify-between gap-4 lg:gap-8 py-2">
-          {/* Nav Items */}
-          <div className="flex items-center gap-1 lg:gap-2 shrink-0">
-            <Link
-              href={`${basePath}/products`}
-              className={`${linkBaseClasses} ${
-                isShopActive ? linkActiveClass : linkInactiveClasses
-              }`}
-            >
-              <span>Shop</span>
-            </Link>
+      <Link
+        href={`${basePath}/products`}
+        className={`${linkBaseClasses} ${
+          isShopActive ? linkActiveClass : linkInactiveClasses
+        }`}
+      >
+        <span>Shop</span>
+      </Link>
 
-            <Link
-              href={`${basePath}/c/single-origin`}
-              className={`${linkBaseClasses} ${
-                isOriginsActive ? linkActiveClass : linkInactiveClasses
-              }`}
-            >
-              <span>Origins</span>
-            </Link>
+      <Link
+        href={`${basePath}/c/single-origin`}
+        className={`${linkBaseClasses} ${
+          isOriginsActive ? linkActiveClass : linkInactiveClasses
+        }`}
+      >
+        <span>Origins</span>
+      </Link>
 
-            <Link
-              href={`${basePath}/c/roast-profiles`}
-              className={`${linkBaseClasses} ${
-                isRoastsActive ? linkActiveClass : linkInactiveClasses
-              }`}
-            >
-              <span>Roasts</span>
-            </Link>
+      <Link
+        href={`${basePath}/c/roast-profiles`}
+        className={`${linkBaseClasses} ${
+          isRoastsActive ? linkActiveClass : linkInactiveClasses
+        }`}
+      >
+        <span>Roasts</span>
+      </Link>
 
-            <Link
-              href={`${basePath}/c/buna-ceremony`}
-              className={`${linkBaseClasses} ${
-                isCeremonyActive ? linkActiveClass : linkInactiveClasses
-              }`}
-            >
-              <span>Ceremony</span>
-            </Link>
+      <Link
+        href={`${basePath}/c/buna-ceremony`}
+        className={`${linkBaseClasses} ${
+          isCeremonyActive ? linkActiveClass : linkInactiveClasses
+        }`}
+      >
+        <span>Ceremony</span>
+      </Link>
 
-            <Link
-              href={`${basePath}/wholesale`}
-              className={`${linkBaseClasses} ${
-                isWholesaleActive ? linkActiveClass : linkInactiveClasses
-              }`}
-            >
-              <span>Wholesale</span>
-            </Link>
-          </div>
-
-          {/* Search Bar aligned on the same line */}
-          <div className="flex-1 max-w-xs lg:max-w-sm">
-            <SearchBar basePath={basePath} />
-          </div>
-        </div>
-
-        {/* Mobile Horizontal Quick-Nav Strip */}
-        <div className="flex md:hidden items-center justify-start gap-1 py-1.5 overflow-x-auto no-scrollbar -mx-2 px-2">
-          <Link
-            href={`${basePath}/products`}
-            className={`${linkBaseClasses} ${
-              isShopActive ? linkActiveClass : linkInactiveClasses
-            }`}
-          >
-            <span>Shop</span>
-          </Link>
-          <Link
-            href={`${basePath}/c/single-origin`}
-            className={`${linkBaseClasses} ${
-              isOriginsActive ? linkActiveClass : linkInactiveClasses
-            }`}
-          >
-            <span>Origins</span>
-          </Link>
-          <Link
-            href={`${basePath}/c/roast-profiles`}
-            className={`${linkBaseClasses} ${
-              isRoastsActive ? linkActiveClass : linkInactiveClasses
-            }`}
-          >
-            <span>Roasts</span>
-          </Link>
-          <Link
-            href={`${basePath}/c/buna-ceremony`}
-            className={`${linkBaseClasses} ${
-              isCeremonyActive ? linkActiveClass : linkInactiveClasses
-            }`}
-          >
-            <span>Ceremony</span>
-          </Link>
-          <Link
-            href={`${basePath}/wholesale`}
-            className={`${linkBaseClasses} ${
-              isWholesaleActive ? linkActiveClass : linkInactiveClasses
-            }`}
-          >
-            <span>Wholesale</span>
-          </Link>
-        </div>
-      </div>
+      <Link
+        href={`${basePath}/wholesale`}
+        className={`${linkBaseClasses} ${
+          isWholesaleActive ? linkActiveClass : linkInactiveClasses
+        }`}
+      >
+        <span>Wholesale</span>
+      </Link>
     </nav>
   );
+}
+
+export function Navbar(_props: NavbarProps) {
+  // Navigation links are rendered inline in Header next to the logo, search, currency, account and cart.
+  return null;
 }
