@@ -46,7 +46,7 @@ export async function cachedListProducts(
       ...res,
       data: (res.data || []).map((p) => enrichProductWithImages(p)),
     } as typeof res;
-  } catch (error) {
+  } catch {
     let filtered = [...KABUNA_PRODUCTS];
     if (params?.in_category) {
       filtered = filtered.filter((p) =>

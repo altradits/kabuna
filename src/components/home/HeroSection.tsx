@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
-import { getStoreName } from "@/lib/store";
 
 interface HeroSectionProps {
   basePath: string;
@@ -15,7 +14,6 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
     locale: locale as Locale,
     namespace: "home",
   });
-  const storeName = getStoreName();
 
   return (
     <section className="relative overflow-hidden border-b border-amber-900/10 bg-linear-to-b from-amber-50/60 via-stone-50 to-white min-h-[560px] flex items-center">
