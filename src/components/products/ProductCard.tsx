@@ -7,6 +7,7 @@ import { memo } from "react";
 import { HiddenPricePrompt } from "@/components/products/HiddenPricePrompt";
 import { ProductImage } from "@/components/ui/product-image";
 import { trackSelectItem } from "@/lib/analytics/gtm";
+import { getCoffeeImage } from "@/lib/data/kabuna-coffee-data";
 
 interface ProductCardProps {
   product: Product;
@@ -31,7 +32,8 @@ export const ProductCard = memo(function ProductCard({
   currency,
 }: ProductCardProps) {
   const t = useTranslations("products");
-  const imageUrl = product.thumbnail_url || null;
+  const imageUrl =
+    product.thumbnail_url || getCoffeeImage(product.slug || product.name);
 
   // Current display price
   const displayPrice = product.price?.display_amount;

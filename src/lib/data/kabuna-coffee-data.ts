@@ -59,6 +59,132 @@ export function createMedia(
   };
 }
 
+export const DEFAULT_COFFEE_IMAGE =
+  "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80";
+
+export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
+  yirgacheffe: [
+    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1200&q=85",
+  ],
+  guji: [
+    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=85",
+  ],
+  sidama: [
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
+  ],
+  harrar: [
+    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  kaffa: [
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+  ],
+  limu: [
+    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  djimmah: [
+    "https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  ceremony: [
+    "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
+  ],
+  espresso: [
+    "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+  ],
+  drip: [
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
+  ],
+};
+
+export function getCoffeeImageKey(slugOrName?: string | null): string {
+  if (!slugOrName) return "yirgacheffe";
+  const s = slugOrName.toLowerCase();
+  if (s.includes("yirga")) return "yirgacheffe";
+  if (s.includes("guji")) return "guji";
+  if (s.includes("sidam")) return "sidama";
+  if (s.includes("harrar") || s.includes("harar")) return "harrar";
+  if (s.includes("kaffa")) return "kaffa";
+  if (s.includes("limu")) return "limu";
+  if (s.includes("djimmah") || s.includes("jimma")) return "djimmah";
+  if (
+    s.includes("ceremony") ||
+    s.includes("jebena") ||
+    s.includes("buna") ||
+    s.includes("kit")
+  )
+    return "ceremony";
+  if (s.includes("espresso")) return "espresso";
+  if (s.includes("drip") || s.includes("maker")) return "drip";
+  return "yirgacheffe";
+}
+
+export function getCoffeeImage(slugOrName?: string | null): string {
+  const key = getCoffeeImageKey(slugOrName);
+  return COFFEE_IMAGE_GALLERIES[key]?.[0] || DEFAULT_COFFEE_IMAGE;
+}
+
+export function getCoffeeGalleryImages(slugOrName?: string | null): string[] {
+  const key = getCoffeeImageKey(slugOrName);
+  return COFFEE_IMAGE_GALLERIES[key] || [DEFAULT_COFFEE_IMAGE];
+}
+
+export function getCoffeeGallery(
+  slugOrName?: string | null,
+  productName = "Kabuna Ethiopian Coffee",
+  productId = "prod",
+): Media[] {
+  const images = getCoffeeGalleryImages(slugOrName);
+  return images.map((url, idx) =>
+    createMedia(
+      `media_${productId}_${idx + 1}`,
+      url,
+      `${productName} photo ${idx + 1}`,
+      idx + 1,
+    ),
+  );
+}
+
+export function enrichProductWithImages<T extends Partial<Product>>(
+  product: T,
+): T {
+  if (!product) return product;
+  const slugOrName = product.slug || product.name || "";
+  const mainImage = product.thumbnail_url || getCoffeeImage(slugOrName);
+  const mediaList =
+    product.media && product.media.length > 0
+      ? product.media
+      : getCoffeeGallery(
+          slugOrName,
+          product.name || undefined,
+          product.id || undefined,
+        );
+  const primaryMedia = product.primary_media || mediaList[0] || null;
+
+  return {
+    ...product,
+    thumbnail_url: mainImage,
+    primary_media: primaryMedia,
+    media: mediaList,
+  };
+}
+
 export function createVariant(id: string, sku: string, cents: number): Variant {
   const price = createPrice(cents);
   return {
@@ -242,7 +368,8 @@ function createProduct(
   extraVariants: Variant[] = [],
 ): Product {
   const price = createPrice(cents, compareAtCents);
-  const mediaItem = createMedia(`media_${id}_1`, imageUrl, name);
+  const gallery = getCoffeeGallery(slug, name, id);
+  const mediaItem = gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
   const defaultVariant = createVariant(
     `var_${id}_default`,
     `KBN-${slug}-250G`,
@@ -275,7 +402,7 @@ function createProduct(
     original_price: price,
     seller_id: null,
     primary_media: mediaItem,
-    media: [mediaItem],
+    media: gallery,
     variants: allVariants,
     default_variant: defaultVariant,
     option_types: [],

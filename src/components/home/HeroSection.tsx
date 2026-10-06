@@ -1,4 +1,5 @@
 import { Coffee, MapPin, Sparkles } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,19 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
 
   return (
     <section className="relative overflow-hidden border-b border-amber-900/10 bg-linear-to-b from-amber-50/60 via-stone-50 to-white min-h-[560px] flex items-center">
+      {/* Background Coffee Imagery with warm ambient blend */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1920&q=80"
+          alt="Ethiopian specialty roasted coffee beans"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-10"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-50/80 via-stone-50/90 to-white" />
+      </div>
+
       {/* Decorative ambient coffee steam glow */}
       <div
         className="absolute top-0 right-1/4 -mt-16 w-96 h-96 rounded-full bg-amber-200/30 blur-3xl pointer-events-none"

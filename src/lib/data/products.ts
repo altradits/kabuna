@@ -10,7 +10,7 @@ import {
   getLocaleOptions,
   type Surface,
 } from "@/lib/spree";
-import { KABUNA_PRODUCTS } from "./kabuna-coffee-data";
+import { enrichProductWithImages, KABUNA_PRODUCTS } from "./kabuna-coffee-data";
 
 /**
  * Cached product list fetch. Cache key is derived from all function
@@ -35,13 +35,17 @@ export async function cachedListProducts(
   cacheLife("tenMinutes");
   cacheTag(`products${cacheTagSuffix(surface)}`);
   try {
-    return await getClientForSurface(surface).products.list(params, {
+    const res = await getClientForSurface(surface).products.list(params, {
       ...options,
       // Wholesale catalog requires the customer JWT — the channel is gated.
       ...(surface === "wholesale" && userToken
         ? { token: userToken }
         : undefined),
     });
+    return {
+      ...res,
+      data: (res.data || []).map((p) => enrichProductWithImages(p)),
+    } as typeof res;
   } catch (error) {
     let filtered = [...KABUNA_PRODUCTS];
     if (params?.in_category) {
@@ -103,7 +107,7 @@ export async function cachedGetProduct(
     `product:${slugOrId}${cacheTagSuffix(surface)}`,
   );
   try {
-    return await getClientForSurface(surface).products.get(
+    const res = await getClientForSurface(surface).products.get(
       slugOrId,
       { expand },
       {
@@ -113,12 +117,19 @@ export async function cachedGetProduct(
           : undefined),
       },
     );
+    if ("data" in res && res.data) {
+      return {
+        ...res,
+        data: enrichProductWithImages(res.data),
+      } as typeof res;
+    }
+    return enrichProductWithImages(res) as typeof res;
   } catch (error) {
     const product = KABUNA_PRODUCTS.find(
       (p) => p.slug === slugOrId || p.id === slugOrId,
     );
     if (product) {
-      return { data: product } as unknown as Awaited<
+      return { data: enrichProductWithImages(product) } as unknown as Awaited<
         ReturnType<ReturnType<typeof getClientForSurface>["products"]["get"]>
       >;
     }

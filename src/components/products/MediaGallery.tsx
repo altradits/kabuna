@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 import { ProductImage } from "@/components/ui/product-image";
+import { getCoffeeGallery } from "@/lib/data/kabuna-coffee-data";
 
 const SWIPE_THRESHOLD_PX = 50;
 const SWIPE_MAX_VERTICAL_PX = 75;
@@ -60,13 +61,20 @@ function MediaGalleryInner({
   activeIndex,
 }: MediaGalleryProps) {
   const t = useTranslations("products");
+  const effectiveImages =
+    images && images.length > 0
+      ? images
+      : getCoffeeGallery(productName, productName);
   const [selectedIndex, setSelectedIndex] = useState(activeIndex ?? 0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mainImageErrorUrl, setMainImageErrorUrl] = useState<string | null>(
     null,
   );
 
-  const safeIndex = Math.max(0, Math.min(selectedIndex, images.length - 1));
+  const safeIndex = Math.max(
+    0,
+    Math.min(selectedIndex, effectiveImages.length - 1),
+  );
 
   // Horizontal swipe on the main image navigates between media. When a
   // swipe is detected we suppress the synthetic click so the lightbox
@@ -85,7 +93,7 @@ function MediaGalleryInner({
     (e: React.TouchEvent) => {
       const start = touchStartRef.current;
       touchStartRef.current = null;
-      if (!start || images.length <= 1) return;
+      if (!start || effectiveImages.length <= 1) return;
       const touch = e.changedTouches[0];
       if (!touch) return;
       const dx = touch.clientX - start.x;
@@ -99,15 +107,15 @@ function MediaGalleryInner({
       suppressClickRef.current = true;
       const nextIndex =
         dx < 0
-          ? (safeIndex + 1) % images.length
-          : (safeIndex - 1 + images.length) % images.length;
+          ? (safeIndex + 1) % effectiveImages.length
+          : (safeIndex - 1 + effectiveImages.length) % effectiveImages.length;
       setSelectedIndex(nextIndex);
       setMainImageErrorUrl(null);
     },
-    [images.length, safeIndex],
+    [effectiveImages.length, safeIndex],
   );
 
-  if (images.length === 0) {
+  if (effectiveImages.length === 0) {
     return (
       <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden">
         <ProductImage
@@ -125,7 +133,7 @@ function MediaGalleryInner({
     setMainImageErrorUrl(null);
   };
 
-  const selectedImage = images[safeIndex];
+  const selectedImage = effectiveImages[safeIndex];
   const mainImageUrl = getMainImageUrl(selectedImage);
   const showMainImage = mainImageUrl && mainImageErrorUrl !== mainImageUrl;
 
@@ -173,9 +181,9 @@ function MediaGalleryInner({
       </button>
 
       {/* Thumbnails */}
-      {images.length > 1 && (
+      {effectiveImages.length > 1 && (
         <div className="flex gap-2 overflow-x-auto pb-2">
-          {images.map((image, index) => {
+          {effectiveImages.map((image, index) => {
             const thumbUrl = getThumbImageUrl(image);
             return (
               <button
@@ -204,7 +212,7 @@ function MediaGalleryInner({
       {/* Lightbox (lazy) */}
       {isZoomed && showMainImage && (
         <LazyMediaLightbox
-          images={images}
+          images={effectiveImages}
           activeIndex={safeIndex}
           productName={productName}
           onClose={() => setIsZoomed(false)}

@@ -5,6 +5,7 @@ import {
   Mountain,
   Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 interface EthiopianOriginsSectionProps {
@@ -20,8 +21,10 @@ const REGIONS = [
     process: "Washed & Natural",
     tagline: "The crown jewel of floral aromatics",
     slug: "single-origin/yirgacheffe",
-    bgColor: "bg-amber-50 border-amber-200",
+    bgColor: "bg-amber-50/80 border-amber-200",
     badgeColor: "bg-amber-100 text-amber-800",
+    image:
+      "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Guji Zone",
@@ -31,8 +34,10 @@ const REGIONS = [
     process: "Natural & Washed",
     tagline: "Volcanic soils producing exotic nectar sweetness",
     slug: "single-origin/guji",
-    bgColor: "bg-orange-50 border-orange-200",
+    bgColor: "bg-orange-50/80 border-orange-200",
     badgeColor: "bg-orange-100 text-orange-800",
+    image:
+      "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Sidama (Sidamo)",
@@ -42,8 +47,10 @@ const REGIONS = [
     process: "Sun-Dried Natural",
     tagline: "Famous for luscious berry compote & balanced body",
     slug: "single-origin/sidama",
-    bgColor: "bg-rose-50 border-rose-200",
+    bgColor: "bg-rose-50/80 border-rose-200",
     badgeColor: "bg-rose-100 text-rose-800",
+    image:
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Harrar Longberry",
@@ -53,8 +60,10 @@ const REGIONS = [
     process: "Dry Natural Heirloom",
     tagline: "Arid highlands delivering wild winey mocha intensity",
     slug: "single-origin/harrar",
-    bgColor: "bg-stone-50 border-stone-200",
+    bgColor: "bg-stone-50/80 border-stone-200",
     badgeColor: "bg-stone-200 text-stone-800",
+    image:
+      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Kaffa & Limu",
@@ -64,8 +73,10 @@ const REGIONS = [
     process: "Wild Harvest & Washed",
     tagline: "The historic botanical birthplace of Coffea Arabica",
     slug: "single-origin/limu-kaffa",
-    bgColor: "bg-emerald-50 border-emerald-200",
+    bgColor: "bg-emerald-50/80 border-emerald-200",
     badgeColor: "bg-emerald-100 text-emerald-800",
+    image:
+      "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80",
   },
 ];
 
@@ -96,48 +107,64 @@ export function EthiopianOriginsSection({
           {REGIONS.map((region) => (
             <div
               key={region.name}
-              className={`rounded-2xl border p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${region.bgColor}`}
+              className={`group rounded-2xl border p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between ${region.bgColor}`}
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <span
-                    className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${region.badgeColor}`}
-                  >
-                    {region.amharic}
-                  </span>
-                  <h3 className="mt-2 text-xl font-bold text-neutral-900">
-                    {region.name}
-                  </h3>
-                </div>
-                <div className="text-right text-xs font-medium text-neutral-500">
-                  <span className="block font-semibold text-neutral-700">
-                    {region.elevation}
-                  </span>
-                  <span>{region.process}</span>
-                </div>
-              </div>
-
-              <p className="mt-3 text-sm text-neutral-600 font-medium italic">
-                &ldquo;{region.tagline}&rdquo;
-              </p>
-
-              <div className="mt-4 pt-4 border-t border-neutral-200/60">
-                <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 block mb-2">
-                  Cupping Flavor Profile
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {region.notes.map((note) => (
+              <div>
+                {/* Photo Banner */}
+                <div className="relative h-44 -mx-6 -mt-6 mb-5 overflow-hidden rounded-t-2xl">
+                  <Image
+                    src={region.image}
+                    alt={region.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
                     <span
-                      key={note}
-                      className="inline-block bg-white/90 text-neutral-800 text-xs px-2.5 py-1 rounded-md border border-neutral-200/70 shadow-2xs font-medium"
+                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md ${region.badgeColor}`}
                     >
-                      {note}
+                      {region.amharic}
                     </span>
-                  ))}
+                    <span className="text-xs font-semibold text-white drop-shadow-sm">
+                      {region.elevation}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-neutral-900">
+                      {region.name}
+                    </h3>
+                  </div>
+                  <div className="text-right text-xs font-medium text-neutral-500">
+                    <span>{region.process}</span>
+                  </div>
+                </div>
+
+                <p className="mt-2 text-sm text-neutral-600 font-medium italic">
+                  &ldquo;{region.tagline}&rdquo;
+                </p>
+
+                <div className="mt-4 pt-4 border-t border-neutral-200/60">
+                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 block mb-2">
+                    Cupping Flavor Profile
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {region.notes.map((note) => (
+                      <span
+                        key={note}
+                        className="inline-block bg-white/90 text-neutral-800 text-xs px-2.5 py-1 rounded-md border border-neutral-200/70 shadow-2xs font-medium"
+                      >
+                        {note}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-6">
+              <div className="mt-6 pt-2">
                 <Link
                   href={`${basePath}/c/${region.slug}`}
                   className="inline-flex items-center text-xs font-bold text-amber-900 hover:text-amber-700 transition-colors uppercase tracking-wider"
@@ -149,13 +176,27 @@ export function EthiopianOriginsSection({
           ))}
 
           {/* Buna Ceremony Callout Card */}
-          <div className="rounded-2xl border border-stone-800 bg-stone-900 text-stone-100 p-6 flex flex-col justify-between shadow-lg">
+          <div className="group rounded-2xl border border-stone-800 bg-stone-900 text-stone-100 p-6 flex flex-col justify-between shadow-xl">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-semibold">
-                <Sparkles className="w-3.5 h-3.5" />
-                የቡና ማፍላት ሥነ-ሥርዓት
+              {/* Photo Banner */}
+              <div className="relative h-44 -mx-6 -mt-6 mb-5 overflow-hidden rounded-t-2xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80"
+                  alt="Traditional Ethiopian Buna Ceremony"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent" />
+                <div className="absolute bottom-3 left-4">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/80 text-white text-xs font-semibold backdrop-blur-md">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    የቡና ማፍላት ሥነ-ሥርዓት
+                  </span>
+                </div>
               </div>
-              <h3 className="mt-3 text-xl font-bold text-white">
+
+              <h3 className="text-xl font-bold text-white">
                 The Sacred Buna Ceremony
               </h3>
               <p className="mt-2 text-sm text-stone-300 leading-relaxed">

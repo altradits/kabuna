@@ -15,6 +15,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useHiddenPricing } from "@/contexts/HiddenPricingContext";
 import { useStore } from "@/contexts/StoreContext";
 import { trackAddToCart, trackViewItem } from "@/lib/analytics/gtm";
+import { getCoffeeGallery } from "@/lib/data/kabuna-coffee-data";
 
 interface ProductDetailsProps {
   product: Product;
@@ -60,8 +61,13 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   }, [product, currency]);
 
   const galleryImages = useMemo((): Media[] => {
-    return product.media || [];
-  }, [product.media]);
+    if (product.media && product.media.length > 0) return product.media;
+    return getCoffeeGallery(
+      product.slug || product.name,
+      product.name,
+      product.id,
+    );
+  }, [product.media, product.slug, product.name, product.id]);
 
   const variantImageIndex = useMemo((): number | null => {
     if (!selectedVariant) return null;
