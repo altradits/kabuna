@@ -28,8 +28,8 @@ function CheckoutHeader() {
         <Image
           src="/kabuna-logo.svg"
           alt={storeName}
-          width={150}
-          height={34}
+          width={140}
+          height={32}
           className="h-8 w-auto object-contain"
           fetchPriority="high"
           loading="eager"
