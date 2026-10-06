@@ -65,11 +65,6 @@ export function SearchToggle({
               <div className="flex items-center min-w-0">{center}</div>
             </div>
 
-            {/* Desktop Search bar */}
-            <div className="hidden md:flex flex-1 max-w-lg mx-4">
-              <SearchBar basePath={basePath} />
-            </div>
-
             {/* Right section: preferences, account, search trigger, cart */}
             <div className="flex items-center justify-end space-x-1 sm:space-x-2 shrink-0">
               {rightStart}
