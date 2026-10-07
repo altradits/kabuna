@@ -22,10 +22,20 @@ export function ProductImage({
 }: ProductImageProps): React.JSX.Element {
   const [hasError, setHasError] = useState(false);
 
-  // Auto-resolve missing or null src using product alt name/keyword
-  const resolvedSrc = src || getCoffeeImage(rest.alt?.toString());
+  const isInvalidOrLocalhost =
+    !src ||
+    src.includes("localhost:") ||
+    src.includes("127.0.0.1") ||
+    src.includes("/rails/active_storage");
 
-  if (hasError || !resolvedSrc) {
+  const fallbackSrc = getCoffeeImage(rest.alt?.toString());
+  const resolvedSrc = isInvalidOrLocalhost ? fallbackSrc || src : src;
+  const effectiveSrc = (hasError ? fallbackSrc : resolvedSrc) || fallbackSrc;
+
+  if (
+    !effectiveSrc ||
+    (hasError && (!fallbackSrc || fallbackSrc === resolvedSrc))
+  ) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-amber-50/80 via-stone-100 to-amber-100/50 text-amber-700/60">
         <Icon className={iconClassName} />
@@ -35,10 +45,14 @@ export function ProductImage({
 
   return (
     <Image
-      src={resolvedSrc}
+      src={effectiveSrc}
       onError={(e) => {
-        setHasError(true);
-        onError?.(e);
+        if (!hasError && fallbackSrc && fallbackSrc !== resolvedSrc) {
+          setHasError(true);
+        } else {
+          setHasError(true);
+          onError?.(e);
+        }
       }}
       fetchPriority={fetchPriority}
       loading={fetchPriority === "high" ? "eager" : undefined}

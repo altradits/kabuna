@@ -32,8 +32,15 @@ export const ProductCard = memo(function ProductCard({
   currency,
 }: ProductCardProps) {
   const t = useTranslations("products");
-  const imageUrl =
-    product.thumbnail_url || getCoffeeImage(product.slug || product.name);
+  const isLocalOrMissing =
+    !product.thumbnail_url ||
+    product.thumbnail_url.includes("localhost:") ||
+    product.thumbnail_url.includes("127.0.0.1") ||
+    product.thumbnail_url.includes("/rails/active_storage");
+
+  const imageUrl = isLocalOrMissing
+    ? getCoffeeImage(product.slug || product.name) || product.thumbnail_url
+    : product.thumbnail_url;
 
   // Current display price
   const displayPrice = product.price?.display_amount;

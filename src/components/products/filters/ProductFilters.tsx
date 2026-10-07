@@ -92,11 +92,15 @@ export const FilterBar = memo(function FilterBar({
     });
   }, [onFilterChange, activeFilters.sortBy]);
 
+  const filtersList = Array.isArray(filtersData?.filters)
+    ? filtersData.filters
+    : [];
+
   const priceBuckets = useMemo(() => {
-    if (!filtersData) return [];
-    const priceFilter = filtersData.filters.find(
-      (f) => f.type === "price_range",
-    ) as PriceRangeFilter | undefined;
+    if (filtersList.length === 0) return [];
+    const priceFilter = filtersList.find((f) => f.type === "price_range") as
+      | PriceRangeFilter
+      | undefined;
     if (!priceFilter) return [];
     return generatePriceBuckets(
       priceFilter.min,
@@ -104,14 +108,12 @@ export const FilterBar = memo(function FilterBar({
       priceFilter.currency,
       { t, locale },
     );
-  }, [filtersData, t, locale]);
+  }, [filtersList, t, locale]);
 
   const optionFilters = useMemo(() => {
-    if (!filtersData) return [];
-    return filtersData.filters.filter(
-      (f) => f.type === "option",
-    ) as OptionFilter[];
-  }, [filtersData]);
+    if (filtersList.length === 0) return [];
+    return filtersList.filter((f) => f.type === "option") as OptionFilter[];
+  }, [filtersList]);
 
   const badgeCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -141,12 +143,12 @@ export const FilterBar = memo(function FilterBar({
     return null;
   }
 
-  const availabilityFilter = filtersData.filters.find(
+  const availabilityFilter = filtersList.find(
     (f) => f.type === "availability",
   ) as AvailabilityFilter | undefined;
 
   const hasPriceFilter =
-    filtersData.filters.some((f) => f.type === "price_range") &&
+    filtersList.some((f) => f.type === "price_range") &&
     priceBuckets.length > 0;
 
   return (
@@ -205,7 +207,9 @@ export const FilterBar = memo(function FilterBar({
 
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-500">
-            {t("productCount", { count: totalCount })}
+            {t("productCount", {
+              count: typeof totalCount === "number" ? totalCount : 0,
+            })}
           </span>
           <FilterDropdown
             label={t("sort")}
@@ -215,7 +219,11 @@ export const FilterBar = memo(function FilterBar({
             align="right"
           >
             <SortDropdownContent
-              sortOptions={filtersData.sort_options}
+              sortOptions={
+                Array.isArray(filtersData?.sort_options)
+                  ? filtersData.sort_options
+                  : []
+              }
               activeSortBy={activeSortBy}
               onSortChange={handleSortChange}
             />
@@ -251,7 +259,11 @@ export const FilterBar = memo(function FilterBar({
             align="right"
           >
             <SortDropdownContent
-              sortOptions={filtersData.sort_options}
+              sortOptions={
+                Array.isArray(filtersData?.sort_options)
+                  ? filtersData.sort_options
+                  : []
+              }
               activeSortBy={activeSortBy}
               onSortChange={handleSortChange}
             />

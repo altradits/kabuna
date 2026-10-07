@@ -83,7 +83,18 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   }, [product, currency]);
 
   const galleryImages = useMemo((): Media[] => {
-    if (product.media && product.media.length > 0) return product.media;
+    const hasValidMedia =
+      product.media &&
+      product.media.length > 0 &&
+      product.media.some(
+        (m) =>
+          m.original_url &&
+          !m.original_url.includes("localhost:") &&
+          !m.original_url.includes("127.0.0.1") &&
+          !m.original_url.includes("/rails/active_storage"),
+      );
+
+    if (hasValidMedia && product.media) return product.media;
     return getCoffeeGallery(
       product.slug || product.name,
       product.name,

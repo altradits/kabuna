@@ -117,6 +117,9 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
     s.includes("kit")
   )
     return "ceremony";
+  if (s.includes("yirgacheffe")) return "chelbesa";
+  if (s.includes("sidama") || s.includes("sidamo")) return "hamasho";
+  if (s.includes("guji")) return "dimtu-tora";
   return null;
 }
 
@@ -153,16 +156,27 @@ export function enrichProductWithImages<T extends Partial<Product>>(
 ): T {
   if (!product) return product;
   const slugOrName = product.slug || product.name || "";
-  const mainImage = product.thumbnail_url || getCoffeeImage(slugOrName);
+  const coffeeImg = getCoffeeImage(slugOrName);
+  const isLocalOrMissing =
+    !product.thumbnail_url ||
+    product.thumbnail_url.includes("localhost:") ||
+    product.thumbnail_url.includes("127.0.0.1") ||
+    product.thumbnail_url.includes("/rails/active_storage");
+
+  const mainImage = isLocalOrMissing
+    ? coffeeImg || product.thumbnail_url || DEFAULT_COFFEE_IMAGE
+    : product.thumbnail_url;
   const mediaList =
-    product.media && product.media.length > 0
+    product.media && product.media.length > 0 && !isLocalOrMissing
       ? product.media
       : getCoffeeGallery(
           slugOrName,
           product.name || undefined,
           product.id || undefined,
         );
-  const primaryMedia = product.primary_media || mediaList[0] || null;
+  const primaryMedia = isLocalOrMissing
+    ? mediaList[0] || null
+    : product.primary_media || mediaList[0] || null;
 
   return {
     ...product,

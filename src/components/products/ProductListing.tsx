@@ -136,9 +136,17 @@ async function ProductListingInner({
     }),
   ]);
 
-  const products = productsResponse.data;
-  const totalCount = productsResponse.meta.count;
-  const totalPages = productsResponse.meta.pages;
+  const products = productsResponse?.data ?? [];
+  const meta = productsResponse?.meta as
+    | {
+        count?: number;
+        total_count?: number;
+        pages?: number;
+        total_pages?: number;
+      }
+    | undefined;
+  const totalCount = meta?.count ?? meta?.total_count ?? products.length ?? 0;
+  const totalPages = meta?.pages ?? meta?.total_pages ?? 1;
 
   const hasResults = products.length > 0;
 
