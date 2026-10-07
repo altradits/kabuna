@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Compass,
-  Grid,
-  Home,
-  Package,
-  Search,
-  ShoppingBag,
-} from "lucide-react";
+import { Grid, Home, Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -42,18 +35,6 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
       href: `${basePath}/products`,
       icon: Grid,
       active: isActive(`${basePath}/products`),
-    },
-    {
-      label: "Origins",
-      href: `${basePath}/c/single-origin`,
-      icon: Compass,
-      active: isActive(`${basePath}/c/single-origin`),
-    },
-    {
-      label: "Ceremony",
-      href: `${basePath}/c/buna-ceremony`,
-      icon: Package,
-      active: isActive(`${basePath}/c/buna-ceremony`),
     },
   ];
 

@@ -103,6 +103,16 @@ export async function Header({
 
           {/* Cart */}
           <CartButton />
+
+          {/* Clear Primary CTA Button */}
+          <div className="hidden sm:flex items-center ml-1 sm:ml-2">
+            <Button
+              asChild
+              className="rounded-full bg-[#a37947] hover:bg-[#8e6534] text-white text-sm font-medium px-5 h-9 shadow-xs hover:shadow transition-all duration-200 cursor-pointer"
+            >
+              <Link href={`${basePath}/products`}>Order Now</Link>
+            </Button>
+          </div>
         </>
       }
     />

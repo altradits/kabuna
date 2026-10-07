@@ -61,27 +61,25 @@ export function SearchToggle({
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center justify-between h-full w-full gap-2 lg:gap-4">
-            {/* Left section: mobile hamburger + Brand Logo */}
-            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          <div className="flex items-center justify-between h-full w-full gap-4 md:gap-6 lg:gap-8">
+            {/* Left section: mobile hamburger + Brand Logo + NavLinks */}
+            <div className="flex items-center gap-3 sm:gap-6 shrink-0">
               <div className="md:hidden">{left}</div>
               <div className="flex items-center min-w-0">{center}</div>
+              {navLinks && (
+                <div className="hidden md:flex items-center shrink-0">
+                  {navLinks}
+                </div>
+              )}
             </div>
 
-            {/* Desktop Navigation Links: Shop, Origins, Roasts, Ceremony, Wholesale */}
-            {navLinks && (
-              <div className="hidden md:flex items-center gap-0.5 lg:gap-1 shrink-0">
-                {navLinks}
-              </div>
-            )}
-
-            {/* Desktop Search Bar: Search... */}
-            <div className="hidden md:flex flex-1 max-w-xs lg:max-w-sm mx-1 lg:mx-3 min-w-[140px]">
+            {/* Desktop Search Bar */}
+            <div className="hidden md:flex flex-1 max-w-sm lg:max-w-md mx-2 lg:mx-4 min-w-[160px]">
               <SearchBar basePath={basePath} />
             </div>
 
-            {/* Right section: currency, account, search trigger (mobile), cart */}
-            <div className="flex items-center justify-end space-x-1 sm:space-x-2 shrink-0">
+            {/* Right section: currency, account, search trigger (mobile), cart, and clear CTA */}
+            <div className="flex items-center justify-end gap-2 sm:gap-3 lg:gap-4 shrink-0">
               {rightStart}
 
               {/* Mobile-only Search button */}
