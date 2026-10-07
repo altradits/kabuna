@@ -118,13 +118,13 @@ export async function Footer({ basePath, locale, categoryLinks }: FooterProps) {
           <p>
             &copy; <CurrentYear /> {storeName}. {t("poweredBy")}{" "}
             <Link
-              href="https://spreecommerce.org"
+              href="https://www.altradits.com"
               target="_blank"
+              rel="noopener noreferrer"
               className="text-neutral-400 hover:text-neutral-200 underline transition-colors"
             >
-              Spree Commerce
-            </Link>{" "}
-            & Next.js.
+              altradits
+            </Link>
           </p>
         </div>
       </div>
