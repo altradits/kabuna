@@ -63,69 +63,60 @@ export const ProductCard = memo(function ProductCard({
   };
 
   return (
-    <div className="group relative bg-white rounded-xl border border-stone-200/80 shadow-2xs hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col justify-between">
-      <div>
-        {/* Image */}
-        <div className="relative aspect-square bg-stone-100 overflow-hidden">
-          <ProductImage
-            src={imageUrl}
-            alt={product.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 300px"
-            iconClassName="w-16 h-16"
-            fetchPriority={fetchPriority}
-          />
-          {onSale && (
-            <span className="absolute top-2 left-2 bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 rounded shadow-xs">
-              {t("sale")}
-            </span>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="p-3.5 pb-2">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-amber-800 mb-1">
-            Ethiopian Specialty
-          </p>
-          <h3 className="text-sm font-bold text-stone-900 group-hover:text-amber-800 transition-colors line-clamp-1">
-            <Link
-              href={`${basePath}/products/${product.slug}${categoryId ? `?category_id=${categoryId}` : ""}`}
-              className="after:absolute after:inset-0"
-              onClick={handleClick}
-            >
-              {product.name}
-            </Link>
-          </h3>
-
-          <div className="mt-2 flex items-baseline gap-2">
-            {displayPrice ? (
-              <span className="text-base font-extrabold text-stone-900">
-                {displayPrice}
-              </span>
-            ) : (
-              <HiddenPricePrompt />
-            )}
-            {onSale && strikethroughPrice && (
-              <span className="text-xs text-stone-400 line-through">
-                {strikethroughPrice}
-              </span>
-            )}
-          </div>
-
-          {!product.purchasable && (
-            <span className="mt-1 text-xs text-stone-400 block font-medium">
-              {t("outOfStock")}
-            </span>
-          )}
-        </div>
+    <div className="group relative">
+      {/* Image */}
+      <div className="relative aspect-square bg-gray-100 rounded-md overflow-hidden">
+        <ProductImage
+          src={imageUrl}
+          alt={product.name}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 300px"
+          iconClassName="w-16 h-16"
+          fetchPriority={fetchPriority}
+        />
+        {onSale && (
+          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded">
+            {t("sale")}
+          </span>
+        )}
       </div>
 
-      {/* Buy Action Button */}
-      <div className="p-3.5 pt-0">
-        <div className="w-full mt-2 bg-stone-900 group-hover:bg-amber-900 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center transition-colors shadow-2xs">
-          <span>Buy</span>
+      {/* Content */}
+      <div className="p-4">
+        <h3 className="text-sm font-medium text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
+          {/* Stretched link: the ::after overlay keeps the whole card clickable
+              without wrapping the content in an <a> — HiddenPricePrompt renders
+              its own link, and anchors can't nest. */}
+          <Link
+            href={`${basePath}/products/${product.slug}${categoryId ? `?category_id=${categoryId}` : ""}`}
+            className="after:absolute after:inset-0"
+            onClick={handleClick}
+          >
+            {product.name}
+          </Link>
+        </h3>
+
+        <div className="mt-2 flex items-center gap-2">
+          {displayPrice ? (
+            <span className="text-lg font-semibold text-gray-900">
+              {displayPrice}
+            </span>
+          ) : (
+            // Null price: a deliberate hide inside a HiddenPricingProvider
+            // (renders a sign-in prompt), otherwise renders nothing.
+            <HiddenPricePrompt />
+          )}
+          {onSale && strikethroughPrice && (
+            <span className="text-sm text-gray-500 line-through">
+              {strikethroughPrice}
+            </span>
+          )}
         </div>
+
+        {!product.purchasable && (
+          <span className="mt-2 text-sm text-gray-500">{t("outOfStock")}</span>
+        )}
       </div>
     </div>
   );

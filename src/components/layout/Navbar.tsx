@@ -18,7 +18,6 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
   const isShopActive =
     pathname === `${basePath}/products` ||
     pathname.startsWith(`${basePath}/products/`);
-  const isWholesaleActive = pathname.startsWith(`${basePath}/wholesale`);
 
   const linkBaseClasses =
     "px-2.5 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm transition-all duration-150 whitespace-nowrap inline-flex items-center cursor-pointer";
@@ -66,15 +65,6 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
         }`}
       >
         <span>Ceremony</span>
-      </Link>
-
-      <Link
-        href={`${basePath}/wholesale`}
-        className={`${linkBaseClasses} ${
-          isWholesaleActive ? linkActiveClass : linkInactiveClasses
-        }`}
-      >
-        <span>Wholesale</span>
       </Link>
     </nav>
   );

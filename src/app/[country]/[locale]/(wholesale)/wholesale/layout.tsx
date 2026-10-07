@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { isWholesaleEnabled } from "@/lib/spree";
 
@@ -16,8 +16,14 @@ interface WholesaleLayoutProps {
  * 404s here in one place (PLP/PDP/cart/quick-order/apply), so a DTC-only
  * storefront never exposes a broken gate.
  */
-export default function WholesaleLayout({ children }: WholesaleLayoutProps) {
-  if (!isWholesaleEnabled()) notFound();
+export default async function WholesaleLayout({
+  children,
+  params,
+}: WholesaleLayoutProps) {
+  const { country, locale } = await params;
+  if (!isWholesaleEnabled()) {
+    redirect(`/${country}/${locale}/products`);
+  }
 
   return <div className="min-h-screen bg-slate-50">{children}</div>;
 }

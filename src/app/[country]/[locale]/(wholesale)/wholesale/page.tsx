@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ProductListing } from "@/components/products/ProductListing";
 import { resolveCurrency } from "@/lib/data/markets";
@@ -5,6 +6,7 @@ import {
   getWholesaleProductFilters,
   getWholesaleProducts,
 } from "@/lib/data/wholesale";
+import { isWholesaleEnabled } from "@/lib/spree";
 import { parseListingSearchParams } from "@/lib/utils/listing-search-params";
 import { WHOLESALE_MIN_QUANTITY } from "@/lib/wholesale";
 import { WholesaleGate } from "./_components/WholesaleGate";
@@ -19,6 +21,9 @@ export default async function WholesaleProductsPage({
   searchParams,
 }: WholesalePlpProps) {
   const { country, locale } = await params;
+  if (!isWholesaleEnabled()) {
+    redirect(`/${country}/${locale}/products`);
+  }
   const rawSearchParams = await searchParams;
   const basePath = `/${country}/${locale}/wholesale`;
   const currency = await resolveCurrency(country);

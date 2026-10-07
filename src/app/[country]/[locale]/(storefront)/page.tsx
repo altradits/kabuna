@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { EthiopianOriginsSection } from "@/components/home/EthiopianOriginsSection";
 import { FeaturedProductsSection } from "@/components/home/FeaturedProductsSection";
 import { HeroSection } from "@/components/home/HeroSection";
-import { WholesaleSection } from "@/components/home/WholesaleSection";
 import { resolveCurrency } from "@/lib/data/markets";
 import { generateHomeMetadata } from "@/lib/metadata/home";
 
@@ -35,7 +34,6 @@ export default async function HomePage({ params }: HomePageProps) {
         currency={currency}
       />
       <EthiopianOriginsSection basePath={basePath} />
-      <WholesaleSection basePath={basePath} locale={locale} />
     </div>
   );
 }
