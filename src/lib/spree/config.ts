@@ -24,15 +24,10 @@ export function initSpreeNext(config: SpreeNextConfig): void {
  */
 export function getClient(): Client {
   if (!_client) {
-    const baseUrl = process.env.SPREE_API_URL;
-    const publishableKey = process.env.SPREE_PUBLISHABLE_KEY;
-    if (baseUrl && publishableKey) {
-      initSpreeNext({ baseUrl, publishableKey });
-    } else {
-      throw new Error(
-        "Spree client is not configured. Either call initSpreeNext() or set SPREE_API_URL and SPREE_PUBLISHABLE_KEY environment variables.",
-      );
-    }
+    const baseUrl = process.env.SPREE_API_URL || "http://localhost:4000";
+    const publishableKey =
+      process.env.SPREE_PUBLISHABLE_KEY || "pk_SXHYJeEi5pAPgNmUnubs7wxR";
+    initSpreeNext({ baseUrl, publishableKey });
   }
   return _client!;
 }
