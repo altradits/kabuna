@@ -24,16 +24,6 @@ const LazyMobileMenu = dynamic(
   },
 );
 
-const LazyRegionPreferences = dynamic(
-  () =>
-    import("@/components/layout/RegionPreferences").then((mod) => ({
-      default: mod.RegionPreferences,
-    })),
-  {
-    loading: () => <div className="size-11" aria-hidden="true" />,
-  },
-);
-
 const storeName = getStoreName();
 
 interface HeaderProps {
@@ -85,11 +75,6 @@ export async function Header({
         </Link>
       }
       navLinks={<HeaderNavLinks basePath={basePath} />}
-      rightStart={
-        <div className="hidden md:flex items-center">
-          <LazyRegionPreferences variant="header" />
-        </div>
-      }
       rightEnd={
         <>
           {/* Account - desktop only */}

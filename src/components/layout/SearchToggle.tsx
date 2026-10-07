@@ -25,10 +25,10 @@ interface SearchToggleProps {
   left: ReactNode;
   /** Center slot (e.g. logo) */
   center: ReactNode;
-  /** Navigation links slot (e.g. Shop, Origins, Roasts, Ceremony, Wholesale) */
+  /** Navigation links slot (e.g. Shop, Wholesale) */
   navLinks?: ReactNode;
   /** Rendered before the search button in the right section */
-  rightStart: ReactNode;
+  rightStart?: ReactNode;
   /** Rendered after the search button in the right section */
   rightEnd: ReactNode;
 }
@@ -64,8 +64,8 @@ export function SearchToggle({
           <div className="flex items-center justify-between h-full w-full gap-4 md:gap-6 lg:gap-8">
             {/* Left section: mobile hamburger + Brand Logo + NavLinks */}
             <div className="flex items-center gap-3 sm:gap-6 shrink-0">
-              <div className="md:hidden">{left}</div>
-              <div className="flex items-center min-w-0">{center}</div>
+              <div className="md:hidden shrink-0">{left}</div>
+              <div className="flex items-center min-w-0 shrink-0">{center}</div>
               {navLinks && (
                 <div className="hidden md:flex items-center shrink-0">
                   {navLinks}
@@ -73,13 +73,13 @@ export function SearchToggle({
               )}
             </div>
 
-            {/* Desktop Search Bar */}
-            <div className="hidden md:flex flex-1 max-w-sm lg:max-w-md mx-2 lg:mx-4 min-w-[160px]">
-              <SearchBar basePath={basePath} />
-            </div>
+            {/* Right section: Desktop Search Bar (moved towards right) + account, cart, clear CTA */}
+            <div className="flex items-center justify-end gap-2.5 sm:gap-3 lg:gap-4 flex-1">
+              {/* Desktop Search Bar positioned towards the right */}
+              <div className="hidden md:flex w-full max-w-xs lg:max-w-sm mr-1 lg:mr-2">
+                <SearchBar basePath={basePath} />
+              </div>
 
-            {/* Right section: currency, account, search trigger (mobile), cart, and clear CTA */}
-            <div className="flex items-center justify-end gap-2 sm:gap-3 lg:gap-4 shrink-0">
               {rightStart}
 
               {/* Mobile-only Search button */}
