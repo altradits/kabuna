@@ -13,6 +13,7 @@ const EXCLUDED_FOOTER_PERMALINKS = new Set([
   "single-origin",
   "washed",
   "natural",
+  "buna-ceremony",
 ]);
 
 const EXCLUDED_FOOTER_NAMES = new Set([
@@ -20,6 +21,9 @@ const EXCLUDED_FOOTER_NAMES = new Set([
   "single origin",
   "washed process",
   "natural process",
+  "ceremony & accessories",
+  "buna ceremony & accessories",
+  "buna ceremony",
 ]);
 
 function InstagramIcon({ className = "size-4" }: { className?: string }) {
