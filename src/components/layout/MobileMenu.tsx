@@ -252,13 +252,6 @@ export function MobileMenu({
                   </Link>
                 ),
               )}
-              <Link
-                href={`${basePath}/#contact`}
-                onClick={() => setOpen(false)}
-                className={linkClass}
-              >
-                {t("contact")}
-              </Link>
               {/* Secondary links — kept out of the category list above. */}
               <div className="mt-2 pt-2 border-t border-gray-200">
                 {wholesaleEnabled && (

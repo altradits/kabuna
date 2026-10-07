@@ -61,14 +61,6 @@ export async function WholesaleSection({
               >
                 <Link href={`${basePath}/wholesale`}>Portal</Link>
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                asChild
-                className="border-slate-600 bg-transparent text-slate-100 hover:bg-slate-800 hover:text-white"
-              >
-                <Link href={`${basePath}/wholesale/apply`}>Apply</Link>
-              </Button>
             </div>
           </div>
 
