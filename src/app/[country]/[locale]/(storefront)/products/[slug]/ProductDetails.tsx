@@ -148,6 +148,24 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
     trackAddToCart(product, selectedVariant, quantity, currency);
   };
 
+  const getField = (k: string) =>
+    product.custom_fields?.find(
+      (f) =>
+        f.key === k ||
+        f.id.endsWith(`_${k}`) ||
+        f.label.toLowerCase().includes(k),
+    )?.value;
+
+  const tastingNotes = getField("notes");
+  const processMethod = getField("process");
+  const roastProfile = getField("roast");
+  const elevation = getField("altitude");
+  const region = getField("region");
+  const washingStation = getField("station");
+  const variety = getField("variety");
+  const cuppingScore = getField("score");
+  const qualityGrade = getField("grade");
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
@@ -166,6 +184,11 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight">
             {product.name}
           </h1>
+
+          {/* Subtitle / Region */}
+          {region && (
+            <p className="mt-1 text-sm font-medium text-amber-900">{region}</p>
+          )}
 
           {/* Price & Sale */}
           <div className="mt-3 flex items-baseline gap-3 flex-wrap">
@@ -198,6 +221,40 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               </span>
             )}
           </div>
+
+          {/* Tasting Notes & Coffee Highlights Box for Consumers */}
+          {tastingNotes && (
+            <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-amber-900">
+                Cupping Profile & Tasting Notes
+              </div>
+              <div className="text-base font-bold text-stone-900 mt-1">
+                {tastingNotes}
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {processMethod && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {processMethod}
+                  </span>
+                )}
+                {roastProfile && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {roastProfile}
+                  </span>
+                )}
+                {elevation && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {elevation}
+                  </span>
+                )}
+                {cuppingScore && (
+                  <span className="text-xs bg-amber-900 text-amber-50 px-3 py-1 rounded-full font-bold shadow-2xs">
+                    Score: {cuppingScore} pts
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Variant Picker */}
           {hasVariants && optionTypes.length > 0 && (
@@ -361,7 +418,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                         Country & Region
                       </dt>
                       <dd className="text-xs font-bold text-stone-900">
-                        Ethiopian Highlands
+                        {region || "Ethiopian Highlands"}
                       </dd>
                     </div>
                     <div>
@@ -369,7 +426,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                         Elevation
                       </dt>
                       <dd className="text-xs font-bold text-stone-900">
-                        1,850m – 2,300m
+                        {elevation || "1,850m – 2,300m"}
                       </dd>
                     </div>
                     <div>
@@ -377,7 +434,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                         Varietals
                       </dt>
                       <dd className="text-xs font-bold text-stone-900">
-                        100% Indigenous Heirloom
+                        {variety || "100% Indigenous Heirloom"}
                       </dd>
                     </div>
                     <div>
@@ -385,9 +442,39 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                         Quality Grade
                       </dt>
                       <dd className="text-xs font-bold text-stone-900">
-                        Specialty Grade
+                        {qualityGrade || "Specialty Grade"}
                       </dd>
                     </div>
+                    {processMethod && (
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Process
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {processMethod}
+                        </dd>
+                      </div>
+                    )}
+                    {cuppingScore && (
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Cupping Score
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {cuppingScore}
+                        </dd>
+                      </div>
+                    )}
+                    {washingStation && (
+                      <div className="col-span-2">
+                        <dt className="text-xs font-medium text-stone-500">
+                          Washing Station / Mill
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {washingStation}
+                        </dd>
+                      </div>
+                    )}
                   </dl>
                 </div>
               )}

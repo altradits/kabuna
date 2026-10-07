@@ -1,7 +1,10 @@
 import type {
   Category,
+  CustomField,
   Market,
   Media,
+  OptionType,
+  OptionValue,
   Price,
   Product,
   Variant,
@@ -59,70 +62,54 @@ export function createMedia(
   };
 }
 
-export const DEFAULT_COFFEE_IMAGE =
-  "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80";
+export const DEFAULT_COFFEE_IMAGE = "/images/products/chelbesa.jpg";
 
 export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
-  yirgacheffe: [
+  chelbesa: [
+    "/images/products/chelbesa.jpg",
     "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1200&q=85",
   ],
-  guji: [
+  hamasho: [
+    "/images/products/hamasho.jpg",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  "dimtu-tora": [
+    "/images/products/dimtu-tora.jpg",
     "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85",
+  ],
+  "benti-neka": [
+    "/images/products/benti-neka.jpg",
+    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=85",
   ],
-  sidama: [
-    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
-  ],
-  harrar: [
+  "worku-buche": [
+    "/images/products/worku-buche.jpg",
     "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
   ],
-  kaffa: [
-    "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
-  ],
-  limu: [
+  uraga: [
+    "/images/products/uraga.jpg",
     "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
-  ],
-  djimmah: [
-    "https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
   ],
   ceremony: [
     "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
-  ],
-  espresso: [
-    "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
-  ],
-  drip: [
-    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85",
-    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
   ],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (!slugOrName) return null;
   const s = slugOrName.toLowerCase();
-  if (s.includes("yirga")) return "yirgacheffe";
-  if (s.includes("guji")) return "guji";
-  if (s.includes("sidam")) return "sidama";
-  if (s.includes("harrar") || s.includes("harar")) return "harrar";
-  if (s.includes("kaffa")) return "kaffa";
-  if (s.includes("limu")) return "limu";
-  if (s.includes("djimmah") || s.includes("jimma")) return "djimmah";
+  if (s.includes("chelbesa")) return "chelbesa";
+  if (s.includes("hamasho")) return "hamasho";
+  if (s.includes("dimtu") || s.includes("tora")) return "dimtu-tora";
+  if (s.includes("benti") || s.includes("neka")) return "benti-neka";
+  if (s.includes("worku") || s.includes("buche")) return "worku-buche";
+  if (s.includes("uraga")) return "uraga";
   if (
     s.includes("ceremony") ||
     s.includes("jebena") ||
@@ -130,10 +117,6 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
     s.includes("kit")
   )
     return "ceremony";
-  if (s.includes("espresso")) return "espresso";
-  if (s.includes("drip") || s.includes("maker")) return "drip";
-  if (s.includes("coffee") || s.includes("bean") || s.includes("roast"))
-    return "yirgacheffe";
   return null;
 }
 
@@ -151,7 +134,7 @@ export function getCoffeeGalleryImages(slugOrName?: string | null): string[] {
 
 export function getCoffeeGallery(
   slugOrName?: string | null,
-  productName = "Kabuna Ethiopian Coffee",
+  productName = "Kabuna Ethiopian Specialty Coffee",
   productId = "prod",
 ): Media[] {
   const images = getCoffeeGalleryImages(slugOrName);
@@ -189,18 +172,144 @@ export function enrichProductWithImages<T extends Partial<Product>>(
   };
 }
 
-export function createVariant(id: string, sku: string, cents: number): Variant {
+/* =========================================================================
+   Option Types & Option Values (Bag Size & Grind Options)
+   ========================================================================= */
+
+export const OPTION_TYPE_BAG_SIZE: OptionType = {
+  id: "opt_bag_size",
+  name: "bag_size",
+  label: "Bag Size",
+  position: 1,
+  kind: "buttons",
+};
+
+export const OPTION_TYPE_GRIND: OptionType = {
+  id: "opt_grind",
+  name: "grind",
+  label: "Grind Option",
+  position: 2,
+  kind: "buttons",
+};
+
+export const BAG_SIZES: OptionValue[] = [
+  {
+    id: "ov_size_250g",
+    option_type_id: "opt_bag_size",
+    name: "250g",
+    label: "250g (8.8 oz)",
+    position: 1,
+    color_code: null,
+    option_type_name: "bag_size",
+    option_type_label: "Bag Size",
+    image_url: null,
+  },
+  {
+    id: "ov_size_500g",
+    option_type_id: "opt_bag_size",
+    name: "500g",
+    label: "500g (1.1 lb)",
+    position: 2,
+    color_code: null,
+    option_type_name: "bag_size",
+    option_type_label: "Bag Size",
+    image_url: null,
+  },
+  {
+    id: "ov_size_1kg",
+    option_type_id: "opt_bag_size",
+    name: "1kg",
+    label: "1kg (2.2 lb)",
+    position: 3,
+    color_code: null,
+    option_type_name: "bag_size",
+    option_type_label: "Bag Size",
+    image_url: null,
+  },
+];
+
+export const GRIND_OPTIONS: OptionValue[] = [
+  {
+    id: "ov_grind_whole",
+    option_type_id: "opt_grind",
+    name: "whole_bean",
+    label: "Whole Bean",
+    position: 1,
+    color_code: null,
+    option_type_name: "grind",
+    option_type_label: "Grind Option",
+    image_url: null,
+  },
+  {
+    id: "ov_grind_filter",
+    option_type_id: "opt_grind",
+    name: "filter_pour_over",
+    label: "Filter / Pour-Over",
+    position: 2,
+    color_code: null,
+    option_type_name: "grind",
+    option_type_label: "Grind Option",
+    image_url: null,
+  },
+  {
+    id: "ov_grind_espresso",
+    option_type_id: "opt_grind",
+    name: "espresso",
+    label: "Espresso",
+    position: 3,
+    color_code: null,
+    option_type_name: "grind",
+    option_type_label: "Grind Option",
+    image_url: null,
+  },
+  {
+    id: "ov_grind_press",
+    option_type_id: "opt_grind",
+    name: "french_press",
+    label: "French Press",
+    position: 4,
+    color_code: null,
+    option_type_name: "grind",
+    option_type_label: "Grind Option",
+    image_url: null,
+  },
+];
+
+function createCustomField(
+  id: string,
+  label: string,
+  key: string,
+  value: string,
+): CustomField {
+  return {
+    id,
+    label,
+    key,
+    value,
+    type: "Spree::CustomFields::ShortText",
+    field_type: "short_text",
+  };
+}
+
+export function createVariant(
+  id: string,
+  sku: string,
+  cents: number,
+  optionValues: OptionValue[] = [],
+  optionsText = "",
+  weight = 0.25,
+): Variant {
   const price = createPrice(cents);
   return {
     id,
     product_id: "",
     sku,
-    options_text: "",
+    options_text: optionsText,
     track_inventory: true,
     media_count: 0,
     preorder_ships_at: null,
     thumbnail_url: null,
-    weight: 0.25,
+    weight,
     height: null,
     width: null,
     depth: null,
@@ -217,7 +326,7 @@ export function createVariant(id: string, sku: string, cents: number): Variant {
     price,
     original_price: price,
     seller_id: null,
-    option_values: [],
+    option_values: optionValues,
     custom_fields: [],
     media: [],
   };
@@ -322,73 +431,167 @@ export const KABUNA_CATEGORIES: Category[] = [
       ),
       createCategory(
         "cat_sidama",
-        "Sidama (Sidamo)",
+        "Sidama",
         "single-origin/sidama",
         "Sun-dried strawberry, milk chocolate, and cane sugar.",
-      ),
-      createCategory(
-        "cat_harrar",
-        "Harrar Longberry",
-        "single-origin/harrar",
-        "Wild blueberry mocha sweetness and rich body.",
-      ),
-      createCategory(
-        "cat_limu_kaffa",
-        "Limu & Kaffa Ancient Forest",
-        "single-origin/limu-kaffa",
-        "From the historic botanical origin of Arabica in Kaffa.",
       ),
     ],
   ),
   createCategory(
-    "cat_roast_profiles",
-    "Roast Profiles",
-    "roast-profiles",
-    "Artisanal roast levels calibrated to enhance natural origin characteristics.",
+    "cat_washed",
+    "Washed Process",
+    "washed",
+    "Pristine mountain spring water fermentation showcasing delicate florals and bright clarity.",
+  ),
+  createCategory(
+    "cat_natural",
+    "Natural Process",
+    "natural",
+    "Sun-dried whole coffee cherries on raised African beds with intense fruit sweetness.",
   ),
   createCategory(
     "cat_ceremony",
-    "Buna Ceremony & Accessories",
+    "Ceremony & Accessories",
     "buna-ceremony",
     "Authentic clay Jebena pots, Cini cups, and traditional accessories for Ethiopian Buna Tetu.",
   ),
-  createCategory(
-    "cat_green_coffee",
-    "Green Coffee (Unroasted)",
-    "green-coffee",
-    "Direct-trade raw green coffee beans for craft roasters and home roasting.",
-  ),
 ];
 
-function createProduct(
-  id: string,
-  name: string,
-  slug: string,
-  description: string,
-  cents: number,
-  imageUrl: string,
-  categories: Category[],
-  compareAtCents: number | null = null,
-  extraVariants: Variant[] = [],
-): Product {
-  const price = createPrice(cents, compareAtCents);
-  const gallery = getCoffeeGallery(slug, name, id);
-  const mediaItem = gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
-  const defaultVariant = createVariant(
-    `var_${id}_default`,
-    `KBN-${slug}-250G`,
-    cents,
+interface CoffeeSpecProps {
+  id: string;
+  name: string; // The single featured name
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  imageUrl: string;
+  categories: Category[];
+  specs: {
+    region: string;
+    station: string;
+    altitude: string;
+    variety: string;
+    process: string;
+    grade: string;
+    roast: string;
+    score: string;
+    notes: string;
+    acidity: string;
+    body: string;
+    harvest: string;
+  };
+}
+
+function buildCoffeeProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  imageUrl,
+  categories,
+  specs,
+}: CoffeeSpecProps): Product {
+  const price = createPrice(baseCents);
+  const gallery = getCoffeeGallery(
+    slug,
+    `${name} Ethiopian Specialty Coffee`,
+    id,
   );
-  const allVariants = [defaultVariant, ...extraVariants];
+  const primaryMedia =
+    gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
+
+  // Generate variants for 3 sizes × 4 grind types = 12 variants
+  const variants: Variant[] = [];
+  const sizeMultipliers: Record<
+    string,
+    { multiplier: number; weight: number }
+  > = {
+    "250g": { multiplier: 1.0, weight: 0.25 },
+    "500g": { multiplier: 1.8, weight: 0.5 },
+    "1kg": { multiplier: 3.3, weight: 1.0 },
+  };
+
+  for (const size of BAG_SIZES) {
+    const { multiplier, weight } = sizeMultipliers[size.name] || {
+      multiplier: 1.0,
+      weight: 0.25,
+    };
+    const variantCents = Math.round(baseCents * multiplier);
+
+    for (const grind of GRIND_OPTIONS) {
+      const variantId = `var_${id}_${size.name}_${grind.name}`;
+      const sku = `KBN-${slug.toUpperCase()}-${size.name.toUpperCase()}-${grind.name.toUpperCase()}`;
+      const optionsText = `${size.label}, ${grind.label}`;
+      variants.push(
+        createVariant(
+          variantId,
+          sku,
+          variantCents,
+          [size, grind],
+          optionsText,
+          weight,
+        ),
+      );
+    }
+  }
+
+  const defaultVariant = variants[0];
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_region`,
+      "Region & Origin",
+      "region",
+      specs.region,
+    ),
+    createCustomField(
+      `cf_${id}_station`,
+      "Washing Station / Mill",
+      "station",
+      specs.station,
+    ),
+    createCustomField(
+      `cf_${id}_altitude`,
+      "Elevation",
+      "altitude",
+      specs.altitude,
+    ),
+    createCustomField(
+      `cf_${id}_variety`,
+      "Variety / Cultivars",
+      "variety",
+      specs.variety,
+    ),
+    createCustomField(
+      `cf_${id}_process`,
+      "Processing Method",
+      "process",
+      specs.process,
+    ),
+    createCustomField(`cf_${id}_grade`, "Quality Grade", "grade", specs.grade),
+    createCustomField(`cf_${id}_roast`, "Roast Profile", "roast", specs.roast),
+    createCustomField(`cf_${id}_score`, "Cupping Score", "score", specs.score),
+    createCustomField(`cf_${id}_notes`, "Tasting Notes", "notes", specs.notes),
+    createCustomField(`cf_${id}_acidity`, "Acidity", "acidity", specs.acidity),
+    createCustomField(`cf_${id}_body`, "Mouthfeel & Body", "body", specs.body),
+    createCustomField(
+      `cf_${id}_harvest`,
+      "Harvest Season",
+      "harvest",
+      specs.harvest,
+    ),
+  ];
 
   return {
     id,
     name,
     slug,
-    meta_title: `${name} | Kabuna Ethiopian Coffee`,
-    meta_description: description,
-    meta_keywords: `Ethiopian specialty coffee, ${name}`,
-    variant_count: allVariants.length,
+    meta_title: `${name} | Kabuna Ethiopian Specialty Coffee`,
+    meta_description: subtitle,
+    meta_keywords: `Ethiopian specialty coffee, ${name}, ${specs.region}, ${specs.variety}, ${specs.process}`,
+    variant_count: variants.length,
     available_on: "2024-01-01T00:00:00.000Z",
     preorder_ships_at: null,
     purchasable: true,
@@ -401,99 +604,275 @@ function createProduct(
     default_variant_id: defaultVariant.id,
     buy_box_variant_id: defaultVariant.id,
     thumbnail_url: imageUrl,
-    tags: ["Ethiopian Specialty Coffee", "Single Origin", "Direct Trade"],
+    tags: [
+      "Ethiopian Specialty Coffee",
+      specs.region,
+      specs.variety,
+      specs.process,
+      "Direct Trade",
+    ],
     price,
     original_price: price,
     seller_id: null,
-    primary_media: mediaItem,
+    primary_media: primaryMedia,
     media: gallery,
-    variants: allVariants,
+    variants,
     default_variant: defaultVariant,
-    option_types: [],
-    option_values: [],
+    option_types: [OPTION_TYPE_BAG_SIZE, OPTION_TYPE_GRIND],
+    option_values: [...BAG_SIZES, ...GRIND_OPTIONS],
     categories,
-    custom_fields: [],
+    custom_fields: customFields,
     prior_price: null,
   };
 }
 
 export const KABUNA_PRODUCTS: Product[] = [
-  createProduct(
-    "prod_yirgacheffe",
-    "Yirgacheffe Misty Valley Natural",
-    "yirgacheffe-misty-valley-grade-1",
-    "Hand-picked from smallholder plots in the high-elevation Gedeo zone (1,950m - 2,200m). Dried slowly on raised African beds under mountain mist and sunshine. Features intoxicating jasmine aromas, bright bergamot tea, and luscious blueberry finish. Roasted light-medium to preserve its aromatic delicacy.",
-    2200,
-    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0]],
-    null,
-    [
-      createVariant("var_yirgacheffe_500g", "KBN-YIR-500G", 4000),
-      createVariant("var_yirgacheffe_1kg", "KBN-YIR-1KG", 7400),
-    ],
-  ),
-  createProduct(
-    "prod_guji",
-    "Guji Highland Amber Washed",
-    "guji-highland-amber-grade-1",
-    "Grown in deep red volcanic soils across the majestic forested ridges of Shakiso and Uraga at 2,050 - 2,300 meters. Washed in mountain spring waters. Exceptionally clean and tea-like with notes of orange blossom honey, white peach, and fresh lemon verbena.",
-    2400,
-    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0]],
-  ),
-  createProduct(
-    "prod_sidama",
-    "Sidama Bensa Sun-Dried",
-    "sidama-bensa-sun-dried-grade-1",
-    "A stunning micro-lot from generational farmers in Bensa, Sidama. Ripe cherries are meticulously hand-sorted before laying on raised beds for 21 days. Deep and jammy sweetness, reminiscent of ripe strawberry compote, milk chocolate, and unrefined cane sugar.",
-    2100,
-    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0]],
-  ),
-  createProduct(
-    "prod_harrar",
-    "Harrar Wild Horse (Heirloom Longberry)",
-    "harrar-wild-horse-longberry",
-    "Cultivated on the arid slopes of eastern Harar where coffee has grown wild for centuries. Celebrated for distinctive elongated 'Longberry' genetics and heavy syrupy body. Intense natural notes of sun-ripened blueberry, baker's cocoa, and exotic cardamom spice.",
-    2300,
-    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0]],
-  ),
-  createProduct(
-    "prod_kaffa",
-    "Kaffa Ancient Forest (Wild Harvested)",
-    "kaffa-ancient-wild-forest",
-    "Harvested directly from wild ancient mother trees in the UNESCO Kaffa Biosphere Reserve — the botanical origin where Arabica coffee was discovered. This sacred coffee offers deep notes of wild blackberries, cardamom, cloves, and dried fig.",
-    2600,
-    "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0]],
-  ),
-  createProduct(
-    "prod_limu",
-    "Limu Forest Reserve Washed",
-    "limu-forest-reserve-washed",
-    "Sourced from the lush cloud forests of Limu Kosa, southwestern Ethiopia. Pure spring water washing yields sweet baked apple notes, cedar, toffee, and a round, silky mouthfeel with gentle malic acidity.",
-    2000,
-    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0]],
-  ),
-  createProduct(
-    "prod_djimmah",
-    "Djimmah Traditional Roast (Heritage Blend)",
-    "djimmah-traditional-roast-heritage",
-    "Crafted specifically for stove-top Jebena brewing, Moka pot, and full-bodied espresso. Dark roasted Ethiopian heirloom beans offering thick body, rich dark chocolate, roasted almond, and sweet molasses.",
-    1900,
-    "https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
-  ),
-  createProduct(
-    "prod_buna_ceremony_kit",
-    "Ethiopian Buna Ceremony Starter Kit",
-    "ethiopian-buna-ceremony-starter-kit",
-    "Experience the warmth and connection of an authentic Ethiopian coffee ceremony at home. Kit includes a hand-turned Ethiopian clay Jebena pot, 6 hand-painted porcelain Cini cups and saucers, traditional straw woven Rekebot mat, unroasted green heirloom coffee beans (250g), and natural frankincense incense.",
-    6800,
-    "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
-    [KABUNA_CATEGORIES[2]],
-    7800,
-  ),
+  // 1. Chelbesa (Yirgacheffe Washed)
+  buildCoffeeProduct({
+    id: "prod_chelbesa",
+    name: "Chelbesa",
+    slug: "chelbesa",
+    subtitle: "Yirgacheffe Washed G1 • Jasmine, White Peach, Bergamot",
+    description:
+      "Chelbesa is sourced from smallholder family plots in the famed Chelbesa Kebele within the high-elevation Gedeo Zone (Yirgacheffe). Grown between 1,950 and 2,200 meters above sea level, indigenous Kurume and Dega heirloom cultivars flourish in rich red-brown clay soil under semi-forest shade. Processed using ceramic fermentation tanks that stabilize temperatures during the 36-hour wet fermentation, then slow-dried on raised African beds for 14 days. The cup reveals an ethereal, crystal-clear profile of white jasmine floral aromatics, juicy white peach, candied lemon, and a silky black-tea finish.",
+    baseCents: 2200,
+    imageUrl: "/images/products/chelbesa.jpg",
+    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
+    specs: {
+      region: "Yirgacheffe, Gedeo Zone (Chelbesa Kebele)",
+      station: "Chelbesa Wet Mill (Ceramic Fermentation)",
+      altitude: "1,950m – 2,200m MASL",
+      variety: "Kurume & Dega Heirloom",
+      process: "Fully Washed (Ceramic Fermentation)",
+      grade: "Grade 1 Specialty",
+      roast: "Light Roast (Floral & Bright)",
+      score: "88.5",
+      notes: "Jasmine Blossom, White Peach, Bergamot, Candied Lemon",
+      acidity: "Vibrant Citric & Delicate Malic",
+      body: "Silky, Tea-Like, Pristine Clean",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 2. Hamasho (Sidama Natural)
+  buildCoffeeProduct({
+    id: "prod_hamasho",
+    name: "Hamasho",
+    slug: "hamasho",
+    subtitle:
+      "Sidama Natural G1 • Blueberry Compote, Wild Lavender, Dark Honey",
+    description:
+      "Hamasho is an extraordinary natural micro-lot from the Bura Hamasho mill in the high mountain ridges of the Sidama Zone, perched at staggering elevations between 2,100 and 2,300 meters. Generational growers cultivate regional JARC 74110 and 74112 heirloom selections, rigorously hand-sorting cherries for peak ripeness. The whole cherries dry naturally under mountain sun on raised ventilated beds for 21 days with hourly hand-turning. Hamasho exemplifies peak Ethiopian natural processing: an explosion of lush blueberry compote, lavender blossoms, dried apricot, and raw dark honey, supported by a velvety winey mouthfeel.",
+    baseCents: 2300,
+    imageUrl: "/images/products/hamasho.jpg",
+    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[2]],
+    specs: {
+      region: "Sidama Zone (Bura Hamasho Mill)",
+      station: "Bura Hamasho Mill",
+      altitude: "2,100m – 2,300m MASL",
+      variety: "JARC 74110 & 74112 Heirloom",
+      process: "Sun-Dried Natural (Raised Beds)",
+      grade: "Grade 1 Specialty",
+      roast: "Light-Medium Roast (Fruity & Sweet)",
+      score: "89.0",
+      notes: "Blueberry Compote, Wild Lavender, Dried Apricot, Dark Honey",
+      acidity: "Complex Winey & Juicy",
+      body: "Velvety, Syrupy & Full",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 3. Dimtu Tora (Guji Anaerobic Natural)
+  buildCoffeeProduct({
+    id: "prod_dimtu_tora",
+    name: "Dimtu Tora",
+    slug: "dimtu-tora",
+    subtitle:
+      "Guji Anaerobic Natural G1 • Wild Strawberry, Red Hibiscus, Milk Chocolate",
+    description:
+      "Dimtu Tora is an organic specialty lot from the Hambela Wamena woreda of the Guji Zone, grown at altitudes ranging from 1,900 to 2,300 meters. Smallholders in this highland enclave hand-pick heirloom Bedessa and Gibirinna varieties from deep semi-forest plots. Processed using a slow anaerobic dry maceration before transferring to raised beds, Dimtu Tora delivers an electrifying and intensely aromatic cup. The profile overflows with ripe wild strawberries, tart red hibiscus flower, tropical papaya, and passionfruit, culminating in a creamy milk chocolate and raw cacao finish.",
+    baseCents: 2400,
+    imageUrl: "/images/products/dimtu-tora.jpg",
+    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[2]],
+    specs: {
+      region: "Guji Zone (Hambela Wamena)",
+      station: "Dimtu Tora Washing Station",
+      altitude: "1,900m – 2,300m MASL",
+      variety: "Bedessa & Gibirinna Heirloom",
+      process: "Anaerobic Natural (Slow Maceration)",
+      grade: "Grade 1 (Certified Organic)",
+      roast: "Light Roast (Intense & Complex)",
+      score: "88.75",
+      notes: "Wild Strawberry, Red Hibiscus, Papaya, Milk Chocolate",
+      acidity: "Bright Phosphoric & Tropical",
+      body: "Creamy, Round & Resonant",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 4. Benti Neka (West Guji Washed)
+  buildCoffeeProduct({
+    id: "prod_benti_neka",
+    name: "Benti Neka",
+    slug: "benti-neka",
+    subtitle: "West Guji Washed G1 • Meyer Lemon, Wildflower Honey, Crisp Pear",
+    description:
+      "Benti Neka is produced at the acclaimed Benti Neka washing station in West Guji, surrounded by virgin forest and pristine mountain river springs at 2,000 to 2,250 meters altitude. This lot consists of certified organic Kurume and 74110 heirloom varieties meticulously pulped, fermented for 48 hours in cold mountain water, and washed twice through serpentine grading channels. Benti Neka is renowned for its crystalline cup clarity and sparkling balance, delivering notes of sweet Meyer lemon, wildflower honey, crisp Anjou pear, ginger blossom, and a lingering botanical finish.",
+    baseCents: 2250,
+    imageUrl: "/images/products/benti-neka.jpg",
+    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
+    specs: {
+      region: "West Guji Zone (Benti Neka Station)",
+      station: "Benti Neka Washing Station",
+      altitude: "2,000m – 2,250m MASL",
+      variety: "Kurume & 74110 Heirloom",
+      process: "Fully Washed (Channel Graded)",
+      grade: "Grade 1 (Certified Organic)",
+      roast: "Light Roast (Crisp & Clean)",
+      score: "87.75",
+      notes: "Meyer Lemon, Wildflower Honey, Crisp Anjou Pear, Ginger Blossom",
+      acidity: "Sparkling, Effervescent & Balanced",
+      body: "Crisp, Delicate & Refreshing",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 5. Worku Buche (Sidama Natural)
+  buildCoffeeProduct({
+    id: "prod_worku_buche",
+    name: "Worku Buche",
+    slug: "worku-buche",
+    subtitle: "Sidama Natural G1 • Concord Grape, Dark Cherry, Cacao Nibs",
+    description:
+      "Worku Buche is an authentic single-producer natural micro-lot from the Kadela wet mill in the Aroresa woreda, situated on the remote eastern mountain ridge of Sidama at 2,000 to 2,150 meters. Harvested from old-growth indigenous landrace trees shaded by Ensete (false banana) and native acacias, the cherries are slowly dried whole in single layers to ensure uniform drying. The resulting cup delivers a deep, satisfying sweetness dominated by sweet Concord grape, dark Rainier cherry, orange blossom, and raw cacao nibs, supported by a thick, velvety mouthfeel.",
+    baseCents: 2150,
+    imageUrl: "/images/products/worku-buche.jpg",
+    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[2]],
+    specs: {
+      region: "Sidama Zone (Aroresa Woreda, Kadela)",
+      station: "Kadela Mill (Worku Buche Lot)",
+      altitude: "2,000m – 2,150m MASL",
+      variety: "Indigenous Heirloom Landraces",
+      process: "Sun-Dried Natural (Single Layer)",
+      grade: "Grade 1 Specialty",
+      roast: "Medium-Light Roast (Rich & Syrupy)",
+      score: "88.25",
+      notes: "Concord Grape, Dark Rainier Cherry, Orange Blossom, Raw Cacao",
+      acidity: "Smooth & Balanced Malic",
+      body: "Heavy, Syrupy & Velvety",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 6. Uraga (Guji High-Altitude Washed)
+  buildCoffeeProduct({
+    id: "prod_uraga",
+    name: "Uraga",
+    slug: "uraga",
+    subtitle: "Guji Washed G1 • Orange Marmalade, Honeysuckle, Red Apple",
+    description:
+      "Uraga is harvested from extreme high-altitude smallholdings scaling up to 2,350 meters on the slopes of Kuri Mountain in the Uraga woreda of Guji. At these freezing night temperatures, coffee cherries mature at a dramatically slowed pace, condensing sugar and aromatic complexity into dense, compact beans of Dega and Wolisho varieties. Washed in pure high-altitude glacial springs, Uraga expresses a luminous citrus-and-floral profile: orange marmalade, honeysuckle nectar, crisp red Honeycrisp apple, and raw turbinado cane sugar, concluding with an immaculate, sparkling finish.",
+    baseCents: 2350,
+    imageUrl: "/images/products/uraga.jpg",
+    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
+    specs: {
+      region: "Guji Zone (Uraga District, Kuri Mountain)",
+      station: "Kuri Mountain Washing Station",
+      altitude: "2,150m – 2,350m MASL",
+      variety: "Dega & Wolisho Heirloom",
+      process: "High-Altitude Glacial Washed",
+      grade: "Grade 1 Specialty",
+      roast: "Light Roast (Floral & Sweet)",
+      score: "88.5",
+      notes: "Orange Marmalade, Honeysuckle Nectar, Red Apple, Turbinado Sugar",
+      acidity: "Crystalline Tartaric & Citric",
+      body: "Smooth, Silky & Elegant",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 7. Jebena Ceremony Kit (Buna Ceremony Accessories)
+  (() => {
+    const kitPrice = createPrice(6800, 7800);
+    const kitMedia = createMedia(
+      "media_ceremony_kit_1",
+      "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
+      "Traditional Ethiopian Buna Ceremony Starter Kit",
+    );
+    const kitVariant = createVariant(
+      "var_ceremony_kit_default",
+      "KBN-CEREMONY-KIT",
+      6800,
+      [],
+      "Standard Kit",
+      2.5,
+    );
+
+    const kitCustomFields: CustomField[] = [
+      createCustomField(
+        "cf_kit_items",
+        "Included Items",
+        "items",
+        "Clay Jebena Pot, 6 Cini Cups & Saucers, Straw Rekebot Mat, 250g Green Coffee, Frankincense",
+      ),
+      createCustomField(
+        "cf_kit_origin",
+        "Craft Origin",
+        "origin",
+        "Hand-Turned Clay & Hand-Painted Ceramic from Addis Ababa",
+      ),
+      createCustomField(
+        "cf_kit_material",
+        "Materials",
+        "material",
+        "Natural Ethiopian Terra Cotta Clay & Porcelain",
+      ),
+      createCustomField(
+        "cf_kit_capacity",
+        "Pot Capacity",
+        "capacity",
+        "800ml (Serves 6–8 traditional servings)",
+      ),
+    ];
+
+    return {
+      id: "prod_buna_ceremony_kit",
+      name: "Jebena Ceremony Kit",
+      slug: "jebena-buna-ceremony-kit",
+      meta_title: "Jebena Ceremony Kit | Kabuna Ethiopian Specialty Coffee",
+      meta_description:
+        "Authentic Ethiopian Buna Ceremony Kit with handcrafted clay Jebena pot, 6 porcelain Cini cups, and Rekebot mat.",
+      meta_keywords:
+        "Buna ceremony, Jebena pot, Cini cups, Rekebot, Ethiopian coffee ritual",
+      variant_count: 1,
+      available_on: "2024-01-01T00:00:00.000Z",
+      preorder_ships_at: null,
+      purchasable: true,
+      preorder: false,
+      in_stock: true,
+      backorderable: false,
+      available: true,
+      description:
+        "Experience the warmth, hospitality, and sacred tradition of an authentic Ethiopian Buna Tetu ceremony at home. This heirloom kit includes a hand-turned Ethiopian clay Jebena pot, 6 hand-painted porcelain Cini cups and saucers, a traditional straw woven Rekebot mat, unroasted green heirloom coffee beans (250g), and natural frankincense incense.",
+      description_html:
+        "<p>Experience the warmth, hospitality, and sacred tradition of an authentic Ethiopian Buna Tetu ceremony at home. This heirloom kit includes a hand-turned Ethiopian clay Jebena pot, 6 hand-painted porcelain Cini cups and saucers, a traditional straw woven Rekebot mat, unroasted green heirloom coffee beans (250g), and natural frankincense incense.</p>",
+      default_variant_id: kitVariant.id,
+      buy_box_variant_id: kitVariant.id,
+      thumbnail_url:
+        "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
+      tags: ["Buna Ceremony", "Jebena", "Accessories", "Traditional Ritual"],
+      price: kitPrice,
+      original_price: createPrice(7800),
+      seller_id: null,
+      primary_media: kitMedia,
+      media: [kitMedia],
+      variants: [kitVariant],
+      default_variant: kitVariant,
+      option_types: [],
+      option_values: [],
+      categories: [KABUNA_CATEGORIES[3]],
+      custom_fields: kitCustomFields,
+      prior_price: null,
+    };
+  })(),
 ];

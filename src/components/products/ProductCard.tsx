@@ -84,7 +84,7 @@ export const ProductCard = memo(function ProductCard({
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="text-sm font-medium text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
+        <h3 className="text-sm font-semibold text-stone-900 group-hover:text-amber-900 transition-colors">
           {/* Stretched link: the ::after overlay keeps the whole card clickable
               without wrapping the content in an <a> — HiddenPricePrompt renders
               its own link, and anchors can't nest. */}
@@ -96,6 +96,12 @@ export const ProductCard = memo(function ProductCard({
             {product.name}
           </Link>
         </h3>
+
+        {product.meta_description && (
+          <p className="mt-1 text-xs text-stone-500 line-clamp-1">
+            {product.meta_description}
+          </p>
+        )}
 
         <div className="mt-2 flex items-center gap-2">
           {displayPrice ? (
