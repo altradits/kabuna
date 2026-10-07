@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { EthiopianOriginsSection } from "@/components/home/EthiopianOriginsSection";
 import { FeaturedProductsSection } from "@/components/home/FeaturedProductsSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { resolveCurrency } from "@/lib/data/markets";
@@ -33,7 +32,6 @@ export default async function HomePage({ params }: HomePageProps) {
         country={country}
         currency={currency}
       />
-      <EthiopianOriginsSection basePath={basePath} />
     </div>
   );
 }

@@ -40,7 +40,7 @@ export async function FeaturedProductsSection({
           {t("featuredProducts")}
         </h2>
         <Button variant="link" asChild>
-          <Link href={`${basePath}/products`}>All &rarr;</Link>
+          <Link href={`${basePath}/products`}>{t("viewAll")} &rarr;</Link>
         </Button>
       </div>
       <Suspense fallback={<CarouselSkeleton />}>
