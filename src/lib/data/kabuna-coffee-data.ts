@@ -95,9 +95,35 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
     "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
   ],
-  ceremony: [
+  // Traditional Ethiopian Buna Ceremony Accessories
+  jebena: [
+    "/images/ceremony/jebena.jpg",
     "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=85",
+  ],
+  cini: [
+    "/images/ceremony/cini.jpg",
     "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+  ],
+  rekebot: [
+    "/images/ceremony/rekebot.jpg",
+    "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=85",
+  ],
+  girgira: [
+    "/images/ceremony/girgira.jpg",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+  ],
+  menkeskesha: [
+    "/images/ceremony/menkeskesha.jpg",
+    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  mukecha: [
+    "/images/ceremony/mukecha.jpg",
+    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  "ceremony-kit": [
+    "/images/ceremony/ceremony-kit.jpg",
+    "/images/ceremony/jebena.jpg",
+    "/images/ceremony/cini.jpg",
   ],
 };
 
@@ -110,13 +136,18 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("benti") || s.includes("neka")) return "benti-neka";
   if (s.includes("worku") || s.includes("buche")) return "worku-buche";
   if (s.includes("uraga")) return "uraga";
-  if (
-    s.includes("ceremony") ||
-    s.includes("jebena") ||
-    s.includes("buna") ||
-    s.includes("kit")
-  )
-    return "ceremony";
+
+  // Specific Ethiopian Ceremony Accessories
+  if (s.includes("kit") || s.includes("buna-ceremony-kit"))
+    return "ceremony-kit";
+  if (s.includes("jebena")) return "jebena";
+  if (s.includes("cini")) return "cini";
+  if (s.includes("rekebot")) return "rekebot";
+  if (s.includes("girgira")) return "girgira";
+  if (s.includes("menkeskesha")) return "menkeskesha";
+  if (s.includes("mukecha") || s.includes("zenezena")) return "mukecha";
+  if (s.includes("ceremony") || s.includes("buna")) return "ceremony-kit";
+
   if (s.includes("yirgacheffe")) return "chelbesa";
   if (s.includes("sidama") || s.includes("sidamo")) return "hamasho";
   if (s.includes("guji")) return "dimtu-tora";
@@ -401,6 +432,7 @@ function createCategory(
   permalink: string,
   description: string,
   children: Category[] = [],
+  imageUrl: string | null = null,
 ): Category {
   return {
     id,
@@ -415,8 +447,8 @@ function createCategory(
     parent_id: null,
     description,
     description_html: `<p>${description}</p>`,
-    image_url: null,
-    square_image_url: null,
+    image_url: imageUrl,
+    square_image_url: imageUrl,
     is_root: true,
     is_child: false,
     is_leaf: children.length === 0,
@@ -468,6 +500,8 @@ export const KABUNA_CATEGORIES: Category[] = [
     "Ceremony & Accessories",
     "buna-ceremony",
     "Authentic clay Jebena pots, Cini cups, and traditional accessories for Ethiopian Buna Tetu.",
+    [],
+    "/images/ceremony/ceremony-kit.jpg",
   ),
 ];
 
@@ -640,6 +674,132 @@ function buildCoffeeProduct({
   };
 }
 
+interface CeremonyProductProps {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  compareAtCents?: number;
+  imageUrl: string;
+  sku: string;
+  weight: number;
+  tags: string[];
+  specs: {
+    material: string;
+    origin: string;
+    dimensionsOrCapacity: string;
+    ritualUse: string;
+    care: string;
+  };
+}
+
+function buildCeremonyProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  compareAtCents,
+  imageUrl,
+  sku,
+  weight,
+  tags,
+  specs,
+}: CeremonyProductProps): Product {
+  const price = createPrice(baseCents, compareAtCents);
+  const gallery = getCoffeeGallery(
+    slug,
+    `${name} - Traditional Ethiopian Buna Ceremony`,
+    id,
+  );
+  const primaryMedia =
+    gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
+  const variant = createVariant(
+    `var_${id}_default`,
+    sku,
+    baseCents,
+    [],
+    "Standard",
+    weight,
+  );
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_material`,
+      "Craft Materials",
+      "material",
+      specs.material,
+    ),
+    createCustomField(
+      `cf_${id}_origin`,
+      "Artisan Provenance",
+      "origin",
+      specs.origin,
+    ),
+    createCustomField(
+      `cf_${id}_capacity`,
+      "Capacity / Dimensions",
+      "capacity",
+      specs.dimensionsOrCapacity,
+    ),
+    createCustomField(
+      `cf_${id}_use`,
+      "Traditional Ritual Role",
+      "use",
+      specs.ritualUse,
+    ),
+    createCustomField(
+      `cf_${id}_care`,
+      "Care & Maintenance",
+      "care",
+      specs.care,
+    ),
+  ];
+
+  return {
+    id,
+    name,
+    slug,
+    meta_title: `${name} | Ethiopian Buna Ceremony Accessories | Kabuna`,
+    meta_description: subtitle,
+    meta_keywords: `Ethiopian coffee ceremony, Buna Tetu, ${name}, ${tags.join(", ")}`,
+    variant_count: 1,
+    available_on: "2024-01-01T00:00:00.000Z",
+    preorder_ships_at: null,
+    purchasable: true,
+    preorder: false,
+    in_stock: true,
+    backorderable: false,
+    available: true,
+    description: `${subtitle}\n\n${description}`,
+    description_html: `<p><strong>${subtitle}</strong></p><p>${description}</p>`,
+    default_variant_id: variant.id,
+    buy_box_variant_id: variant.id,
+    thumbnail_url: imageUrl,
+    tags: [
+      "Buna Ceremony",
+      "Accessories",
+      "Authentic Ethiopian Craft",
+      ...tags,
+    ],
+    price,
+    original_price: compareAtCents ? createPrice(compareAtCents) : price,
+    seller_id: null,
+    primary_media: primaryMedia,
+    media: gallery.length > 0 ? gallery : [primaryMedia],
+    variants: [variant],
+    default_variant: variant,
+    option_types: [],
+    option_values: [],
+    categories: [KABUNA_CATEGORIES[3]],
+    custom_fields: customFields,
+    prior_price: null,
+  };
+}
+
 export const KABUNA_PRODUCTS: Product[] = [
   // 1. Chelbesa (Yirgacheffe Washed)
   buildCoffeeProduct({
@@ -805,88 +965,221 @@ export const KABUNA_PRODUCTS: Product[] = [
     },
   }),
 
-  // 7. Jebena Ceremony Kit (Buna Ceremony Accessories)
-  (() => {
-    const kitPrice = createPrice(6800, 7800);
-    const kitMedia = createMedia(
-      "media_ceremony_kit_1",
-      "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
-      "Traditional Ethiopian Buna Ceremony Starter Kit",
-    );
-    const kitVariant = createVariant(
-      "var_ceremony_kit_default",
-      "KBN-CEREMONY-KIT",
-      6800,
-      [],
-      "Standard Kit",
-      2.5,
-    );
+  // 7. Jebena (Traditional Clay Coffee Boiling Pot)
+  buildCeremonyProduct({
+    id: "prod_jebena_pot",
+    name: "Jebena",
+    slug: "jebena-clay-pot",
+    subtitle:
+      "Handcrafted Highland Clay Boiling Pot with Woven Straw Ring Base",
+    description:
+      "The beating heart of the Ethiopian coffee ritual. Hand-thrown from iron-rich highland clay by master potters and pit-fired with dried eucalyptus leaves, the Jebena features a bulbous boiling chamber, slender pouring neck, and precision spout designed to separate fine grounds naturally. Includes a hand-woven straw ring base (mat) and natural straw filter stopper. Suitable for stovetop embers, gas flame with heat diffuser, or electric cooktops.",
+    baseCents: 3600,
+    compareAtCents: 4400,
+    imageUrl: "/images/ceremony/jebena.jpg",
+    sku: "KBN-CEREMONY-JEBENA",
+    weight: 0.95,
+    tags: [
+      "Jebena",
+      "Clay Pot",
+      "Buna Tetu",
+      "Earthenware",
+      "Traditional Brewing",
+    ],
+    specs: {
+      material: "Highland Terracotta Clay & Natural Woven Straw Base",
+      origin: "Addis Ababa & Wolaita Potter Guilds, Ethiopia",
+      dimensionsOrCapacity: "850ml (Serves 6–8 traditional Cini cups)",
+      ritualUse:
+        "Boils coarse coffee grounds; long neck allows sediment to settle naturally before pouring",
+      care: "Rinse with boiling water only; never use detergents or abrasive scourers",
+    },
+  }),
 
-    const kitCustomFields: CustomField[] = [
-      createCustomField(
-        "cf_kit_items",
-        "Included Items",
-        "items",
-        "Clay Jebena Pot, 6 Cini Cups & Saucers, Straw Rekebot Mat, 250g Green Coffee, Frankincense",
-      ),
-      createCustomField(
-        "cf_kit_origin",
-        "Craft Origin",
-        "origin",
-        "Hand-Turned Clay & Hand-Painted Ceramic from Addis Ababa",
-      ),
-      createCustomField(
-        "cf_kit_material",
-        "Materials",
-        "material",
-        "Natural Ethiopian Terra Cotta Clay & Porcelain",
-      ),
-      createCustomField(
-        "cf_kit_capacity",
-        "Pot Capacity",
-        "capacity",
-        "800ml (Serves 6–8 traditional servings)",
-      ),
-    ];
+  // 8. Cini (Ceremonial Porcelain Cups & Saucers)
+  buildCeremonyProduct({
+    id: "prod_cini_cups",
+    name: "Cini",
+    slug: "cini-cups-set",
+    subtitle:
+      "Set of 6 Authentic Handleless Porcelain Demitasse Cups & Saucers with Tibeb Motifs",
+    description:
+      "Authentic Ethiopian handleless demitasse cups and matching saucers, decorated with iconic vibrant Tibeb geometric patterns in crimson red, emerald green, and gold trim. Sized specifically for the traditional three rounds of ceremony blessing: Abol (first brew), Tona (second brew), and Bereka (third blessing). Each box includes a full set of 6 cups and 6 matching saucers.",
+    baseCents: 3200,
+    compareAtCents: 3800,
+    imageUrl: "/images/ceremony/cini.jpg",
+    sku: "KBN-CEREMONY-CINI",
+    weight: 0.75,
+    tags: ["Cini", "Ceremony Cups", "Tibeb", "Porcelain", "Demitasse Set"],
+    specs: {
+      material:
+        "High-Fire Fine Porcelain with Gold Trim and Traditional Tibeb Enamel",
+      origin: "Ethiopian Cultural Heritage Ware",
+      dimensionsOrCapacity: "65ml per cup; 11cm diameter saucer (Set of 6)",
+      ritualUse:
+        "Serves Abol, Tona, and Bereka ceremonial pourings in continuous stream from the Jebena",
+      care: "Gentle hand wash recommended to protect gold-leaf filigree",
+    },
+  }),
 
-    return {
-      id: "prod_buna_ceremony_kit",
-      name: "Jebena Ceremony Kit",
-      slug: "jebena-buna-ceremony-kit",
-      meta_title: "Jebena Ceremony Kit | Kabuna Ethiopian Specialty Coffee",
-      meta_description:
-        "Authentic Ethiopian Buna Ceremony Kit with handcrafted clay Jebena pot, 6 porcelain Cini cups, and Rekebot mat.",
-      meta_keywords:
-        "Buna ceremony, Jebena pot, Cini cups, Rekebot, Ethiopian coffee ritual",
-      variant_count: 1,
-      available_on: "2024-01-01T00:00:00.000Z",
-      preorder_ships_at: null,
-      purchasable: true,
-      preorder: false,
-      in_stock: true,
-      backorderable: false,
-      available: true,
-      description:
-        "Experience the warmth, hospitality, and sacred tradition of an authentic Ethiopian Buna Tetu ceremony at home. This heirloom kit includes a hand-turned Ethiopian clay Jebena pot, 6 hand-painted porcelain Cini cups and saucers, a traditional straw woven Rekebot mat, unroasted green heirloom coffee beans (250g), and natural frankincense incense.",
-      description_html:
-        "<p>Experience the warmth, hospitality, and sacred tradition of an authentic Ethiopian Buna Tetu ceremony at home. This heirloom kit includes a hand-turned Ethiopian clay Jebena pot, 6 hand-painted porcelain Cini cups and saucers, a traditional straw woven Rekebot mat, unroasted green heirloom coffee beans (250g), and natural frankincense incense.</p>",
-      default_variant_id: kitVariant.id,
-      buy_box_variant_id: kitVariant.id,
-      thumbnail_url:
-        "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
-      tags: ["Buna Ceremony", "Jebena", "Accessories", "Traditional Ritual"],
-      price: kitPrice,
-      original_price: createPrice(7800),
-      seller_id: null,
-      primary_media: kitMedia,
-      media: [kitMedia],
-      variants: [kitVariant],
-      default_variant: kitVariant,
-      option_types: [],
-      option_values: [],
-      categories: [KABUNA_CATEGORIES[3]],
-      custom_fields: kitCustomFields,
-      prior_price: null,
-    };
-  })(),
+  // 9. Rekebot (Ceremonial Wooden Service Table)
+  buildCeremonyProduct({
+    id: "prod_rekebot_table",
+    name: "Rekebot",
+    slug: "rekebot-serving-table",
+    subtitle: "Handcrafted Dark Hardwood Ceremony Service Table & Cup Tray",
+    description:
+      "The ceremonial centerpiece around which guests gather. Handcrafted from rich dark Ethiopian hardwood, this two-tiered presentation box features engraved geometric lattice panels, polished brass corner reinforcements, and recessed circular slots engineered to cradle Cini cups securely during service. An interior compartment stores extra cups, frankincense, and ceremony essentials.",
+    baseCents: 8500,
+    compareAtCents: 9800,
+    imageUrl: "/images/ceremony/rekebot.jpg",
+    sku: "KBN-CEREMONY-REKEBOT",
+    weight: 2.2,
+    tags: [
+      "Rekebot",
+      "Ceremony Table",
+      "Wooden Chest",
+      "Brass Accents",
+      "Coffee Tray",
+    ],
+    specs: {
+      material: "Solid Ethiopian Hardwood & Antiqued Brass Hardware",
+      origin: "Addis Ababa Master Carpenters",
+      dimensionsOrCapacity:
+        "38cm (L) × 26cm (W) × 18cm (H); holds 6–12 Cini cups",
+      ritualUse:
+        "Elevates cups during service, protects against spills, and stores ceremonial utensils",
+      care: "Wipe with damp cloth; nourish wood biannually with natural beeswax",
+    },
+  }),
+
+  // 10. Girgira (Handcrafted Terracotta Incense Burner)
+  buildCeremonyProduct({
+    id: "prod_girgira_burner",
+    name: "Girgira",
+    slug: "girgira-incense-burner",
+    subtitle:
+      "Hand-Carved Terracotta Censer with Raw Tigray Frankincense (Itan)",
+    description:
+      "No Buna ceremony begins without the sacred scent of Itan. Hand-carved from natural terracotta with traditional sunburst and cross geometric carvings, the Girgira cradles glowing coconut charcoal and raw tears of wild-harvested Ethiopian frankincense and myrrh. The aromatic smoke cleanses the room, elevates the atmosphere, and honors guests before the first roast begins.",
+    baseCents: 2400,
+    compareAtCents: 2900,
+    imageUrl: "/images/ceremony/girgira.jpg",
+    sku: "KBN-CEREMONY-GIRGIRA",
+    weight: 0.55,
+    tags: [
+      "Girgira",
+      "Incense Burner",
+      "Frankincense",
+      "Itan",
+      "Clay Chalice",
+      "Aromatics",
+    ],
+    specs: {
+      material: "High-Heat Pit-Fired Terracotta Clay",
+      origin: "Tigray & Amhara Artisan Kilns, Ethiopia",
+      dimensionsOrCapacity:
+        "15cm height × 11cm diameter; includes 50g Tigray Frankincense (Itan)",
+      ritualUse:
+        "Burns frankincense resin over hot embers to perfume and sanctify the ceremony room",
+      care: "Allow embers to extinguish fully; empty ash before storing",
+    },
+  }),
+
+  // 11. Menkeskesha (Traditional Iron Roasting Pan)
+  buildCeremonyProduct({
+    id: "prod_menkeskesha_pan",
+    name: "Menkeskesha",
+    slug: "menkeskesha-roasting-pan",
+    subtitle:
+      "Hand-Forged Perforated Iron Coffee Roasting Pan with Extended Handle",
+    description:
+      "Experience the mesmerizing ritual of roasting coffee right at your table. Hand-forged from seasoned heavy-gauge black iron, the Menkeskesha features micro-perforations that ensure even airflow and gentle heat transfer over charcoal or flame. Its slender, heat-dissipating handle allows the host to rhythmically toss green beans until they reach a deep glossy brown, then circulate the smoking pan for guests to waft and admire.",
+    baseCents: 2800,
+    compareAtCents: 3400,
+    imageUrl: "/images/ceremony/menkeskesha.jpg",
+    sku: "KBN-CEREMONY-MENKESKESHA",
+    weight: 0.65,
+    tags: [
+      "Menkeskesha",
+      "Roasting Pan",
+      "Wafting Skillet",
+      "Iron Craft",
+      "Manual Roasting",
+    ],
+    specs: {
+      material: "Hand-Hammered Seasoned Carbon Iron",
+      origin: "Traditional Blacksmith Guild of Oromia",
+      dimensionsOrCapacity:
+        "22cm diameter skillet; 28cm elongated iron handle; 250g batch capacity",
+      ritualUse:
+        "Hand-roasts raw beans over open coals; wafted warm under guests' noses as a welcome blessing",
+      care: "Season with edible vegetable oil after washing; keep completely dry to prevent rust",
+    },
+  }),
+
+  // 12. Mukecha & Zenezena (Carved Wooden Mortar & Pestle)
+  buildCeremonyProduct({
+    id: "prod_mukecha_mortar",
+    name: "Mukecha & Zenezena",
+    slug: "mukecha-zenezena-mortar-pestle",
+    subtitle:
+      "Solid Hand-Carved Hardwood Mortar and Pestle for Ceremonial Crushing",
+    description:
+      "The authentic way to grind ceremony coffee. Carved from a solid block of dense Ethiopian eucalyptus hardwood, the deep-welled Mukecha (mortar) and weighted ergonomic Zenezena (pestle) hand-crush hot freshly roasted beans without overheating or shearing bean oils. Produces an uneven, rustic coarse-to-medium grind prized for rich body and deep extraction in the Jebena.",
+    baseCents: 3400,
+    compareAtCents: 4200,
+    imageUrl: "/images/ceremony/mukecha.jpg",
+    sku: "KBN-CEREMONY-MUKECHA",
+    weight: 1.1,
+    tags: [
+      "Mukecha",
+      "Zenezena",
+      "Mortar and Pestle",
+      "Hand-Carved Hardwood",
+      "Manual Grinder",
+    ],
+    specs: {
+      material: "Solid Mountain Eucalyptus Hardwood",
+      origin: "Southern Nations & Sidama Woodcarvers",
+      dimensionsOrCapacity:
+        "18cm mortar height × 12cm rim; 24cm heavy pestle; 100g bean capacity",
+      ritualUse:
+        "Hand-pounds roasted coffee beans immediately prior to boiling in the Jebena",
+      care: "Wipe dry with clean cloth; condition monthly with food-safe mineral oil",
+    },
+  }),
+
+  // 13. Jebena Ceremony Kit (Complete Heirloom Ritual Set)
+  buildCeremonyProduct({
+    id: "prod_buna_ceremony_kit",
+    name: "Jebena Ceremony Kit",
+    slug: "jebena-buna-ceremony-kit",
+    subtitle:
+      "Complete Heirloom Ethiopian Buna Tetu Ritual Package with All 6 Accessories",
+    description:
+      "The ultimate heirloom collection for authentic Ethiopian Buna Tetu at home. This master set contains all 6 ceremonial accessories: a handcrafted clay Jebena pot with straw base, 6 porcelain Cini cups and saucers with Tibeb motifs, a dark hardwood Rekebot table box, a terracotta Girgira incense burner with Tigray frankincense resin, an iron Menkeskesha roasting pan, a carved wooden Mukecha & Zenezena mortar and pestle, plus 250g unroasted green heirloom coffee beans and ceremonial Ketema grass mat.",
+    baseCents: 14500,
+    compareAtCents: 17500,
+    imageUrl: "/images/ceremony/ceremony-kit.jpg",
+    sku: "KBN-CEREMONY-KIT-FULL",
+    weight: 4.8,
+    tags: [
+      "Buna Ceremony",
+      "Jebena Kit",
+      "Complete Set",
+      "Ethiopian Heirloom",
+      "Gift Set",
+    ],
+    specs: {
+      material:
+        "Highland Terracotta, Fine Porcelain, Solid Hardwood, and Hand-Forged Iron",
+      origin: "Artisan Guilds of Addis Ababa, Sidama & Tigray, Ethiopia",
+      dimensionsOrCapacity:
+        "Complete 6-person ritual setup; packaged in handcrafted presentation crate",
+      ritualUse:
+        "Enables the full three-round traditional Buna Tetu ceremony: roasting, grinding, incense, and serving",
+      care: "Includes comprehensive illustrated English/Amharic ritual care and brewing manual",
+    },
+  }),
 ];

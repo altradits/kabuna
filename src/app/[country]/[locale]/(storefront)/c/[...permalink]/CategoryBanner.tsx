@@ -21,29 +21,46 @@ export async function CategoryBanner({
   return (
     <>
       <div
-        className="flex flex-col justify-end min-h-[350px] bg-gray-50 bg-cover bg-center"
+        className="relative flex flex-col justify-end min-h-[320px] sm:min-h-[380px] bg-neutral-900 bg-cover bg-center overflow-hidden"
         style={
           category.image_url
             ? { backgroundImage: `url(${category.image_url})` }
             : undefined
         }
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {category.image_url && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/30 pointer-events-none" />
+        )}
+        <div
+          className={`relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8 ${
+            category.image_url ? "text-white" : ""
+          }`}
+        >
           <Breadcrumbs
             category={category}
             basePath={basePath}
             locale={locale}
           />
 
-          <div className="mb-4">
-            <h1 className="text-4xl font-bold text-gray-900">
+          <div className="mb-3 mt-4">
+            <h1
+              className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight ${
+                category.image_url ? "text-white" : "text-gray-900"
+              }`}
+            >
               {category.name}
             </h1>
           </div>
 
           {/* Description */}
           {category.description && (
-            <p className="mb-4 text-gray-600">{category.description}</p>
+            <p
+              className={`max-w-2xl text-sm sm:text-base leading-relaxed ${
+                category.image_url ? "text-neutral-200" : "text-gray-600"
+              }`}
+            >
+              {category.description}
+            </p>
           )}
         </div>
       </div>

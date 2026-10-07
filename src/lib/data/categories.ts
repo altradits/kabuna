@@ -3,7 +3,11 @@
 import type { CategoryListParams, ProductListParams } from "@spree/sdk";
 import { cacheLife, cacheTag } from "next/cache";
 import { getAccessToken, getClient, getLocaleOptions } from "@/lib/spree";
-import { KABUNA_CATEGORIES, KABUNA_PRODUCTS } from "./kabuna-coffee-data";
+import {
+  enrichProductWithImages,
+  KABUNA_CATEGORIES,
+  KABUNA_PRODUCTS,
+} from "./kabuna-coffee-data";
 
 async function cachedListCategories(
   params: CategoryListParams | undefined,
@@ -13,7 +17,19 @@ async function cachedListCategories(
   cacheLife("hours");
   cacheTag("categories");
   try {
-    return await getClient().categories.list(params, options);
+    const res = await getClient().categories.list(params, options);
+    const hasCeremony = res.data?.some(
+      (c) =>
+        c.permalink?.includes("buna-ceremony") ||
+        c.permalink?.includes("ceremony") ||
+        c.id === "cat_ceremony",
+    );
+    if (res.data && res.data.length > 0 && hasCeremony) {
+      return res;
+    }
+    return { data: KABUNA_CATEGORIES } as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["list"]>
+    >;
   } catch {
     return { data: KABUNA_CATEGORIES } as unknown as Awaited<
       ReturnType<ReturnType<typeof getClient>["categories"]["list"]>
@@ -37,25 +53,47 @@ export async function cachedGetCategory(
   "use cache: remote";
   cacheLife("tenMinutes");
   cacheTag("category");
-  try {
-    return await getClient().categories.get(idOrPermalink, params, options);
-  } catch {
-    const all = [
-      ...KABUNA_CATEGORIES,
-      ...KABUNA_CATEGORIES.flatMap((c) => c.children || []),
-    ];
-    const found = all.find(
-      (c) =>
-        c.permalink === idOrPermalink ||
-        c.id === idOrPermalink ||
-        c.permalink?.endsWith(`/${idOrPermalink}`),
+
+  const idOrPermaLower = idOrPermalink.toLowerCase();
+
+  // Specifically resolve Buna Ceremony category to KABUNA_CATEGORIES
+  if (
+    idOrPermaLower.includes("buna-ceremony") ||
+    idOrPermaLower.includes("ceremony") ||
+    idOrPermaLower === "cat_ceremony" ||
+    idOrPermaLower === "ctg_so8jagonyx"
+  ) {
+    const ceremonyCat = KABUNA_CATEGORIES.find(
+      (c) => c.permalink === "buna-ceremony" || c.id === "cat_ceremony",
     );
-    if (found) {
-      return { data: found } as unknown as Awaited<
+    if (ceremonyCat) {
+      return ceremonyCat as unknown as Awaited<
         ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
       >;
     }
-    throw new Error("Category not found");
+  }
+
+  const all = [
+    ...KABUNA_CATEGORIES,
+    ...KABUNA_CATEGORIES.flatMap((c) => c.children || []),
+  ];
+  const found = all.find(
+    (c) =>
+      c.permalink?.toLowerCase() === idOrPermaLower ||
+      c.id.toLowerCase() === idOrPermaLower ||
+      c.permalink?.toLowerCase().endsWith(`/${idOrPermaLower}`) ||
+      c.name.toLowerCase() === idOrPermaLower,
+  );
+  if (found) {
+    return found as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+    >;
+  }
+
+  try {
+    return await getClient().categories.get(idOrPermalink, params, options);
+  } catch {
+    throw new Error(`Category not found: ${idOrPermalink}`);
   }
 }
 
@@ -81,30 +119,94 @@ async function cachedListCategoryProducts(
   "use cache: remote";
   cacheLife("tenMinutes");
   cacheTag("products", `category-products:${categoryId}`);
-  try {
-    return await getClient().products.list(
-      { ...params, in_category: categoryId },
-      options,
-    );
-  } catch {
-    const filtered = KABUNA_PRODUCTS.filter((p) =>
-      p.categories?.some(
+
+  const catLower = (categoryId || "").toLowerCase();
+  const isCeremonyCategory =
+    catLower.includes("ceremony") ||
+    catLower.includes("buna") ||
+    catLower === "cat_ceremony" ||
+    catLower === "ctg_so8jagonyx";
+
+  const localFiltered = KABUNA_PRODUCTS.filter((p) => {
+    if (isCeremonyCategory) {
+      return p.categories?.some(
         (c) =>
-          c.id === categoryId ||
-          c.permalink === categoryId ||
-          c.permalink?.endsWith(`/${categoryId}`),
-      ),
+          c.id === "cat_ceremony" ||
+          c.permalink === "buna-ceremony" ||
+          c.name.toLowerCase().includes("ceremony"),
+      );
+    }
+    return p.categories?.some(
+      (c) =>
+        (c?.id && c.id.toLowerCase() === catLower) ||
+        (c?.permalink && c.permalink.toLowerCase() === catLower) ||
+        (c?.permalink &&
+          catLower &&
+          c.permalink.toLowerCase().endsWith(`/${catLower}`)) ||
+        (c?.name && c.name.toLowerCase() === catLower),
     );
+  });
+
+  // Support sort param if requested
+  const sortParam = (
+    params as Record<string, unknown> | undefined
+  )?.sort?.toString();
+  if (sortParam && localFiltered.length > 0) {
+    if (
+      sortParam.includes("price") &&
+      (sortParam.includes("desc") || sortParam === "price_high_to_low")
+    ) {
+      localFiltered.sort(
+        (a, b) =>
+          (b.price?.amount_in_cents || 0) - (a.price?.amount_in_cents || 0),
+      );
+    } else if (
+      sortParam.includes("price") &&
+      (sortParam.includes("asc") || sortParam === "price_low_to_high")
+    ) {
+      localFiltered.sort(
+        (a, b) =>
+          (a.price?.amount_in_cents || 0) - (b.price?.amount_in_cents || 0),
+      );
+    }
+  }
+
+  if (localFiltered.length > 0) {
     return {
-      data: filtered,
+      data: localFiltered.map(enrichProductWithImages),
       meta: {
-        total_count: filtered.length,
+        total_count: localFiltered.length,
         total_pages: 1,
       },
     } as unknown as Awaited<
       ReturnType<ReturnType<typeof getClient>["products"]["list"]>
     >;
   }
+
+  try {
+    const res = await getClient().products.list(
+      { ...params, in_category: categoryId },
+      options,
+    );
+    if (res.data && res.data.length > 0) {
+      return {
+        ...res,
+        data: res.data.map(enrichProductWithImages),
+      };
+    }
+  } catch {
+    // ignore Spree error and fall back
+  }
+
+  return {
+    data: localFiltered.map(enrichProductWithImages),
+    meta: {
+      total_count: localFiltered.length,
+      total_pages: 1,
+    },
+  } as unknown as Awaited<
+    ReturnType<ReturnType<typeof getClient>["products"]["list"]>
+  >;
 }
 
 export async function getCategoryProducts(
