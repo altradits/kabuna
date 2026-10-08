@@ -12,9 +12,9 @@ export function ProductCardSkeleton(): React.JSX.Element {
       <div className="p-4 flex flex-col flex-1">
         <div className="h-4 bg-stone-200 rounded w-3/4 mb-2" />
         <div className="h-3 bg-stone-100 rounded w-1/2 mb-4" />
-        <div className="mt-auto pt-3 flex flex-col gap-2.5">
-          <div className="h-5 bg-stone-200 rounded w-1/4" />
-          <div className="h-9 bg-stone-200 rounded-full w-full" />
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
+          <div className="h-5 bg-stone-200 rounded w-16" />
+          <div className="h-8 bg-stone-200 rounded-full w-24 shrink-0" />
         </div>
       </div>
     </div>

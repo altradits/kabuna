@@ -102,7 +102,12 @@ export function VariantPicker({
     const testOptions = { ...selectedOptions, [optionTypeId]: optionValue };
     return variantOptionMaps.some(
       ({ variant, optionsMap }) =>
-        variant.purchasable &&
+        variant.purchasable !== false &&
+        variant.in_stock !== false &&
+        (typeof (variant as unknown as Record<string, unknown>)
+          ?.total_on_hand !== "number" ||
+          ((variant as unknown as Record<string, unknown>)
+            .total_on_hand as number) > 0) &&
         Object.entries(testOptions).every(
           ([typeId, value]) => optionsMap[typeId] === value,
         ),

@@ -1,7 +1,6 @@
 "use client";
 
 import type { Product } from "@spree/sdk";
-import { Check, Loader2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { memo, useState } from "react";
@@ -68,6 +67,16 @@ export const ProductCard = memo(function ProductCard({
         ? product.original_price.display_amount
         : product.price?.display_compare_at_amount) ?? null)
     : null;
+
+  // All products are available unless all quantities have been bought or explicitly marked out of stock
+  const isOutOfStock =
+    product.purchasable === false ||
+    product.in_stock === false ||
+    (typeof (product as unknown as Record<string, unknown>).total_on_hand ===
+      "number" &&
+      ((product as unknown as Record<string, unknown>)
+        .total_on_hand as number) <= 0);
+  const isAvailable = !isOutOfStock;
 
   const handleClick = () => {
     if (index != null && listId && listName && currency) {
@@ -145,64 +154,45 @@ export const ProductCard = memo(function ProductCard({
           </p>
         )}
 
-        {/* Bottom Section: Price & Add to Cart button */}
-        <div className="mt-auto pt-3 flex flex-col gap-2.5">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-baseline gap-1.5">
-              {displayPrice ? (
-                <span className="text-base sm:text-lg font-semibold text-stone-900">
-                  {displayPrice}
-                </span>
-              ) : (
-                // Null price: a deliberate hide inside a HiddenPricingProvider
-                // (renders a sign-in prompt), otherwise renders nothing.
-                <HiddenPricePrompt />
-              )}
-              {onSale && strikethroughPrice && (
-                <span className="text-xs sm:text-sm text-stone-400 line-through">
-                  {strikethroughPrice}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Strategic, elegant Add to Cart button */}
-          <div className="pt-0.5">
-            {product.purchasable ? (
-              <button
-                type="button"
-                disabled={isAdding}
-                onClick={handleAddToCart}
-                className="relative z-10 w-full inline-flex items-center justify-center gap-2 py-2 px-3 sm:py-2.5 sm:px-4 rounded-full text-xs font-medium tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer"
-                aria-label={`${t("addToCart")} - ${product.name}`}
-              >
-                {isAdding ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>{t("adding")}</span>
-                  </>
-                ) : isSuccess ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Added</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag className="w-3.5 h-3.5 text-[#d8a870] transition-colors" />
-                    <span>{t("addToCart")}</span>
-                  </>
-                )}
-              </button>
+        {/* Bottom Section: Price in line with Add to Cart, space between */}
+        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-1.5 min-w-0">
+            {displayPrice ? (
+              <span className="text-base sm:text-lg font-bold text-stone-900 tracking-tight">
+                {displayPrice}
+              </span>
             ) : (
-              <button
-                type="button"
-                disabled
-                className="relative z-10 w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 sm:py-2.5 sm:px-4 rounded-full text-xs font-medium tracking-wide bg-stone-100 text-stone-400 cursor-not-allowed"
-              >
-                <span>{t("outOfStock")}</span>
-              </button>
+              // Null price: a deliberate hide inside a HiddenPricingProvider
+              // (renders a sign-in prompt), otherwise renders nothing.
+              <HiddenPricePrompt />
+            )}
+            {onSale && strikethroughPrice && (
+              <span className="text-xs sm:text-sm text-stone-400 line-through">
+                {strikethroughPrice}
+              </span>
             )}
           </div>
+
+          {/* Add to Cart button (in line with price, space-between, no icon) */}
+          {isAvailable ? (
+            <button
+              type="button"
+              disabled={isAdding}
+              onClick={handleAddToCart}
+              className="relative z-10 shrink-0 inline-flex items-center justify-center py-1.5 px-3 sm:py-2 sm:px-3.5 rounded-full text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
+              aria-label={`${t("addToCart")} - ${product.name}`}
+            >
+              {isAdding ? t("adding") : isSuccess ? "Added" : t("addToCart")}
+            </button>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="relative z-10 shrink-0 inline-flex items-center justify-center py-1.5 px-3 sm:py-2 sm:px-3.5 rounded-full text-xs font-medium tracking-wide bg-stone-100 text-stone-400 cursor-not-allowed whitespace-nowrap"
+            >
+              {t("outOfStock")}
+            </button>
+          )}
         </div>
       </div>
     </div>

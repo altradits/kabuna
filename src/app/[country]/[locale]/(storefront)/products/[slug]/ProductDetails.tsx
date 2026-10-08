@@ -52,7 +52,10 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       return product.default_variant;
     }
     if (hasVariants) {
-      return variants.find((v) => v.purchasable) || variants[0];
+      return (
+        variants.find((v) => v.purchasable !== false && v.in_stock !== false) ||
+        variants[0]
+      );
     }
     return product.default_variant || null;
   });
@@ -135,14 +138,28 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
   const sku = selectedVariant?.sku ?? product.default_variant?.sku;
 
-  // Purchasability
-  const isPurchasable = hasVariants
-    ? (selectedVariant?.purchasable ?? false)
-    : (product.purchasable ?? false);
+  // All products/variants are available unless all quantities have been bought or explicitly marked out of stock
+  const isVariantOutOfStock =
+    selectedVariant?.purchasable === false ||
+    selectedVariant?.in_stock === false ||
+    (typeof (selectedVariant as unknown as Record<string, unknown>)
+      ?.total_on_hand === "number" &&
+      ((selectedVariant as unknown as Record<string, unknown>)
+        .total_on_hand as number) <= 0);
 
-  const inStock = hasVariants
-    ? (selectedVariant?.in_stock ?? false)
-    : (product.in_stock ?? false);
+  const isProductOutOfStock =
+    product.purchasable === false ||
+    product.in_stock === false ||
+    (typeof (product as unknown as Record<string, unknown>)?.total_on_hand ===
+      "number" &&
+      ((product as unknown as Record<string, unknown>)
+        .total_on_hand as number) <= 0);
+
+  const isPurchasable = hasVariants
+    ? !isVariantOutOfStock
+    : !isProductOutOfStock;
+
+  const inStock = isPurchasable;
 
   const handleAddToCart = async () => {
     const variantId =
