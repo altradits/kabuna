@@ -29,9 +29,12 @@ export async function CategoryBanner({
   cacheTag("category-banner");
 
   const permalink = (category.permalink || "").toLowerCase();
+  const isBunaCeremony =
+    permalink.includes("buna-ceremony") || permalink.includes("ceremony");
+  const isSingleOrigin = permalink === "single-origin";
 
   let heroProps = {
-    badge: "CURATED ETHIOPIAN COLLECTION",
+    badge: "CURATED ETHIOPIAN COLLECTION" as string | undefined,
     titleLine1: category.name,
     titleLine2: undefined as string | undefined,
     description:
@@ -74,7 +77,7 @@ export async function CategoryBanner({
 
   if (permalink.includes("buna-ceremony") || permalink.includes("ceremony")) {
     heroProps = {
-      badge: "ANCIENT COFFEE RITUAL",
+      badge: undefined,
       titleLine1: "Authentic Ethiopian",
       titleLine2: "Buna Ceremony Wares",
       description:
@@ -240,7 +243,7 @@ export async function CategoryBanner({
       };
     } else {
       heroProps = {
-        badge: "UNBLENDED HIGHLAND HARVESTS",
+        badge: undefined,
         titleLine1: "Single-Origin Varieties",
         titleLine2: "& Indigenous Landraces",
         description:
@@ -381,13 +384,15 @@ export async function CategoryBanner({
         focalImageAlt={heroProps.focalImageAlt}
         focalImageIsCutout={heroProps.focalImageIsCutout}
         breadcrumbs={
-          <div className="[&_span]:text-stone-300 [&_a]:text-stone-300 [&_a:hover]:text-white [&_svg]:text-stone-400 [&_nav]:mb-0">
-            <Breadcrumbs
-              category={category}
-              basePath={basePath}
-              locale={locale}
-            />
-          </div>
+          !isBunaCeremony && !isSingleOrigin ? (
+            <div className="[&_span]:text-stone-300 [&_a]:text-stone-300 [&_a:hover]:text-white [&_svg]:text-stone-400 [&_nav]:mb-0">
+              <Breadcrumbs
+                category={category}
+                basePath={basePath}
+                locale={locale}
+              />
+            </div>
+          ) : undefined
         }
         pillarsTitle={heroProps.pillarsTitle}
         pillars={heroProps.pillars}

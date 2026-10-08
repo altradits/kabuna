@@ -46,7 +46,7 @@ export default async function ProductsPage({
   return (
     <div>
       <PageHeroSection
-        badge={query ? "SEARCH DISCOVERIES" : "SPECIALTY ETHIOPIAN COLLECTION"}
+        badge={query ? "SEARCH DISCOVERIES" : undefined}
         titleLine1={
           query ? t("searchResultsFor", { query }) : "Direct-Trade Heirlooms"
         }
