@@ -1,4 +1,4 @@
-import type { Category } from "@spree/sdk";
+import type { Category, Product } from "@spree/sdk";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
@@ -51,9 +51,17 @@ export default async function ProductPage({
   const { category_id } = await searchParams;
   const basePath = `/${country}/${locale}`;
 
-  let product;
+  let product: Product;
   try {
-    product = await getCachedProduct(slug, PRODUCT_PAGE_EXPAND);
+    const raw = await getCachedProduct(slug, PRODUCT_PAGE_EXPAND);
+    product = (
+      raw &&
+      typeof raw === "object" &&
+      "data" in raw &&
+      (raw as { data: Product }).data
+        ? (raw as { data: Product }).data
+        : raw
+    ) as Product;
   } catch {
     notFound();
   }

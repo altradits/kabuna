@@ -188,7 +188,11 @@ export default function CartPage() {
               {cart.items.map((item) => (
                 <div key={item.id} className="p-6 flex gap-6">
                   {/* Image */}
-                  <div className="relative w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0">
+                  <Link
+                    href={`${basePath}/products/${item.slug}`}
+                    className="relative w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 block hover:opacity-90 transition-opacity"
+                    aria-label={item.name}
+                  >
                     <ProductImage
                       src={item.thumbnail_url}
                       alt={item.name}
@@ -196,12 +200,17 @@ export default function CartPage() {
                       className="object-cover"
                       sizes="96px"
                     />
-                  </div>
+                  </Link>
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
                     <h3 className="text-lg font-medium text-gray-900 truncate">
-                      {item.name}
+                      <Link
+                        href={`${basePath}/products/${item.slug}`}
+                        className="hover:text-[#a37947] transition-colors"
+                      >
+                        {item.name}
+                      </Link>
                     </h3>
                     {item.options_text && (
                       <p className="mt-1 text-sm text-gray-500">

@@ -1,12 +1,12 @@
 "use server";
 
-import type { ProductListParams } from "@spree/sdk";
+import type { Product, ProductListParams } from "@spree/sdk";
 import { cacheLife, cacheTag } from "next/cache";
 import {
   cacheTagSuffix,
   DEFAULT_SURFACE,
   getAccessToken,
-  type getClientForSurface,
+  getClientForSurface,
   getLocaleOptions,
   type Surface,
 } from "@/lib/spree";
@@ -143,11 +143,11 @@ export async function getProducts(
  */
 export async function cachedGetProduct(
   slugOrId: string,
-  _expand: string[],
-  _options: { locale?: string; country?: string },
+  expand: string[],
+  options: { locale?: string; country?: string },
   surface: Surface,
-  _userToken?: string,
-) {
+  userToken?: string,
+): Promise<Product> {
   "use cache: remote";
   cacheLife("tenMinutes");
   cacheTag(
@@ -163,12 +163,32 @@ export async function cachedGetProduct(
   );
 
   if (product) {
-    return { data: enrichProductWithImages(product) } as unknown as Awaited<
-      ReturnType<ReturnType<typeof getClientForSurface>["products"]["get"]>
-    >;
+    return enrichProductWithImages(product);
   }
 
-  throw new Error(`Product not found: ${slugOrId}`);
+  try {
+    const res = await getClientForSurface(surface).products.get(
+      slugOrId,
+      { expand },
+      {
+        ...options,
+        ...(surface === "wholesale" && userToken
+          ? { token: userToken }
+          : undefined),
+      },
+    );
+    if (
+      res &&
+      typeof res === "object" &&
+      "data" in res &&
+      (res as { data: Product }).data
+    ) {
+      return enrichProductWithImages((res as { data: Product }).data);
+    }
+    return enrichProductWithImages(res as Product);
+  } catch {
+    throw new Error(`Product not found: ${slugOrId}`);
+  }
 }
 
 export async function getProduct(

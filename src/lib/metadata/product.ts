@@ -1,3 +1,4 @@
+import type { Product } from "@spree/sdk";
 import type { Metadata } from "next";
 import { getCachedProduct, PRODUCT_METADATA_EXPAND } from "@/lib/data/cached";
 import { cachedGetProduct } from "@/lib/data/products";
@@ -20,9 +21,17 @@ export async function generateProductMetadata({
   locale,
   slug,
 }: ProductMetadataParams): Promise<Metadata> {
-  let product;
+  let product: Product;
   try {
-    product = await getCachedProduct(slug, PRODUCT_METADATA_EXPAND);
+    const raw = await getCachedProduct(slug, PRODUCT_METADATA_EXPAND);
+    product = (
+      raw &&
+      typeof raw === "object" &&
+      "data" in raw &&
+      (raw as { data: Product }).data
+        ? (raw as { data: Product }).data
+        : raw
+    ) as Product;
   } catch {
     return { title: "Product Not Found" };
   }
@@ -43,12 +52,20 @@ export async function generateProductMetadata({
         path: `/products/${product.slug}`,
         currentResourceFingerprint: productTranslationFingerprint(product),
         resolvePath: async (target) => {
-          const localizedProduct = await cachedGetProduct(
+          const localizedRaw = await cachedGetProduct(
             product.id,
             [],
             { country: target.country, locale: target.locale },
             DEFAULT_SURFACE,
           );
+          const localizedProduct = (
+            localizedRaw &&
+            typeof localizedRaw === "object" &&
+            "data" in localizedRaw &&
+            (localizedRaw as { data: Product }).data
+              ? (localizedRaw as { data: Product }).data
+              : localizedRaw
+          ) as Product;
           return {
             path: `/products/${localizedProduct.slug}`,
             fingerprint: productTranslationFingerprint(localizedProduct),
