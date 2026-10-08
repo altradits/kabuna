@@ -32,6 +32,8 @@ export async function CategoryBanner({
   const isBunaCeremony =
     permalink.includes("buna-ceremony") || permalink.includes("ceremony");
   const isSingleOrigin = permalink === "single-origin";
+  const isWashed = permalink.includes("washed");
+  const isNatural = permalink.includes("natural");
 
   let heroProps = {
     badge: "CURATED ETHIOPIAN COLLECTION" as string | undefined,
@@ -285,7 +287,7 @@ export async function CategoryBanner({
     }
   } else if (permalink.includes("washed")) {
     heroProps = {
-      badge: "SPRING WATER FERMENTATION",
+      badge: undefined,
       titleLine1: "Washed Process Coffees",
       titleLine2: "Floral Aromas & Clarity",
       description:
@@ -326,7 +328,7 @@ export async function CategoryBanner({
     };
   } else if (permalink.includes("natural")) {
     heroProps = {
-      badge: "EQUATORIAL SUN-DRIED WHOLE CHERRY",
+      badge: undefined,
       titleLine1: "Natural Process Coffees",
       titleLine2: "Wild Berries & Syrupy Nectar",
       description:
@@ -384,7 +386,7 @@ export async function CategoryBanner({
         focalImageAlt={heroProps.focalImageAlt}
         focalImageIsCutout={heroProps.focalImageIsCutout}
         breadcrumbs={
-          !isBunaCeremony && !isSingleOrigin ? (
+          !isBunaCeremony && !isSingleOrigin && !isWashed && !isNatural ? (
             <div className="[&_span]:text-stone-300 [&_a]:text-stone-300 [&_a:hover]:text-white [&_svg]:text-stone-400 [&_nav]:mb-0">
               <Breadcrumbs
                 category={category}
