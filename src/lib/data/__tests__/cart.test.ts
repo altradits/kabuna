@@ -268,6 +268,23 @@ describe("cart server actions", () => {
         error: "Insufficient stock",
       });
     });
+
+    it("updates item quantity in fallback local cart", async () => {
+      const { getCartId } = await import("@/lib/spree");
+      (getCartId as ReturnType<typeof vi.fn>).mockResolvedValue(
+        "cart_local_test",
+      );
+
+      // First add item to local cart
+      const addRes = await addToCart("chelbesa", 1);
+      expect(addRes.success).toBe(true);
+      const lineItemId = addRes.cart?.items[0]?.id;
+      expect(lineItemId).toBeDefined();
+
+      const updateRes = await updateCartItem(lineItemId!, 5);
+      expect(updateRes.success).toBe(true);
+      expect(updateRes.cart?.total_quantity).toBe(5);
+    });
   });
 
   describe("removeCartItem", () => {
@@ -285,6 +302,22 @@ describe("cart server actions", () => {
         },
       );
       expect(result).toEqual({ success: true, cart: mockCart });
+    });
+
+    it("removes item from fallback local cart", async () => {
+      const { getCartId } = await import("@/lib/spree");
+      (getCartId as ReturnType<typeof vi.fn>).mockResolvedValue(
+        "cart_local_test",
+      );
+
+      const addRes = await addToCart("chelbesa", 1);
+      const lineItemId = addRes.cart?.items[0]?.id;
+      expect(lineItemId).toBeDefined();
+
+      const removeRes = await removeCartItem(lineItemId!);
+      expect(removeRes.success).toBe(true);
+      expect(removeRes.cart?.items.length).toBe(0);
+      expect(removeRes.cart?.total_quantity).toBe(0);
     });
 
     it("returns error on failure", async () => {
