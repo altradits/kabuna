@@ -14,7 +14,10 @@ export function ProductCardSkeleton(): React.JSX.Element {
         <div className="h-3 bg-stone-100 rounded w-1/2 mb-4" />
         <div className="mt-auto pt-2.5 sm:pt-3 flex flex-wrap items-center justify-between gap-y-2 gap-x-2">
           <div className="h-4 sm:h-5 bg-stone-200 rounded w-12 sm:w-16" />
-          <div className="h-[30px] sm:h-[34px] bg-stone-200 rounded-full w-20 sm:w-24 shrink-0" />
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="h-[30px] sm:h-[34px] bg-stone-200 rounded-full w-14 sm:w-16 shrink-0" />
+            <div className="h-[30px] sm:h-[34px] bg-stone-200 rounded-full w-20 sm:w-24 shrink-0" />
+          </div>
         </div>
       </div>
     </div>

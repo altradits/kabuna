@@ -1,13 +1,7 @@
 "use client";
 
 import type { Media, Product, Variant } from "@spree/sdk";
-import {
-  ChevronDown,
-  ChevronUp,
-  CircleCheckBig,
-  CircleX,
-  Loader2,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, CircleCheckBig, CircleX } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
@@ -312,23 +306,18 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                   />
                 </div>
 
-                {/* Primary Buy Button: Strictly ONE word */}
+                {/* Primary Add to Cart Button: same as across the website */}
                 <Button
                   size="lg"
                   onClick={handleAddToCart}
                   disabled={loading || !isPurchasable}
-                  className="flex-1 bg-amber-900 hover:bg-amber-800 text-amber-50 font-bold h-12 text-base shadow-md transition-all active:scale-[0.99]"
+                  className="flex-1 bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white font-bold h-12 text-base rounded-full shadow-md transition-all active:scale-[0.99] cursor-pointer"
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                      Adding...
-                    </>
-                  ) : isPurchasable ? (
-                    "Buy"
-                  ) : (
-                    "Sold"
-                  )}
+                  {loading
+                    ? t("adding")
+                    : isPurchasable
+                      ? t("addToCart")
+                      : t("outOfStock")}
                 </Button>
               </div>
             )}

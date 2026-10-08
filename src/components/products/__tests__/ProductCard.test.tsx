@@ -1,5 +1,4 @@
-import type { Product } from "@spree/sdk";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ProductCard } from "@/components/products/ProductCard";
 
@@ -168,5 +167,23 @@ describe("ProductCard", () => {
     button.click();
 
     expect(mockAddItem).toHaveBeenCalledWith("prod-1", 1);
+  });
+
+  it("allows adjusting quantity before adding to cart", async () => {
+    mockAddItem.mockReset();
+    render(<ProductCard product={baseProduct} basePath="/us/en" />);
+
+    const increaseBtn = screen.getByRole("button", {
+      name: /increase quantity/i,
+    });
+    fireEvent.click(increaseBtn);
+    fireEvent.click(increaseBtn);
+
+    expect(screen.getByText("3")).toBeInTheDocument();
+
+    const addToCartBtn = screen.getByRole("button", { name: /addToCart/i });
+    fireEvent.click(addToCartBtn);
+
+    expect(mockAddItem).toHaveBeenCalledWith("prod-1", 3);
   });
 });

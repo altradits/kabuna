@@ -36,6 +36,7 @@ export const ProductCard = memo(function ProductCard({
   const cart = useOptionalCart();
   const [isAdding, setIsAdding] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const isLocalOrMissing =
     !product.thumbnail_url ||
@@ -98,10 +99,15 @@ export const ProductCard = memo(function ProductCard({
 
     try {
       setIsAdding(true);
-      await cart.addItem(variantId, 1);
+      await cart.addItem(variantId, quantity);
       setIsSuccess(true);
       if (currency) {
-        trackAddToCart(product, product.default_variant ?? null, 1, currency);
+        trackAddToCart(
+          product,
+          product.default_variant ?? null,
+          quantity,
+          currency,
+        );
       }
       setTimeout(() => {
         setIsSuccess(false);
@@ -173,17 +179,53 @@ export const ProductCard = memo(function ProductCard({
             )}
           </div>
 
-          {/* Add to Cart button (in line with price, space-between, no icon, responsive on mobile & desktop) */}
+          {/* Actions: Quantity Stepper & Add to Cart button */}
           {isAvailable ? (
-            <button
-              type="button"
-              disabled={isAdding}
-              onClick={handleAddToCart}
-              className="relative z-10 shrink-0 inline-flex items-center justify-center min-h-[30px] sm:min-h-[34px] py-1 sm:py-1.5 px-2.5 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
-              aria-label={`${t("addToCart")} - ${product.name}`}
-            >
-              {isAdding ? t("adding") : isSuccess ? "Added" : t("addToCart")}
-            </button>
+            <div className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+              {/* Quantity Stepper (clean, no icon, unicode minus/plus) */}
+              <div className="inline-flex items-center border border-stone-200/90 rounded-full bg-stone-50/90 px-1 py-0.5 shadow-2xs">
+                <button
+                  type="button"
+                  disabled={isAdding || quantity <= 1}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setQuantity((q) => Math.max(1, q - 1));
+                  }}
+                  className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full text-xs font-bold text-stone-700 hover:bg-stone-200/80 active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+                <span className="w-5 sm:w-6 text-center text-[11px] sm:text-xs font-bold text-stone-900 tabular-nums select-none">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  disabled={isAdding}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setQuantity((q) => q + 1);
+                  }}
+                  className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full text-xs font-bold text-stone-700 hover:bg-stone-200/80 active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Add to Cart button */}
+              <button
+                type="button"
+                disabled={isAdding}
+                onClick={handleAddToCart}
+                className="shrink-0 inline-flex items-center justify-center min-h-[30px] sm:min-h-[34px] py-1 sm:py-1.5 px-2.5 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
+                aria-label={`${t("addToCart")} - ${product.name}`}
+              >
+                {isAdding ? t("adding") : isSuccess ? "Added" : t("addToCart")}
+              </button>
+            </div>
           ) : (
             <button
               type="button"
