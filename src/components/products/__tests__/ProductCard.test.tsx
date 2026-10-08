@@ -11,6 +11,11 @@ vi.mock("@/contexts/StoreContext", () => ({
   useStore: () => ({ currency: "USD", locale: "en", loading: false }),
 }));
 
+const mockAddItem = vi.fn();
+vi.mock("@/contexts/CartContext", () => ({
+  useOptionalCart: () => ({ addItem: mockAddItem }),
+}));
+
 // Minimal product fixtures — cast to Product for component props
 const baseProduct = {
   id: "prod-1",
@@ -147,5 +152,21 @@ describe("ProductCard", () => {
 
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/products/classic-t-shirt");
+  });
+
+  it("renders Add to cart button for purchasable products", () => {
+    render(<ProductCard product={baseProduct} basePath="/us/en" />);
+
+    expect(screen.getByText("addToCart")).toBeInTheDocument();
+  });
+
+  it("triggers addItem when Add to cart button is clicked", async () => {
+    mockAddItem.mockReset();
+    render(<ProductCard product={baseProduct} basePath="/us/en" />);
+
+    const button = screen.getByRole("button", { name: /addToCart/i });
+    button.click();
+
+    expect(mockAddItem).toHaveBeenCalledWith("prod-1", 1);
   });
 });
