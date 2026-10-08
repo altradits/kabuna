@@ -81,7 +81,6 @@ export default function CartPage() {
       <div>
         <PageHeroSection
           compact
-          badge="YOUR HARVEST SELECTION"
           titleLine1="Fresh Roasts & Ritual"
           titleLine2="Essentials in Your Cart"
           description="Every coffee order is prepared fresh upon confirmation from direct-trade Ethiopian highland harvests. Handcrafted ceremony items are safely packaged with full transit protection."
@@ -112,7 +111,6 @@ export default function CartPage() {
       <div>
         <PageHeroSection
           compact
-          badge="YOUR HARVEST SELECTION"
           titleLine1="Your Cart is Waiting"
           titleLine2="for Fresh Roasts"
           description="Explore our direct-trade single-origin Ethiopian micro-lots or authentic handcrafted buna ceremony pottery to begin your order."
@@ -167,7 +165,6 @@ export default function CartPage() {
     <div>
       <PageHeroSection
         compact
-        badge="YOUR HARVEST SELECTION"
         titleLine1="Fresh Roasts & Ritual"
         titleLine2="Essentials in Your Cart"
         description="Every coffee order is prepared fresh upon confirmation from direct-trade Ethiopian highland harvests. Handcrafted ceremony items are safely packaged with full transit protection."

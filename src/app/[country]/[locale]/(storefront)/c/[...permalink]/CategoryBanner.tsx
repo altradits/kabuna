@@ -11,7 +11,6 @@ import {
 import { cacheLife, cacheTag } from "next/cache";
 import Link from "next/link";
 import { PageHeroSection } from "@/components/layout/PageHeroSection";
-import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 interface CategoryBannerProps {
   category: Category;
@@ -29,14 +28,9 @@ export async function CategoryBanner({
   cacheTag("category-banner");
 
   const permalink = (category.permalink || "").toLowerCase();
-  const isBunaCeremony =
-    permalink.includes("buna-ceremony") || permalink.includes("ceremony");
-  const isSingleOrigin = permalink === "single-origin";
-  const isWashed = permalink.includes("washed");
-  const isNatural = permalink.includes("natural");
 
   let heroProps = {
-    badge: "CURATED ETHIOPIAN COLLECTION" as string | undefined,
+    badge: undefined as string | undefined,
     titleLine1: category.name,
     titleLine2: undefined as string | undefined,
     description:
@@ -122,7 +116,7 @@ export async function CategoryBanner({
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {
-        badge: "YIRGACHEFFE HIGHLAND ZONE",
+        badge: undefined,
         titleLine1: "Yirgacheffe Micro-Lots",
         titleLine2: "Jasmine & Bergamot",
         description:
@@ -163,7 +157,7 @@ export async function CategoryBanner({
       };
     } else if (permalink.includes("guji")) {
       heroProps = {
-        badge: "GUJI VOLCANIC HIGHLANDS",
+        badge: undefined,
         titleLine1: "Guji Highland Harvests",
         titleLine2: "Stone Fruit & Wild Honey",
         description:
@@ -204,7 +198,7 @@ export async function CategoryBanner({
       };
     } else if (permalink.includes("sidama")) {
       heroProps = {
-        badge: "SIDAMA ARORESA VALLEY",
+        badge: undefined,
         titleLine1: "Sidama Heirloom Roasts",
         titleLine2: "Ripe Berries & Cocoa",
         description:
@@ -385,17 +379,6 @@ export async function CategoryBanner({
         focalImageSrc={heroProps.focalImageSrc}
         focalImageAlt={heroProps.focalImageAlt}
         focalImageIsCutout={heroProps.focalImageIsCutout}
-        breadcrumbs={
-          !isBunaCeremony && !isSingleOrigin && !isWashed && !isNatural ? (
-            <div className="[&_span]:text-stone-300 [&_a]:text-stone-300 [&_a:hover]:text-white [&_svg]:text-stone-400 [&_nav]:mb-0">
-              <Breadcrumbs
-                category={category}
-                basePath={basePath}
-                locale={locale}
-              />
-            </div>
-          ) : undefined
-        }
         pillarsTitle={heroProps.pillarsTitle}
         pillars={heroProps.pillars}
       />

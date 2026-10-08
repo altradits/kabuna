@@ -90,7 +90,6 @@ export default function AccountPage() {
       <div>
         <PageHeroSection
           compact
-          badge="KABUNA MEMBER PORTAL"
           titleLine1="Sign In to Your"
           titleLine2="Coffee Journey"
           description="Access saved harvest subscriptions, ceremony accessories, expedited checkout, and personal order tracking."
