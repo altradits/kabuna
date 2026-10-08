@@ -5,8 +5,11 @@ import {
   CreditCard,
   Eye,
   EyeOff,
+  HeartHandshake,
   MapPin,
+  ShieldCheck,
   ShoppingBag,
+  Sparkles,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -14,6 +17,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { AccountShell } from "@/components/account/AccountShell";
+import { PageHeroSection } from "@/components/layout/PageHeroSection";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,104 +87,142 @@ export default function AccountPage() {
   // Show login form if not authenticated
   if (!isAuthenticated) {
     return (
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle>{t("myAccount")}</CardTitle>
-            <CardDescription>{t("signInDescription")}</CardDescription>
-          </CardHeader>
+      <div>
+        <PageHeroSection
+          compact
+          badge="KABUNA MEMBER PORTAL"
+          titleLine1="Sign In to Your"
+          titleLine2="Coffee Journey"
+          description="Access saved harvest subscriptions, ceremony accessories, expedited checkout, and personal order tracking."
+          bgImageSrc="/images/hero-mountain.jpg"
+          bgImageAlt="Ethiopian mountain highlands at dusk"
+          focalImageSrc="/images/hero-cup.png"
+          focalImageAlt="Freshly brewed coffee in ceramic cup"
+          focalImageIsCutout={true}
+          pillarsTitle="Why Join the Kabuna Coffee Society"
+          pillars={[
+            {
+              icon: <Sparkles className="w-6 h-6" />,
+              titleLine1: "Exclusive Harvest",
+              titleLine2: "Allocations",
+              description:
+                "Direct access to limited-quantity natural and anaerobic microlots before general public release.",
+            },
+            {
+              icon: <ShieldCheck className="w-6 h-6" />,
+              titleLine1: "Encrypted & Secure",
+              titleLine2: "Member Experience",
+              description:
+                "Your preferences, payment methods, and shipping addresses securely protected with industry standards.",
+            },
+            {
+              icon: <HeartHandshake className="w-6 h-6" />,
+              titleLine1: "Community & Ritual",
+              titleLine2: "Guides & Advice",
+              description:
+                "Complimentary access to traditional Ethiopian buna ceremony masterclasses and brew recipes.",
+            },
+          ]}
+        />
+        <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle>{t("myAccount")}</CardTitle>
+              <CardDescription>{t("signInDescription")}</CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <CircleAlert />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <Alert variant="destructive">
+                    <CircleAlert />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
 
-              <Field>
-                <FieldLabel htmlFor="email">{t("email")}</FieldLabel>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="you@example.com"
-                />
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="password">{t("password")}</FieldLabel>
-                <div className="relative">
+                <Field>
+                  <FieldLabel htmlFor="email">{t("email")}</FieldLabel>
                   <Input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="current-password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    type="email"
+                    id="email"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
-                    placeholder="••••••••"
-                    className="pr-10"
+                    placeholder="you@example.com"
                   />
-                  <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={
-                        showPassword ? t("hidePassword") : t("showPassword")
-                      }
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </Button>
+                </Field>
+
+                <Field>
+                  <FieldLabel htmlFor="password">{t("password")}</FieldLabel>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="current-password"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      placeholder="••••••••"
+                      className="pr-10"
+                    />
+                    <div className="absolute right-1 top-1/2 -translate-y-1/2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={
+                          showPassword ? t("hidePassword") : t("showPassword")
+                        }
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
+                </Field>
+
+                <div className="flex justify-end">
+                  <Link
+                    href={`${basePath}/account/forgot-password`}
+                    className="text-sm text-primary hover:text-primary/70 font-medium"
+                  >
+                    {t("forgotPassword")}
+                  </Link>
                 </div>
-              </Field>
 
-              <div className="flex justify-end">
+                <div className="w-full">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    size="lg"
+                    className="w-full"
+                  >
+                    {loading ? t("signingIn") : t("signIn")}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+
+            <CardFooter className="justify-center">
+              <p className="text-sm text-muted-foreground">
+                {t("dontHaveAccount")}{" "}
                 <Link
-                  href={`${basePath}/account/forgot-password`}
-                  className="text-sm text-primary hover:text-primary/70 font-medium"
+                  href={`${basePath}/account/register`}
+                  className="text-primary hover:text-primary/70 font-medium"
                 >
-                  {t("forgotPassword")}
+                  {t("signUp")}
                 </Link>
-              </div>
-
-              <div className="w-full">
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  size="lg"
-                  className="w-full"
-                >
-                  {loading ? t("signingIn") : t("signIn")}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-
-          <CardFooter className="justify-center">
-            <p className="text-sm text-muted-foreground">
-              {t("dontHaveAccount")}{" "}
-              <Link
-                href={`${basePath}/account/register`}
-                className="text-primary hover:text-primary/70 font-medium"
-              >
-                {t("signUp")}
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
+              </p>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     );
   }

@@ -1,6 +1,8 @@
+import { Award, HeartHandshake, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { PageHeroSection } from "@/components/layout/PageHeroSection";
 import { cachedGetPolicy, getPolicy } from "@/lib/data/policies";
 import {
   buildLocalizedAlternates,
@@ -89,20 +91,57 @@ export default async function PolicyPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">{policy.name}</h1>
-      {policy.body_html ? (
-        <div
-          className="prose prose-gray"
-          dangerouslySetInnerHTML={{ __html: policy.body_html }}
-        />
-      ) : policy.body ? (
-        <div className="prose prose-gray whitespace-pre-wrap">
-          {policy.body}
-        </div>
-      ) : (
-        <p className="text-gray-500">{t("noContent")}</p>
-      )}
+    <div>
+      <PageHeroSection
+        compact
+        badge="TRANSPARENCY & CUSTOMER CARE"
+        titleLine1={policy.name}
+        description="Our direct-trade commitments, quality standards, and customer care principles at Kabuna."
+        bgImageSrc="/images/hero-mountain.jpg"
+        bgImageAlt="Majestic Ethiopian highlands"
+        focalImageSrc="/images/ceremony/cini.jpg"
+        focalImageAlt="Handcrafted Ethiopian porcelain Cini cup"
+        focalImageIsCutout={false}
+        pillarsTitle="Our Foundational Standards"
+        pillars={[
+          {
+            icon: <ShieldCheck className="w-6 h-6" />,
+            titleLine1: "Direct-Trade",
+            titleLine2: "Integrity & Equity",
+            description:
+              "Long-term partnerships and transparent compensation directly supporting Ethiopian smallholder farmers.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Customer Care",
+            titleLine2: "& Support Pledge",
+            description:
+              "Prompt resolution, insured shipping coverage, and expert guidance for all coffee and ceremony inquiries.",
+          },
+          {
+            icon: <Award className="w-6 h-6" />,
+            titleLine1: "Handcrafted &",
+            titleLine2: "Strict Quality Inspection",
+            description:
+              "Every bag of green beans is rigorously cupped and every ceramic piece is hand-inspected before dispatch.",
+          },
+        ]}
+      />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        {policy.body_html ? (
+          <div
+            className="prose prose-stone max-w-none"
+            dangerouslySetInnerHTML={{ __html: policy.body_html }}
+          />
+        ) : policy.body ? (
+          <div className="prose prose-stone max-w-none whitespace-pre-wrap">
+            {policy.body}
+          </div>
+        ) : (
+          <p className="text-gray-500">{t("noContent")}</p>
+        )}
+      </div>
     </div>
   );
 }

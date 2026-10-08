@@ -68,7 +68,10 @@ export default async function CategoryPage({
 
       <CategoryBanner category={category} basePath={basePath} locale={locale} />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div
+        id="category-products"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10"
+      >
         <ProductListing
           state={listingState}
           basePath={basePath}

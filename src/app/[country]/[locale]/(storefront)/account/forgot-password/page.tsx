@@ -1,10 +1,18 @@
 "use client";
 
-import { CircleAlert, CircleCheck, Mail } from "lucide-react";
+import {
+  CircleAlert,
+  CircleCheck,
+  HeartHandshake,
+  Mail,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { PageHeroSection } from "@/components/layout/PageHeroSection";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,39 +59,151 @@ export default function ForgotPasswordPage() {
     }
   };
 
+  const heroPillars = [
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      titleLine1: "Encrypted & Secure",
+      titleLine2: "Account Recovery",
+      description:
+        "One-time cryptographically secure verification tokens protect your membership access.",
+    },
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      titleLine1: "Instant Email",
+      titleLine2: "Dispatch",
+      description:
+        "Reset instructions delivered directly to your verified inbox within moments.",
+    },
+    {
+      icon: <HeartHandshake className="w-6 h-6" />,
+      titleLine1: "Dedicated Member",
+      titleLine2: "Concierge Assistance",
+      description:
+        "Our support specialists are always on hand to assist with recurring harvest orders.",
+    },
+  ];
+
   if (submitted) {
     return (
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div>
+        <PageHeroSection
+          compact
+          badge="ACCOUNT SECURITY"
+          titleLine1="Check Your Email"
+          titleLine2="For Password Link"
+          description="We have sent password recovery instructions to your email address."
+          bgImageSrc="/images/hero-mountain.jpg"
+          bgImageAlt="Ethiopian mountain highlands"
+          focalImageSrc="/images/hero-cup.png"
+          focalImageAlt="Ceramic coffee cup"
+          focalImageIsCutout={true}
+          pillarsTitle="Member Security & Support"
+          pillars={heroPillars}
+        />
+        <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <Card>
+            <CardHeader className="text-center">
+              <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                <CircleCheck className="w-6 h-6 text-green-600" />
+              </div>
+              <CardTitle>{t("checkYourEmail")}</CardTitle>
+              <CardDescription>
+                {t.rich("resetEmailSent", {
+                  email,
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <div className="flex items-start gap-3 text-sm text-gray-600">
+                <Mail className="w-5 h-5 mt-0.5 flex-shrink-0 text-gray-400" />
+                <p>{t("linkExpiry")}</p>
+              </div>
+
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  setSubmitted(false);
+                  setEmail("");
+                }}
+              >
+                {t("tryDifferentEmail")}
+              </Button>
+            </CardContent>
+
+            <CardFooter className="justify-center">
+              <Link
+                href={`${basePath}/account`}
+                className="text-sm text-primary hover:text-primary/70 font-medium"
+              >
+                {t("backToSignIn")}
+              </Link>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <PageHeroSection
+        compact
+        badge="ACCOUNT ASSISTANCE"
+        titleLine1="Reset Your Account"
+        titleLine2="Password"
+        description="Enter the email associated with your Kabuna member account to receive password recovery instructions."
+        bgImageSrc="/images/hero-mountain.jpg"
+        bgImageAlt="Ethiopian mountain highlands"
+        focalImageSrc="/images/hero-cup.png"
+        focalImageAlt="Ceramic coffee cup"
+        focalImageIsCutout={true}
+        pillarsTitle="Member Security & Support"
+        pillars={heroPillars}
+      />
+      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <Card>
           <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2">
-              <CircleCheck className="w-6 h-6 text-green-600" />
-            </div>
-            <CardTitle>{t("checkYourEmail")}</CardTitle>
-            <CardDescription>
-              {t.rich("resetEmailSent", {
-                email,
-                strong: (chunks) => <strong>{chunks}</strong>,
-              })}
-            </CardDescription>
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4">
-            <div className="flex items-start gap-3 text-sm text-gray-600">
-              <Mail className="w-5 h-5 mt-0.5 flex-shrink-0 text-gray-400" />
-              <p>{t("linkExpiry")}</p>
-            </div>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <CircleAlert />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => {
-                setSubmitted(false);
-                setEmail("");
-              }}
-            >
-              {t("tryDifferentEmail")}
-            </Button>
+              <Field>
+                <FieldLabel htmlFor="email">{t("email")}</FieldLabel>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="you@example.com"
+                />
+              </Field>
+
+              <div className="w-full">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  size="lg"
+                  className="w-full"
+                >
+                  {submitting ? t("sending") : t("sendResetLink")}
+                </Button>
+              </div>
+            </form>
           </CardContent>
 
           <CardFooter className="justify-center">
@@ -96,62 +216,6 @@ export default function ForgotPasswordPage() {
           </CardFooter>
         </Card>
       </div>
-    );
-  }
-
-  return (
-    <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>{t("title")}</CardTitle>
-          <CardDescription>{t("description")}</CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <CircleAlert />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <Field>
-              <FieldLabel htmlFor="email">{t("email")}</FieldLabel>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="you@example.com"
-              />
-            </Field>
-
-            <div className="w-full">
-              <Button
-                type="submit"
-                disabled={submitting}
-                size="lg"
-                className="w-full"
-              >
-                {submitting ? t("sending") : t("sendResetLink")}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-
-        <CardFooter className="justify-center">
-          <Link
-            href={`${basePath}/account`}
-            className="text-sm text-primary hover:text-primary/70 font-medium"
-          >
-            {t("backToSignIn")}
-          </Link>
-        </CardFooter>
-      </Card>
     </div>
   );
 }

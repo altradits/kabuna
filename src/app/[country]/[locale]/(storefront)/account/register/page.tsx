@@ -1,10 +1,18 @@
 "use client";
 
-import { CircleAlert, Eye, EyeOff } from "lucide-react";
+import {
+  CircleAlert,
+  Eye,
+  EyeOff,
+  Flame,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { PageHeroSection } from "@/components/layout/PageHeroSection";
 import { PolicyConsent } from "@/components/policy/PolicyConsent";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -100,166 +108,204 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>{t("createAccount")}</CardTitle>
-          <CardDescription>{t("signUpDescription")}</CardDescription>
-        </CardHeader>
+    <div>
+      <PageHeroSection
+        compact
+        badge="BECOME A MEMBER"
+        titleLine1="Join the Kabuna"
+        titleLine2="Coffee Society"
+        description="Unlock priority allocations for rare Ethiopian heirloom micro-lots, expedited buna ceremony deliveries, and member-exclusive tastings."
+        bgImageSrc="/images/hero-mountain.jpg"
+        bgImageAlt="Ethiopian mountain highlands at dusk"
+        focalImageSrc="/images/ceremony/cini.jpg"
+        focalImageAlt="Handcrafted porcelain Cini cup"
+        focalImageIsCutout={false}
+        pillarsTitle="Society Privileges & Commitments"
+        pillars={[
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Priority Access to",
+            titleLine2: "Rare Micro-Lots",
+            description:
+              "Taste exceptional Grade 1 single-origin lots before general release.",
+          },
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Fresh Roasting",
+            titleLine2: "To Your Schedule",
+            description:
+              "Customize your delivery intervals and whole-bean quantities anytime.",
+          },
+          {
+            icon: <ShieldCheck className="w-6 h-6" />,
+            titleLine1: "Direct-Trade",
+            titleLine2: "Farmer Impact",
+            description:
+              "Every member order directly supports living wages and community infrastructure across Sidama, Yirgacheffe, and Guji.",
+          },
+        ]}
+      />
+      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle>{t("createAccount")}</CardTitle>
+            <CardDescription>{t("signUpDescription")}</CardDescription>
+          </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <CircleAlert />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <CircleAlert />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Field>
+                  <FieldLabel htmlFor="firstName">{t("firstName")}</FieldLabel>
+                  <Input
+                    type="text"
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    placeholder={t("firstNamePlaceholder")}
+                  />
+                </Field>
+
+                <Field>
+                  <FieldLabel htmlFor="lastName">{t("lastName")}</FieldLabel>
+                  <Input
+                    type="text"
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    placeholder={t("lastNamePlaceholder")}
+                  />
+                </Field>
+              </div>
+
               <Field>
-                <FieldLabel htmlFor="firstName">{t("firstName")}</FieldLabel>
+                <FieldLabel htmlFor="email">{ta("email")}</FieldLabel>
                 <Input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder={t("firstNamePlaceholder")}
+                  placeholder={t("emailPlaceholder")}
                 />
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="lastName">{t("lastName")}</FieldLabel>
-                <Input
-                  type="text"
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                  placeholder={t("lastNamePlaceholder")}
-                />
+                <FieldLabel htmlFor="password">{ta("password")}</FieldLabel>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="••••••••"
+                    className="pr-10"
+                  />
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? ta("hidePassword") : ta("showPassword")
+                      }
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
               </Field>
-            </div>
 
-            <Field>
-              <FieldLabel htmlFor="email">{ta("email")}</FieldLabel>
-              <Input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder={t("emailPlaceholder")}
+              <Field>
+                <FieldLabel htmlFor="passwordConfirmation">
+                  {t("confirmPassword")}
+                </FieldLabel>
+                <div className="relative">
+                  <Input
+                    type={showPasswordConfirmation ? "text" : "password"}
+                    id="passwordConfirmation"
+                    value={passwordConfirmation}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="••••••••"
+                    className="pr-10"
+                  />
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() =>
+                        setShowPasswordConfirmation(!showPasswordConfirmation)
+                      }
+                      aria-label={
+                        showPasswordConfirmation
+                          ? ta("hidePassword")
+                          : ta("showPassword")
+                      }
+                    >
+                      {showPasswordConfirmation ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </Field>
+
+              <PolicyConsent
+                checked={policyConsent}
+                onCheckedChange={(checked) => {
+                  setPolicyConsent(checked);
+                  if (checked) setPolicyError(false);
+                }}
+                error={policyError}
               />
-            </Field>
 
-            <Field>
-              <FieldLabel htmlFor="password">{ta("password")}</FieldLabel>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  placeholder="••••••••"
-                  className="pr-10"
-                />
-                <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? ta("hidePassword") : ta("showPassword")
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </Button>
-                </div>
+              <div className="w-full">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  size="lg"
+                  className="w-full"
+                >
+                  {submitting ? t("creatingAccount") : t("createAccount")}
+                </Button>
               </div>
-            </Field>
+            </form>
+          </CardContent>
 
-            <Field>
-              <FieldLabel htmlFor="passwordConfirmation">
-                {t("confirmPassword")}
-              </FieldLabel>
-              <div className="relative">
-                <Input
-                  type={showPasswordConfirmation ? "text" : "password"}
-                  id="passwordConfirmation"
-                  value={passwordConfirmation}
-                  onChange={(e) => setPasswordConfirmation(e.target.value)}
-                  required
-                  minLength={6}
-                  placeholder="••••••••"
-                  className="pr-10"
-                />
-                <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() =>
-                      setShowPasswordConfirmation(!showPasswordConfirmation)
-                    }
-                    aria-label={
-                      showPasswordConfirmation
-                        ? ta("hidePassword")
-                        : ta("showPassword")
-                    }
-                  >
-                    {showPasswordConfirmation ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </Field>
-
-            <PolicyConsent
-              checked={policyConsent}
-              onCheckedChange={(checked) => {
-                setPolicyConsent(checked);
-                if (checked) setPolicyError(false);
-              }}
-              error={policyError}
-            />
-
-            <div className="w-full">
-              <Button
-                type="submit"
-                disabled={submitting}
-                size="lg"
-                className="w-full"
+          <CardFooter className="justify-center">
+            <p className="text-sm text-muted-foreground">
+              {t("alreadyHaveAccount")}{" "}
+              <Link
+                href={`${basePath}/account`}
+                className="text-primary hover:text-primary/70 font-medium"
               >
-                {submitting ? t("creatingAccount") : t("createAccount")}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-
-        <CardFooter className="justify-center">
-          <p className="text-sm text-muted-foreground">
-            {t("alreadyHaveAccount")}{" "}
-            <Link
-              href={`${basePath}/account`}
-              className="text-primary hover:text-primary/70 font-medium"
-            >
-              {t("signIn")}
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+                {t("signIn")}
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }

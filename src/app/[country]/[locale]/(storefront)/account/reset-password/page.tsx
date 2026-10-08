@@ -1,10 +1,19 @@
 "use client";
 
-import { CircleAlert, CircleCheck, Eye, EyeOff } from "lucide-react";
+import {
+  CircleAlert,
+  CircleCheck,
+  Eye,
+  EyeOff,
+  HeartHandshake,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { PageHeroSection } from "@/components/layout/PageHeroSection";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,25 +47,65 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  const heroPillars = [
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      titleLine1: "Encrypted & Secure",
+      titleLine2: "Credential Update",
+      description:
+        "Direct end-to-end credential hashing ensuring member privacy and data protection.",
+    },
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      titleLine1: "Immediate Account",
+      titleLine2: "Re-activation",
+      description:
+        "Your session and saved harvest preferences are instantly ready after setting your password.",
+    },
+    {
+      icon: <HeartHandshake className="w-6 h-6" />,
+      titleLine1: "Dedicated Member",
+      titleLine2: "Concierge Care",
+      description:
+        "Need help accessing past orders or subscriptions? Our team is always ready to assist.",
+    },
+  ];
+
   // No token = invalid link
   if (!token) {
     return (
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle>{t("invalidLink")}</CardTitle>
-            <CardDescription>{t("invalidLinkDescription")}</CardDescription>
-          </CardHeader>
+      <div>
+        <PageHeroSection
+          compact
+          badge="ACCOUNT SECURITY"
+          titleLine1="Invalid Or Expired"
+          titleLine2="Password Link"
+          description="The password reset link is invalid or has expired. Please request a new link to continue."
+          bgImageSrc="/images/hero-mountain.jpg"
+          bgImageAlt="Ethiopian mountain highlands"
+          focalImageSrc="/images/hero-cup.png"
+          focalImageAlt="Ceramic coffee cup"
+          focalImageIsCutout={true}
+          pillarsTitle="Member Security & Support"
+          pillars={heroPillars}
+        />
+        <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle>{t("invalidLink")}</CardTitle>
+              <CardDescription>{t("invalidLinkDescription")}</CardDescription>
+            </CardHeader>
 
-          <CardFooter className="justify-center">
-            <Link
-              href={`${basePath}/account/forgot-password`}
-              className="text-sm text-primary hover:text-primary/70 font-medium"
-            >
-              {t("requestNewLink")}
-            </Link>
-          </CardFooter>
-        </Card>
+            <CardFooter className="justify-center">
+              <Link
+                href={`${basePath}/account/forgot-password`}
+                className="text-sm text-primary hover:text-primary/70 font-medium"
+              >
+                {t("requestNewLink")}
+              </Link>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -93,143 +142,175 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <Card>
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2">
-              <CircleCheck className="w-6 h-6 text-green-600" />
-            </div>
-            <CardTitle>{t("success")}</CardTitle>
-            <CardDescription>{t("successDescription")}</CardDescription>
-          </CardHeader>
+      <div>
+        <PageHeroSection
+          compact
+          badge="PASSWORD UPDATED"
+          titleLine1="Password Reset"
+          titleLine2="Successful"
+          description="Your password has been securely updated. You can now sign in to your Kabuna member account."
+          bgImageSrc="/images/hero-mountain.jpg"
+          bgImageAlt="Ethiopian mountain highlands"
+          focalImageSrc="/images/hero-cup.png"
+          focalImageAlt="Ceramic coffee cup"
+          focalImageIsCutout={true}
+          pillarsTitle="Member Security & Support"
+          pillars={heroPillars}
+        />
+        <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <Card>
+            <CardHeader className="text-center">
+              <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                <CircleCheck className="w-6 h-6 text-green-600" />
+              </div>
+              <CardTitle>{t("success")}</CardTitle>
+              <CardDescription>{t("successDescription")}</CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            <Button
-              size="lg"
-              className="w-full"
-              onClick={() => router.push(`${basePath}/account`)}
-            >
-              {t("signIn")}
-            </Button>
-          </CardContent>
-        </Card>
+            <CardContent>
+              <Button
+                size="lg"
+                className="w-full"
+                onClick={() => router.push(`${basePath}/account`)}
+              >
+                {t("signIn")}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>{t("title")}</CardTitle>
-          <CardDescription>{t("description")}</CardDescription>
-        </CardHeader>
+    <div>
+      <PageHeroSection
+        compact
+        badge="ACCOUNT SECURITY"
+        titleLine1="Create Your New"
+        titleLine2="Account Password"
+        description="Choose a secure password for your Kabuna member account to regain access to your orders and subscriptions."
+        bgImageSrc="/images/hero-mountain.jpg"
+        bgImageAlt="Ethiopian mountain highlands"
+        focalImageSrc="/images/hero-cup.png"
+        focalImageAlt="Ceramic coffee cup"
+        focalImageIsCutout={true}
+        pillarsTitle="Member Security & Support"
+        pillars={heroPillars}
+      />
+      <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
+          </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <CircleAlert />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <CircleAlert />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <Field>
-              <FieldLabel htmlFor="password">{t("newPassword")}</FieldLabel>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  placeholder="••••••••"
-                  className="pr-10"
-                />
-                <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? ta("hidePassword") : ta("showPassword")
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </Button>
+              <Field>
+                <FieldLabel htmlFor="password">{t("newPassword")}</FieldLabel>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="••••••••"
+                    className="pr-10"
+                  />
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={
+                        showPassword ? ta("hidePassword") : ta("showPassword")
+                      }
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Field>
+              </Field>
 
-            <Field>
-              <FieldLabel htmlFor="passwordConfirmation">
-                {t("confirmPassword")}
-              </FieldLabel>
-              <div className="relative">
-                <Input
-                  type={showPasswordConfirmation ? "text" : "password"}
-                  id="passwordConfirmation"
-                  autoComplete="new-password"
-                  value={passwordConfirmation}
-                  onChange={(e) => setPasswordConfirmation(e.target.value)}
-                  required
-                  minLength={6}
-                  placeholder="••••••••"
-                  className="pr-10"
-                />
-                <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() =>
-                      setShowPasswordConfirmation(!showPasswordConfirmation)
-                    }
-                    aria-label={
-                      showPasswordConfirmation
-                        ? ta("hidePassword")
-                        : ta("showPassword")
-                    }
-                  >
-                    {showPasswordConfirmation ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </Button>
+              <Field>
+                <FieldLabel htmlFor="passwordConfirmation">
+                  {t("confirmPassword")}
+                </FieldLabel>
+                <div className="relative">
+                  <Input
+                    type={showPasswordConfirmation ? "text" : "password"}
+                    id="passwordConfirmation"
+                    autoComplete="new-password"
+                    value={passwordConfirmation}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="••••••••"
+                    className="pr-10"
+                  />
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() =>
+                        setShowPasswordConfirmation(!showPasswordConfirmation)
+                      }
+                      aria-label={
+                        showPasswordConfirmation
+                          ? ta("hidePassword")
+                          : ta("showPassword")
+                      }
+                    >
+                      {showPasswordConfirmation ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
+              </Field>
+
+              <div className="w-full">
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  size="lg"
+                  className="w-full"
+                >
+                  {submitting ? t("resetting") : t("resetPassword")}
+                </Button>
               </div>
-            </Field>
+            </form>
+          </CardContent>
 
-            <div className="w-full">
-              <Button
-                type="submit"
-                disabled={submitting}
-                size="lg"
-                className="w-full"
-              >
-                {submitting ? t("resetting") : t("resetPassword")}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-
-        <CardFooter className="justify-center">
-          <Link
-            href={`${basePath}/account`}
-            className="text-sm text-primary hover:text-primary/70 font-medium"
-          >
-            {t("backToSignIn")}
-          </Link>
-        </CardFooter>
-      </Card>
+          <CardFooter className="justify-center">
+            <Link
+              href={`${basePath}/account`}
+              className="text-sm text-primary hover:text-primary/70 font-medium"
+            >
+              {t("backToSignIn")}
+            </Link>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }
