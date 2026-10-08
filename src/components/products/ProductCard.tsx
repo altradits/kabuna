@@ -134,7 +134,7 @@ export const ProductCard = memo(function ProductCard({
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
+      <div className="p-3 sm:p-4 flex flex-col flex-1">
         <h3 className="text-sm font-semibold text-stone-900 group-hover:text-[#a37947] transition-colors leading-snug line-clamp-1">
           {/* Stretched link: the ::after overlay keeps the whole card clickable
               without wrapping the content in an <a> — HiddenPricePrompt renders
@@ -154,11 +154,11 @@ export const ProductCard = memo(function ProductCard({
           </p>
         )}
 
-        {/* Bottom Section: Price in line with Add to Cart, space between */}
-        <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-          <div className="flex items-baseline gap-1.5 min-w-0">
+        {/* Bottom Section: Price in line with Add to Cart, space between (responsive across all screen sizes) */}
+        <div className="mt-auto pt-2.5 sm:pt-3 flex flex-wrap items-center justify-between gap-y-2 gap-x-2">
+          <div className="flex items-baseline gap-1 sm:gap-1.5 min-w-0">
             {displayPrice ? (
-              <span className="text-base sm:text-lg font-bold text-stone-900 tracking-tight">
+              <span className="text-sm sm:text-base md:text-lg font-bold text-stone-900 tracking-tight whitespace-nowrap">
                 {displayPrice}
               </span>
             ) : (
@@ -167,19 +167,19 @@ export const ProductCard = memo(function ProductCard({
               <HiddenPricePrompt />
             )}
             {onSale && strikethroughPrice && (
-              <span className="text-xs sm:text-sm text-stone-400 line-through">
+              <span className="text-[10px] sm:text-xs text-stone-400 line-through whitespace-nowrap">
                 {strikethroughPrice}
               </span>
             )}
           </div>
 
-          {/* Add to Cart button (in line with price, space-between, no icon) */}
+          {/* Add to Cart button (in line with price, space-between, no icon, responsive on mobile & desktop) */}
           {isAvailable ? (
             <button
               type="button"
               disabled={isAdding}
               onClick={handleAddToCart}
-              className="relative z-10 shrink-0 inline-flex items-center justify-center py-1.5 px-3 sm:py-2 sm:px-3.5 rounded-full text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
+              className="relative z-10 shrink-0 inline-flex items-center justify-center min-h-[30px] sm:min-h-[34px] py-1 sm:py-1.5 px-2.5 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
               aria-label={`${t("addToCart")} - ${product.name}`}
             >
               {isAdding ? t("adding") : isSuccess ? "Added" : t("addToCart")}
@@ -188,7 +188,7 @@ export const ProductCard = memo(function ProductCard({
             <button
               type="button"
               disabled
-              className="relative z-10 shrink-0 inline-flex items-center justify-center py-1.5 px-3 sm:py-2 sm:px-3.5 rounded-full text-xs font-medium tracking-wide bg-stone-100 text-stone-400 cursor-not-allowed whitespace-nowrap"
+              className="relative z-10 shrink-0 inline-flex items-center justify-center min-h-[30px] sm:min-h-[34px] py-1 sm:py-1.5 px-2.5 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-medium tracking-wide bg-stone-100 text-stone-400 cursor-not-allowed whitespace-nowrap"
             >
               {t("outOfStock")}
             </button>
