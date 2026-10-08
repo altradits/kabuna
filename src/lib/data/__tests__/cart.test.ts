@@ -17,7 +17,10 @@ const mockClient = {
   },
 };
 
-const { mockGetCartId } = vi.hoisted(() => ({ mockGetCartId: vi.fn() }));
+const { mockGetCartId, mockLocalCookies } = vi.hoisted(() => ({
+  mockGetCartId: vi.fn(),
+  mockLocalCookies: { store: {} as Record<string, string> },
+}));
 
 vi.mock("@/lib/spree", () => ({
   getClient: () => mockClient,
@@ -33,6 +36,18 @@ vi.mock("@/lib/spree", () => ({
   getLocaleOptions: vi.fn().mockResolvedValue({ locale: "en", country: "us" }),
   setCartCookies: vi.fn(),
   clearCartCookies: vi.fn(),
+  getLocalCartRaw: vi
+    .fn()
+    .mockImplementation(
+      async (surface = "dtc") =>
+        mockLocalCookies.store[`_kabuna_cart_${surface}`],
+    ),
+  setLocalCartRaw: vi.fn().mockImplementation(async (val, surface = "dtc") => {
+    mockLocalCookies.store[`_kabuna_cart_${surface}`] = val;
+  }),
+  clearLocalCartRaw: vi.fn().mockImplementation(async (surface = "dtc") => {
+    delete mockLocalCookies.store[`_kabuna_cart_${surface}`];
+  }),
   // Real logic against the mocked getCartId — the DTC cookie is poisoned when
   // it holds the wholesale cart's id.
   isPoisonedDtcCartId: async (cartId: string, surface: string) => {
@@ -74,6 +89,7 @@ const mockCart = {
 describe("cart server actions", () => {
   beforeEach(async () => {
     vi.clearAllMocks();
+    mockLocalCookies.store = {};
     // Surface-aware cart-id cookie: only DTC has one by default, so the
     // cross-surface poison guard sees no wholesale cookie to collide with.
     const { getCartId } = await import("@/lib/spree");
@@ -206,6 +222,22 @@ describe("cart server actions", () => {
         success: false,
         error: "Failed to add item to cart",
       });
+    });
+
+    it("falls back to local cart when Spree throws fetch failed error", async () => {
+      mockClient.carts.get.mockResolvedValue(mockCart);
+      mockClient.carts.items.create.mockRejectedValue(
+        new TypeError("fetch failed"),
+      );
+
+      const result = await addToCart("chelbesa", 2);
+
+      expect(result.success).toBe(true);
+      if (result.success && result.cart) {
+        expect(result.cart.total_quantity).toBe(2);
+        expect(result.cart.items.length).toBe(1);
+        expect(result.cart.items[0].name).toBe("Chelbesa");
+      }
     });
   });
 

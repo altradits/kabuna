@@ -91,6 +91,44 @@ export async function setCartCookies(
   }
 }
 
+export function getLocalCartCookieName(
+  surface: Surface = DEFAULT_SURFACE,
+): string {
+  return `_kabuna_cart_${surface}`;
+}
+
+export async function getLocalCartRaw(
+  surface: Surface = DEFAULT_SURFACE,
+): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  return cookieStore.get(getLocalCartCookieName(surface))?.value;
+}
+
+export async function setLocalCartRaw(
+  value: string,
+  surface: Surface = DEFAULT_SURFACE,
+): Promise<void> {
+  const cookieStore = await cookies();
+  const opts = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: CART_TOKEN_MAX_AGE,
+  };
+  cookieStore.set(getLocalCartCookieName(surface), value, opts);
+}
+
+export async function clearLocalCartRaw(
+  surface: Surface = DEFAULT_SURFACE,
+): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(getLocalCartCookieName(surface), "", {
+    maxAge: -1,
+    path: "/",
+  });
+}
+
 export async function clearCartCookies(
   surface: Surface = DEFAULT_SURFACE,
 ): Promise<void> {
@@ -98,6 +136,7 @@ export async function clearCartCookies(
   const opts = { maxAge: -1, path: "/" };
   cookieStore.set(getCartCookieName(surface), "", opts);
   cookieStore.set(getCartIdCookieName(surface), "", opts);
+  cookieStore.set(getLocalCartCookieName(surface), "", opts);
 }
 
 /**

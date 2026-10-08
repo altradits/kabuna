@@ -13,6 +13,11 @@ import {
   type Surface,
 } from "@/lib/spree";
 import { getCart } from "./cart";
+import {
+  isLocalCartId,
+  selectLocalDeliveryRate,
+  updateLocalCartAddresses,
+} from "./local-cart";
 import { getOrder } from "./orders";
 import { actionResult, withFallback } from "./utils";
 import { getWholesaleChannel } from "./wholesale";
@@ -89,8 +94,8 @@ export async function getCheckoutOrder(cartId: string): Promise<Cart | null> {
   const surface = await resolveSurfaceForCart(cartId);
 
   // Try active cart first (order may still be in checkout)
-  const cart = await getCart(undefined, surface);
-  if (cart && cart.id === cartId) return cart;
+  const cart = await getCart(cartId, surface);
+  if (cart && (cart.id === cartId || isLocalCartId(cartId))) return cart;
 
   // Cart completed — fetch as completed order.
   return withFallback(
@@ -125,6 +130,11 @@ export async function updateOrderAddresses(
 ) {
   return actionResult(async () => {
     const surface = await resolveSurfaceForCart(cartId);
+    if (isLocalCartId(cartId)) {
+      const cart = await updateLocalCartAddresses(cartId, addresses, surface);
+      updateTag(checkoutTag(surface));
+      return { cart };
+    }
     const options = await getCartOptions(surface);
     const id = await requireCartId(surface);
     const cart = await getClientForSurface(surface).carts.update(
@@ -162,6 +172,15 @@ export async function selectDeliveryRate(
 ) {
   return actionResult(async () => {
     const surface = await resolveSurfaceForCart(cartId);
+    if (isLocalCartId(cartId)) {
+      const cart = await selectLocalDeliveryRate(
+        cartId,
+        deliveryRateId,
+        surface,
+      );
+      updateTag(checkoutTag(surface));
+      return { cart };
+    }
     const options = await getCartOptions(surface);
     const id = await requireCartId(surface);
     const cart = await getClientForSurface(surface).carts.fulfillments.update(
@@ -181,6 +200,14 @@ export async function selectDeliveryRate(
  */
 export async function applyCode(cartId: string, code: string) {
   const surface = await resolveSurfaceForCart(cartId);
+  if (isLocalCartId(cartId)) {
+    const cart = await getCart(cartId, surface);
+    return {
+      success: true,
+      cart: cart ?? undefined,
+      type: "discount" as const,
+    };
+  }
   const options = await getCartOptions(surface);
   const id = await requireCartId(surface);
   const client = getClientForSurface(surface);

@@ -14,6 +14,7 @@ import {
   resolveSurfaceForCart,
   resolveSurfaceForCartVerified,
 } from "./checkout";
+import { completeLocalCart, isLocalCartId } from "./local-cart";
 import { getOrder } from "./orders";
 import { actionResult } from "./utils";
 
@@ -81,6 +82,16 @@ export async function createDirectPayment(
 ) {
   return actionResult(async () => {
     const surface = await resolveSurfaceForCart(cartId);
+    if (isLocalCartId(cartId)) {
+      const cart = await getCart(cartId, surface);
+      return {
+        payment: {
+          id: "payment_local",
+          amount: cart?.total,
+          payment_method_id: paymentMethodId,
+        },
+      };
+    }
     const options = await getCartOptions(surface);
     const id = await requireCartId(surface);
     const payment = await getClientForSurface(surface).carts.payments.create(
@@ -127,6 +138,12 @@ export async function completeCheckoutOrder(
   knownSurface?: Surface,
 ) {
   const surface = knownSurface ?? (await resolveSurfaceForCart(cartId));
+  if (isLocalCartId(cartId)) {
+    const completedCart = await completeLocalCart(cartId, surface);
+    updateTag(checkoutTag(surface));
+    updateTag(cartTag(surface));
+    return { success: true as const, order: completedCart as unknown as Order };
+  }
   try {
     const options = await getCartOptions(surface);
     // A marketplace cart splits across sellers, so completion returns an

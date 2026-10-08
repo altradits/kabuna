@@ -17,6 +17,14 @@ import {
   type Surface,
   setCartCookies,
 } from "@/lib/spree";
+import {
+  addItemToLocalCart,
+  getLocalCart,
+  isLocalCartId,
+  isNetworkError,
+  removeItemFromLocalCart,
+  updateItemInLocalCart,
+} from "./local-cart";
 import { actionResult } from "./utils";
 
 /** Cache tag for a surface's cart, so DTC and wholesale carts invalidate independently. */
@@ -61,7 +69,17 @@ export async function getCart(
   const cartId = explicitCartId ?? (await getCartId(surface));
   const client = getClientForSurface(surface);
 
-  if (!cartId && !token) return null;
+  if (isLocalCartId(cartId)) {
+    return getLocalCart(surface);
+  }
+
+  if (!cartId && !token) {
+    const localCart = await getLocalCart(surface);
+    if (localCart && localCart.items.length > 0) {
+      return localCart;
+    }
+    return null;
+  }
 
   try {
     if (cartId) {
@@ -97,7 +115,13 @@ export async function getCart(
     }
 
     return null;
-  } catch {
+  } catch (error) {
+    if (isNetworkError(error)) {
+      const localCart = await getLocalCart(surface);
+      if (localCart && localCart.items.length > 0) {
+        return localCart;
+      }
+    }
     // Cart not found (e.g., order was completed) — clear stale cookies.
     // Wrapped in try/catch because clearCartCookies sets cookies, which
     // is not allowed in Server Components (only in Server Actions).
@@ -129,19 +153,31 @@ export async function getOrCreateCart(
   const existing = await getCart(undefined, surface);
   if (existing) return existing;
 
-  const token = await getAccessToken();
-  const localeOptions = await getLocaleOptions();
-  const cartParams =
-    params && Object.keys(params).length > 0 ? params : undefined;
-  const cart = await getClientForSurface(surface).carts.create(cartParams, {
-    ...localeOptions,
-    ...(token ? { token } : undefined),
-  });
+  try {
+    const token = await getAccessToken();
+    const localeOptions = await getLocaleOptions();
+    const cartParams =
+      params && Object.keys(params).length > 0 ? params : undefined;
+    const cart = await getClientForSurface(surface).carts.create(cartParams, {
+      ...localeOptions,
+      ...(token ? { token } : undefined),
+    });
 
-  await setCartCookies(cart.id, cart.token, surface);
+    await setCartCookies(cart.id, cart.token, surface);
 
-  updateTag(cartTag(surface));
-  return cart;
+    updateTag(cartTag(surface));
+    return cart;
+  } catch (error) {
+    if (isNetworkError(error)) {
+      const initialVariant = params?.items?.[0]?.variant_id;
+      const initialQty = params?.items?.[0]?.quantity ?? 1;
+      if (initialVariant) {
+        return addItemToLocalCart(initialVariant, initialQty, surface);
+      }
+      return addItemToLocalCart("", 0, surface);
+    }
+    throw error;
+  }
 }
 
 export async function clearCart(surface: Surface = DEFAULT_SURFACE) {
@@ -158,18 +194,52 @@ export async function addToCart(
   surface: Surface = DEFAULT_SURFACE,
 ) {
   return actionResult(async () => {
-    const cart = await getOrCreateCart(undefined, surface);
-    const spreeToken = await getCartToken(surface);
-    const token = await getAccessToken();
+    const cartId = await getCartId(surface);
+    if (isLocalCartId(cartId)) {
+      const updatedCart = await addItemToLocalCart(
+        variantId,
+        quantity,
+        surface,
+      );
+      updateTag(cartTag(surface));
+      return { cart: updatedCart };
+    }
 
-    const updatedCart = await getClientForSurface(surface).carts.items.create(
-      cart.id,
-      { variant_id: variantId, quantity },
-      { spreeToken, token },
-    );
+    try {
+      const cart = await getOrCreateCart(undefined, surface);
+      if (isLocalCartId(cart.id)) {
+        const updatedCart = await addItemToLocalCart(
+          variantId,
+          quantity,
+          surface,
+        );
+        updateTag(cartTag(surface));
+        return { cart: updatedCart };
+      }
 
-    updateTag(cartTag(surface));
-    return { cart: updatedCart };
+      const spreeToken = await getCartToken(surface);
+      const token = await getAccessToken();
+
+      const updatedCart = await getClientForSurface(surface).carts.items.create(
+        cart.id,
+        { variant_id: variantId, quantity },
+        { spreeToken, token },
+      );
+
+      updateTag(cartTag(surface));
+      return { cart: updatedCart };
+    } catch (error) {
+      if (isNetworkError(error)) {
+        const updatedCart = await addItemToLocalCart(
+          variantId,
+          quantity,
+          surface,
+        );
+        updateTag(cartTag(surface));
+        return { cart: updatedCart };
+      }
+      throw error;
+    }
   }, "Failed to add item to cart");
 }
 
@@ -179,18 +249,34 @@ export async function updateCartItem(
   surface: Surface = DEFAULT_SURFACE,
 ) {
   return actionResult(async () => {
-    const options = await getCartOptions(surface);
-    const cartId = await requireCartId(surface);
+    const cartId = await getCartId(surface);
+    if (isLocalCartId(cartId) || lineItemId.startsWith("li_local_")) {
+      const cart = await updateItemInLocalCart(lineItemId, quantity, surface);
+      updateTag(cartTag(surface));
+      return { cart };
+    }
 
-    const cart = await getClientForSurface(surface).carts.items.update(
-      cartId,
-      lineItemId,
-      { quantity },
-      options,
-    );
+    try {
+      const options = await getCartOptions(surface);
+      const id = await requireCartId(surface);
 
-    updateTag(cartTag(surface));
-    return { cart };
+      const cart = await getClientForSurface(surface).carts.items.update(
+        id,
+        lineItemId,
+        { quantity },
+        options,
+      );
+
+      updateTag(cartTag(surface));
+      return { cart };
+    } catch (error) {
+      if (isNetworkError(error)) {
+        const cart = await updateItemInLocalCart(lineItemId, quantity, surface);
+        updateTag(cartTag(surface));
+        return { cart };
+      }
+      throw error;
+    }
   }, "Failed to update cart item");
 }
 
@@ -199,17 +285,33 @@ export async function removeCartItem(
   surface: Surface = DEFAULT_SURFACE,
 ) {
   return actionResult(async () => {
-    const options = await getCartOptions(surface);
-    const cartId = await requireCartId(surface);
+    const cartId = await getCartId(surface);
+    if (isLocalCartId(cartId) || lineItemId.startsWith("li_local_")) {
+      const cart = await removeItemFromLocalCart(lineItemId, surface);
+      updateTag(cartTag(surface));
+      return { cart };
+    }
 
-    const cart = await getClientForSurface(surface).carts.items.delete(
-      cartId,
-      lineItemId,
-      options,
-    );
+    try {
+      const options = await getCartOptions(surface);
+      const id = await requireCartId(surface);
 
-    updateTag(cartTag(surface));
-    return { cart };
+      const cart = await getClientForSurface(surface).carts.items.delete(
+        id,
+        lineItemId,
+        options,
+      );
+
+      updateTag(cartTag(surface));
+      return { cart };
+    } catch (error) {
+      if (isNetworkError(error)) {
+        const cart = await removeItemFromLocalCart(lineItemId, surface);
+        updateTag(cartTag(surface));
+        return { cart };
+      }
+      throw error;
+    }
   }, "Failed to remove cart item");
 }
 
@@ -221,6 +323,10 @@ export async function associateCartWithUser(
     const token = await getAccessToken();
     const cartId = await getCartId(surface);
     if (!cartId || !token) return {};
+
+    if (isLocalCartId(cartId)) {
+      return {};
+    }
 
     try {
       await getClientForSurface(surface).carts.associate(cartId, {
