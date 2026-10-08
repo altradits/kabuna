@@ -127,6 +127,53 @@ async function cachedListCategoryProducts(
     catLower === "cat_ceremony" ||
     catLower === "ctg_so8jagonyx";
 
+  const isYirgacheffe =
+    catLower.includes("yirgacheffe") ||
+    catLower === "cat_yirgacheffe" ||
+    catLower === "ctg_3uwpptcf5w";
+
+  const isGuji =
+    catLower.includes("guji") ||
+    catLower === "cat_guji" ||
+    catLower === "ctg_d6psx31wat";
+
+  const isSidama =
+    catLower.includes("sidama") ||
+    catLower.includes("sidamo") ||
+    catLower === "cat_sidama" ||
+    catLower === "ctg_msx3nojap6";
+
+  const isHarrar =
+    catLower.includes("harrar") ||
+    catLower.includes("harar") ||
+    catLower === "cat_harrar" ||
+    catLower === "ctg_5cqzncrf8j";
+
+  const isLimuKaffa =
+    catLower.includes("kaffa") ||
+    catLower.includes("limu") ||
+    catLower === "cat_limu_kaffa" ||
+    catLower === "ctg_m2nylohtruq";
+
+  const isWashed = catLower.includes("washed") || catLower === "cat_washed";
+
+  const isNatural = catLower.includes("natural") || catLower === "cat_natural";
+
+  const isRoast =
+    catLower.includes("roast") ||
+    catLower === "cat_roast" ||
+    catLower === "ctg_prklvemgbn";
+
+  const isGreen =
+    catLower.includes("green") ||
+    catLower === "cat_green" ||
+    catLower === "ctg_rsclytecfi";
+
+  const isSingleOriginParent =
+    catLower === "single-origin" ||
+    catLower === "cat_single_origin" ||
+    catLower === "ctg_kokt9mvfb0";
+
   const localFiltered = KABUNA_PRODUCTS.filter((p) => {
     if (isCeremonyCategory) {
       return p.categories?.some(
@@ -134,6 +181,63 @@ async function cachedListCategoryProducts(
           c.id === "cat_ceremony" ||
           c.permalink === "buna-ceremony" ||
           c.name.toLowerCase().includes("ceremony"),
+      );
+    }
+    if (isYirgacheffe) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_yirgacheffe" || c.permalink?.includes("yirgacheffe"),
+      );
+    }
+    if (isGuji) {
+      return p.categories?.some(
+        (c) => c.id === "cat_guji" || c.permalink?.includes("guji"),
+      );
+    }
+    if (isSidama) {
+      return p.categories?.some(
+        (c) => c.id === "cat_sidama" || c.permalink?.includes("sidama"),
+      );
+    }
+    if (isHarrar) {
+      return p.categories?.some(
+        (c) => c.id === "cat_harrar" || c.permalink?.includes("harrar"),
+      );
+    }
+    if (isLimuKaffa) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_limu_kaffa" ||
+          c.permalink?.includes("kaffa") ||
+          c.permalink?.includes("limu"),
+      );
+    }
+    if (isWashed) {
+      return p.categories?.some(
+        (c) => c.id === "cat_washed" || c.permalink === "washed",
+      );
+    }
+    if (isNatural) {
+      return p.categories?.some(
+        (c) => c.id === "cat_natural" || c.permalink === "natural",
+      );
+    }
+    if (isRoast) {
+      return p.categories?.some(
+        (c) => c.id === "cat_roast" || c.permalink === "roast-profiles",
+      );
+    }
+    if (isGreen) {
+      return p.categories?.some(
+        (c) => c.id === "cat_green" || c.permalink === "green-coffee",
+      );
+    }
+    if (isSingleOriginParent) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_single_origin" ||
+          c.permalink === "single-origin" ||
+          c.permalink?.startsWith("single-origin/"),
       );
     }
     return p.categories?.some(

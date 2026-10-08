@@ -125,6 +125,24 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
     "/images/ceremony/jebena.jpg",
     "/images/ceremony/cini.jpg",
   ],
+  harrar: [
+    "/images/products/harrar.jpg",
+    "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=85",
+  ],
+  kaffa: [
+    "/images/products/kaffa.jpg",
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=1200&q=85",
+  ],
+  djimmah: [
+    "/images/products/djimmah.jpg",
+    "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=1200&q=85",
+  ],
+  "green-coffee": [
+    "/images/products/green-coffee.jpg",
+    "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
+  ],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
@@ -136,6 +154,10 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("benti") || s.includes("neka")) return "benti-neka";
   if (s.includes("worku") || s.includes("buche")) return "worku-buche";
   if (s.includes("uraga")) return "uraga";
+  if (s.includes("harrar") || s.includes("harar")) return "harrar";
+  if (s.includes("kaffa") || s.includes("limu")) return "kaffa";
+  if (s.includes("djimmah") || s.includes("jimma")) return "djimmah";
+  if (s.includes("green") || s.includes("raw")) return "green-coffee";
 
   // Specific Ethiopian Ceremony Accessories
   if (s.includes("kit") || s.includes("buna-ceremony-kit"))
@@ -456,53 +478,93 @@ function createCategory(
   };
 }
 
+export const CAT_YIRGACHEFFE = createCategory(
+  "cat_yirgacheffe",
+  "Yirgacheffe",
+  "single-origin/yirgacheffe",
+  "Floral aromas, bergamot, and sweet citrus.",
+);
+
+export const CAT_GUJI = createCategory(
+  "cat_guji",
+  "Guji",
+  "single-origin/guji",
+  "Highland volcanic soils producing honeyed stone fruit.",
+);
+
+export const CAT_SIDAMA = createCategory(
+  "cat_sidama",
+  "Sidama",
+  "single-origin/sidama",
+  "Sun-dried strawberry, milk chocolate, and cane sugar.",
+);
+
+export const CAT_HARRAR = createCategory(
+  "cat_harrar",
+  "Harrar Longberry",
+  "single-origin/harrar",
+  "Wild blueberry mocha sweetness and rich body.",
+);
+
+export const CAT_LIMU_KAFFA = createCategory(
+  "cat_limu_kaffa",
+  "Limu & Kaffa Ancient Forest",
+  "single-origin/limu-kaffa",
+  "From the historic botanical origin of Arabica in Kaffa.",
+);
+
+export const CAT_SINGLE_ORIGIN = createCategory(
+  "cat_single_origin",
+  "Single Origin Varieties",
+  "single-origin",
+  "Exceptional single-origin specialty coffees from distinct micro-regions of Ethiopia.",
+  [CAT_YIRGACHEFFE, CAT_GUJI, CAT_SIDAMA, CAT_HARRAR, CAT_LIMU_KAFFA],
+);
+
+export const CAT_WASHED = createCategory(
+  "cat_washed",
+  "Washed Process",
+  "washed",
+  "Pristine mountain spring water fermentation showcasing delicate florals and bright clarity.",
+);
+
+export const CAT_NATURAL = createCategory(
+  "cat_natural",
+  "Natural Process",
+  "natural",
+  "Sun-dried whole coffee cherries on raised African beds with intense fruit sweetness.",
+);
+
+export const CAT_ROAST = createCategory(
+  "cat_roast",
+  "Roast Profiles",
+  "roast-profiles",
+  "Artisanal roast levels calibrated to enhance natural origin characteristics.",
+);
+
+export const CAT_GREEN = createCategory(
+  "cat_green",
+  "Green Coffee (Unroasted)",
+  "green-coffee",
+  "Direct-trade Grade 1 raw green coffee beans for home roasting.",
+);
+
+export const CAT_CEREMONY = createCategory(
+  "cat_ceremony",
+  "Ceremony & Accessories",
+  "buna-ceremony",
+  "Authentic clay Jebena pots, Cini cups, and traditional accessories for Ethiopian Buna Tetu.",
+  [],
+  "/images/ceremony/ceremony-kit.jpg",
+);
+
 export const KABUNA_CATEGORIES: Category[] = [
-  createCategory(
-    "cat_single_origin",
-    "Single Origin Varieties",
-    "single-origin",
-    "Exceptional single-origin specialty coffees from distinct micro-regions of Ethiopia.",
-    [
-      createCategory(
-        "cat_yirgacheffe",
-        "Yirgacheffe",
-        "single-origin/yirgacheffe",
-        "Floral aromas, bergamot, and sweet citrus.",
-      ),
-      createCategory(
-        "cat_guji",
-        "Guji",
-        "single-origin/guji",
-        "Highland volcanic soils producing honeyed stone fruit.",
-      ),
-      createCategory(
-        "cat_sidama",
-        "Sidama",
-        "single-origin/sidama",
-        "Sun-dried strawberry, milk chocolate, and cane sugar.",
-      ),
-    ],
-  ),
-  createCategory(
-    "cat_washed",
-    "Washed Process",
-    "washed",
-    "Pristine mountain spring water fermentation showcasing delicate florals and bright clarity.",
-  ),
-  createCategory(
-    "cat_natural",
-    "Natural Process",
-    "natural",
-    "Sun-dried whole coffee cherries on raised African beds with intense fruit sweetness.",
-  ),
-  createCategory(
-    "cat_ceremony",
-    "Ceremony & Accessories",
-    "buna-ceremony",
-    "Authentic clay Jebena pots, Cini cups, and traditional accessories for Ethiopian Buna Tetu.",
-    [],
-    "/images/ceremony/ceremony-kit.jpg",
-  ),
+  CAT_SINGLE_ORIGIN,
+  CAT_WASHED,
+  CAT_NATURAL,
+  CAT_ROAST,
+  CAT_GREEN,
+  CAT_CEREMONY,
 ];
 
 interface CoffeeSpecProps {
@@ -794,7 +856,7 @@ function buildCeremonyProduct({
     default_variant: variant,
     option_types: [],
     option_values: [],
-    categories: [KABUNA_CATEGORIES[3]],
+    categories: [CAT_CEREMONY],
     custom_fields: customFields,
     prior_price: null,
   };
@@ -811,7 +873,7 @@ export const KABUNA_PRODUCTS: Product[] = [
       "Chelbesa is sourced from smallholder family plots in the famed Chelbesa Kebele within the high-elevation Gedeo Zone (Yirgacheffe). Grown between 1,950 and 2,200 meters above sea level, indigenous Kurume and Dega heirloom cultivars flourish in rich red-brown clay soil under semi-forest shade. Processed using ceramic fermentation tanks that stabilize temperatures during the 36-hour wet fermentation, then slow-dried on raised African beds for 14 days. The cup reveals an ethereal, crystal-clear profile of white jasmine floral aromatics, juicy white peach, candied lemon, and a silky black-tea finish.",
     baseCents: 2200,
     imageUrl: "/images/products/chelbesa.jpg",
-    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
+    categories: [CAT_SINGLE_ORIGIN, CAT_YIRGACHEFFE, CAT_WASHED],
     specs: {
       region: "Yirgacheffe, Gedeo Zone (Chelbesa Kebele)",
       station: "Chelbesa Wet Mill (Ceramic Fermentation)",
@@ -839,7 +901,7 @@ export const KABUNA_PRODUCTS: Product[] = [
       "Hamasho is an extraordinary natural micro-lot from the Bura Hamasho mill in the high mountain ridges of the Sidama Zone, perched at staggering elevations between 2,100 and 2,300 meters. Generational growers cultivate regional JARC 74110 and 74112 heirloom selections, rigorously hand-sorting cherries for peak ripeness. The whole cherries dry naturally under mountain sun on raised ventilated beds for 21 days with hourly hand-turning. Hamasho exemplifies peak Ethiopian natural processing: an explosion of lush blueberry compote, lavender blossoms, dried apricot, and raw dark honey, supported by a velvety winey mouthfeel.",
     baseCents: 2300,
     imageUrl: "/images/products/hamasho.jpg",
-    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[2]],
+    categories: [CAT_SINGLE_ORIGIN, CAT_SIDAMA, CAT_NATURAL],
     specs: {
       region: "Sidama Zone (Bura Hamasho Mill)",
       station: "Bura Hamasho Mill",
@@ -867,7 +929,7 @@ export const KABUNA_PRODUCTS: Product[] = [
       "Dimtu Tora is an organic specialty lot from the Hambela Wamena woreda of the Guji Zone, grown at altitudes ranging from 1,900 to 2,300 meters. Smallholders in this highland enclave hand-pick heirloom Bedessa and Gibirinna varieties from deep semi-forest plots. Processed using a slow anaerobic dry maceration before transferring to raised beds, Dimtu Tora delivers an electrifying and intensely aromatic cup. The profile overflows with ripe wild strawberries, tart red hibiscus flower, tropical papaya, and passionfruit, culminating in a creamy milk chocolate and raw cacao finish.",
     baseCents: 2400,
     imageUrl: "/images/products/dimtu-tora.jpg",
-    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[2]],
+    categories: [CAT_SINGLE_ORIGIN, CAT_GUJI, CAT_NATURAL],
     specs: {
       region: "Guji Zone (Hambela Wamena)",
       station: "Dimtu Tora Washing Station",
@@ -894,7 +956,7 @@ export const KABUNA_PRODUCTS: Product[] = [
       "Benti Neka is produced at the acclaimed Benti Neka washing station in West Guji, surrounded by virgin forest and pristine mountain river springs at 2,000 to 2,250 meters altitude. This lot consists of certified organic Kurume and 74110 heirloom varieties meticulously pulped, fermented for 48 hours in cold mountain water, and washed twice through serpentine grading channels. Benti Neka is renowned for its crystalline cup clarity and sparkling balance, delivering notes of sweet Meyer lemon, wildflower honey, crisp Anjou pear, ginger blossom, and a lingering botanical finish.",
     baseCents: 2250,
     imageUrl: "/images/products/benti-neka.jpg",
-    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
+    categories: [CAT_SINGLE_ORIGIN, CAT_GUJI, CAT_WASHED],
     specs: {
       region: "West Guji Zone (Benti Neka Station)",
       station: "Benti Neka Washing Station",
@@ -921,7 +983,7 @@ export const KABUNA_PRODUCTS: Product[] = [
       "Worku Buche is an authentic single-producer natural micro-lot from the Kadela wet mill in the Aroresa woreda, situated on the remote eastern mountain ridge of Sidama at 2,000 to 2,150 meters. Harvested from old-growth indigenous landrace trees shaded by Ensete (false banana) and native acacias, the cherries are slowly dried whole in single layers to ensure uniform drying. The resulting cup delivers a deep, satisfying sweetness dominated by sweet Concord grape, dark Rainier cherry, orange blossom, and raw cacao nibs, supported by a thick, velvety mouthfeel.",
     baseCents: 2150,
     imageUrl: "/images/products/worku-buche.jpg",
-    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[2]],
+    categories: [CAT_SINGLE_ORIGIN, CAT_SIDAMA, CAT_NATURAL],
     specs: {
       region: "Sidama Zone (Aroresa Woreda, Kadela)",
       station: "Kadela Mill (Worku Buche Lot)",
@@ -948,7 +1010,7 @@ export const KABUNA_PRODUCTS: Product[] = [
       "Uraga is harvested from extreme high-altitude smallholdings scaling up to 2,350 meters on the slopes of Kuri Mountain in the Uraga woreda of Guji. At these freezing night temperatures, coffee cherries mature at a dramatically slowed pace, condensing sugar and aromatic complexity into dense, compact beans of Dega and Wolisho varieties. Washed in pure high-altitude glacial springs, Uraga expresses a luminous citrus-and-floral profile: orange marmalade, honeysuckle nectar, crisp red Honeycrisp apple, and raw turbinado cane sugar, concluding with an immaculate, sparkling finish.",
     baseCents: 2350,
     imageUrl: "/images/products/uraga.jpg",
-    categories: [KABUNA_CATEGORIES[0], KABUNA_CATEGORIES[1]],
+    categories: [CAT_SINGLE_ORIGIN, CAT_GUJI, CAT_WASHED],
     specs: {
       region: "Guji Zone (Uraga District, Kuri Mountain)",
       station: "Kuri Mountain Washing Station",
@@ -962,6 +1024,116 @@ export const KABUNA_PRODUCTS: Product[] = [
       acidity: "Crystalline Tartaric & Citric",
       body: "Smooth, Silky & Elegant",
       harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 7. Harrar Wild Horse (Heirloom Longberry)
+  buildCoffeeProduct({
+    id: "prod_harrar_longberry",
+    name: "Harrar Wild Horse",
+    slug: "harrar-wild-horse-longberry",
+    subtitle:
+      "Harrar Longberry G1 • Wild Blueberry, Dark Baker's Cocoa, Cardamom",
+    description:
+      "Cultivated on the sun-baked arid mountain terraces of Eastern Harar, where wild Coffea Arabica has thrived for well over a millennium. This legendary micro-lot is celebrated for its distinctive elongated 'Longberry' bean morphology, hand-harvested from ancient indigenous shrubs and sun-dried whole on raised beds under the fierce desert sun. Harrar Wild Horse yields a thick, syrupy cup bursting with ripe wild blueberry jam, heavy baker's cocoa, raw cane molasses, and exotic green cardamom, framed by an enchanting, lingering winey finish.",
+    baseCents: 2300,
+    imageUrl: "/images/products/harrar.jpg",
+    categories: [CAT_SINGLE_ORIGIN, CAT_HARRAR, CAT_NATURAL],
+    specs: {
+      region: "Eastern Harar Highlands (Oromia)",
+      station: "Harar Jugol Heirloom Sun-Drying Beds",
+      altitude: "1,600m – 1,850m MASL",
+      variety: "Longberry Heirloom",
+      process: "Dry Natural Heirloom (Whole Cherry Sun-Cured)",
+      grade: "Grade 1 Specialty Longberry",
+      roast: "Medium Roast (Winey & Heavy Body)",
+      score: "88.0",
+      notes: "Wild Blueberry Compote, Baker's Cocoa, Cardamom, Raw Molasses",
+      acidity: "Gentle Winey & Sweet Malic",
+      body: "Heavy, Syrupy & Velvet-Coating",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 8. Kaffa Ancient Forest (Wild Harvested)
+  buildCoffeeProduct({
+    id: "prod_kaffa_forest",
+    name: "Kaffa Ancient Forest",
+    slug: "kaffa-ancient-wild-forest",
+    subtitle: "Kaffa Wild Biosphere G1 • Black Fig, Spiced Plum, Sacred Cedar",
+    description:
+      "Harvested directly from wild ancient mother trees growing under the virgin rainforest canopy of the UNESCO Kaffa Biosphere Reserve — the sacred botanical origin where Coffea Arabica was first discovered in ancient Abyssinia. Local indigenous gatherers selectively forage wild red cherries from primeval mountain forests at 1,750 to 2,100 meters elevation. Slow sun-dried on shaded forest raised beds, Kaffa Ancient Forest offers an unforgettable cup of deep forest character: spiced ripe black fig, stewed Damson plum, raw wildflower honey, and an intoxicating finish of frankincense and sacred mountain cedar.",
+    baseCents: 2600,
+    imageUrl: "/images/products/kaffa.jpg",
+    categories: [CAT_SINGLE_ORIGIN, CAT_LIMU_KAFFA, CAT_NATURAL],
+    specs: {
+      region: "Kaffa Biosphere Reserve (Mankira Ancient Forest)",
+      station: "Kaffa Forest Foragers Guild & Raised Beds",
+      altitude: "1,750m – 2,100m MASL",
+      variety: "Indigenous Kaffa Wild Forest Mother Trees (7440 & 7454)",
+      process: "Wild Rainforest Natural (Canopy Shade-Dried)",
+      grade: "Grade 1 Wild Specialty",
+      roast: "Light-Medium Roast (Aromatic & Complex)",
+      score: "89.5",
+      notes: "Dried Black Fig, Spiced Damson Plum, Wild Honey, Sacred Cedar",
+      acidity: "Complex Phosphoric & Wild Blackberry",
+      body: "Round, Resonant & Tea-Like Silky",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 9. Djimmah Traditional Roast (Heritage Blend)
+  buildCoffeeProduct({
+    id: "prod_djimmah_roast",
+    name: "Djimmah Traditional Roast",
+    slug: "djimmah-traditional-roast-heritage",
+    subtitle:
+      "Heritage Dark Roast • Roasted Almond, Dark Chocolate Ganache, Molasses",
+    description:
+      "Crafted specifically for authentic stove-top Jebena boiling, Moka pot, and full-bodied espresso. Sourced from generational heritage smallholdings across the Jimma and Djimmah highlands of southwestern Ethiopia. Expertly roasted to a rich French-Italian dark roast profile that brings forth deep caramelized sweetness without astringency. Offers a profound, dense body laden with dark chocolate ganache, toasted almonds, sweet smoky molasses, and a velvety Crema.",
+    baseCents: 1900,
+    imageUrl: "/images/products/djimmah.jpg",
+    categories: [CAT_SINGLE_ORIGIN, CAT_ROAST],
+    specs: {
+      region: "Djimmah & Jimma Highlands",
+      station: "Traditional Heritage Roasting Lot",
+      altitude: "1,650m – 1,950m MASL",
+      variety: "Djimmah Heritage Landraces",
+      process: "Traditional Deep Roast (Optimized for Jebena)",
+      grade: "Specialty Heritage Dark Roast",
+      roast: "Dark Roast (Rich, Bold & Heavy)",
+      score: "86.5",
+      notes: "Dark Chocolate Ganache, Roasted Almond, Burnt Sugar, Molasses",
+      acidity: "Low, Mellow & Balanced",
+      body: "Dense, Syrupy & Extremely Bold",
+      harvest: "Current Crop 2024",
+    },
+  }),
+
+  // 10. Yirgacheffe Raw Green Coffee (Unroasted)
+  buildCoffeeProduct({
+    id: "prod_green_coffee_raw",
+    name: "Yirgacheffe Raw Green Coffee",
+    slug: "yirgacheffe-raw-green-coffee-beans",
+    subtitle: "Grade 1 Direct-Trade Raw Beans • For Home Artisan Roasting",
+    description:
+      "For home roasters and coffee purists. Pristine unroasted raw green Arabica coffee beans directly imported from high-altitude micro-lots in Yirgacheffe. Sourced at 2,000–2,200m elevation and carefully sorted for zero primary defects. Featuring dense, moisture-stable jade-green beans of Metu Bishari and Gera 74158 highland heirloom selections. Ready for roasting in a traditional iron Menkeskesha pan over embers, or modern home drum and air roasters.",
+    baseCents: 1800,
+    imageUrl: "/images/products/green-coffee.jpg",
+    categories: [CAT_SINGLE_ORIGIN, CAT_GREEN, CAT_WASHED],
+    specs: {
+      region: "Yirgacheffe (Chelbesa Kebele)",
+      station: "Chelbesa Wet Mill (Raw Lot)",
+      altitude: "2,000m – 2,200m MASL",
+      variety: "Metu Bishari & Gera 74158 Highland Heirloom",
+      process: "Raw Unroasted Green (Spring Water Washed)",
+      grade: "Grade 1 Raw Specialty (Zero Primary Defects)",
+      roast: "Unroasted Raw Green Beans",
+      score: "88.5 Potential Cup",
+      notes: "Raw Jasmine Floral, Crisp Green Apple, White Grape, Bergamot",
+      acidity: "Bright Citric & Malic",
+      body: "Dense High-Altitude Bean Structure",
+      harvest: "Current Crop 2024 Fresh Crop",
     },
   }),
 

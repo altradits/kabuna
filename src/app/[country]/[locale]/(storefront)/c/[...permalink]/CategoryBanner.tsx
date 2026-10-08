@@ -237,6 +237,88 @@ export async function CategoryBanner({
           },
         ],
       };
+    } else if (permalink.includes("harrar")) {
+      heroProps = {
+        badge: undefined,
+        titleLine1: "Harrar Longberry Harvests",
+        titleLine2: "Wild Blueberry & Mocha",
+        description:
+          "Arid terraced highlands cultivating rare elongated Longberry genetics for over a millennium. Sun-cured in whole cherries for intense wild blueberry, dark cocoa, and cardamom spice.",
+        bgImageSrc: "/images/hero-mountain.jpg",
+        bgImageAlt: "Eastern Harar arid mountains at dusk",
+        focalImageSrc: "/images/products/harrar.jpg",
+        focalImageAlt: "Harrar Wild Horse specialty coffee",
+        focalImageIsCutout: false,
+        ctaText: "Shop Harrar",
+        ctaHref: "#category-products",
+        secondaryCtaText: "Buna Ceremony",
+        secondaryCtaHref: `${basePath}/c/buna-ceremony`,
+        pillarsTitle: "The Ancient Harrar Heritage",
+        pillars: [
+          {
+            icon: <SunMedium className="w-6 h-6" />,
+            titleLine1: "Arid Desert Sun",
+            titleLine2: "Dry-Cured Cherry",
+            description:
+              "Equatorial arid mountain heat slowly concentrates sugars inside the intact fruit.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Elongated Longberry",
+            titleLine2: "Genetic Rarity",
+            description:
+              "Distinctive pointed bean structure prized worldwide for heavy syrupy body.",
+          },
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Wild Blueberry &",
+            titleLine2: "Dark Baker's Mocha",
+            description:
+              "Unmistakable aroma of simmering blueberry compote and bittersweet raw cacao.",
+          },
+        ],
+      };
+    } else if (permalink.includes("limu") || permalink.includes("kaffa")) {
+      heroProps = {
+        badge: undefined,
+        titleLine1: "Kaffa & Limu Ancient Forests",
+        titleLine2: "Wild Mother Tree Harvests",
+        description:
+          "Sourced from the UNESCO Kaffa Biosphere Reserve — the sacred botanical origin where Coffea Arabica was discovered. Foraged under ancient rainforest canopies for unmatched primordial depth.",
+        bgImageSrc: "/images/hero-mountain.jpg",
+        bgImageAlt: "Kaffa ancient cloud forest canopy",
+        focalImageSrc: "/images/products/kaffa.jpg",
+        focalImageAlt: "Kaffa Ancient Forest specialty coffee",
+        focalImageIsCutout: false,
+        ctaText: "Shop Kaffa",
+        ctaHref: "#category-products",
+        secondaryCtaText: "Buna Ceremony",
+        secondaryCtaHref: `${basePath}/c/buna-ceremony`,
+        pillarsTitle: "The Sacred Mother Trees of Kaffa",
+        pillars: [
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Birthplace of Arabica",
+            titleLine2: "UNESCO Biosphere",
+            description:
+              "Harvested from wild mother trees thriving undisturbed for thousands of years.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Black Fig, Plum &",
+            titleLine2: "Sacred Cedar Notes",
+            description:
+              "Deep forest profile laden with wild blackberries, spiced figs, and frankincense cedar.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Wild Forager Guilds",
+            titleLine2: "Canopy Stewardship",
+            description:
+              "Preserving Ethiopia's virgin rainforest through direct-trade community equity.",
+          },
+        ],
+      };
     } else {
       heroProps = {
         badge: undefined,
@@ -358,6 +440,88 @@ export async function CategoryBanner({
           titleLine2: "Syrupy Mouthfeel",
           description:
             "Rich, luscious mouthfeel with balanced wine-like acidity and an enduring sweet finish.",
+        },
+      ],
+    };
+  } else if (permalink.includes("roast")) {
+    heroProps = {
+      badge: undefined,
+      titleLine1: "Artisanal Roast Profiles",
+      titleLine2: "Heritage Ethiopian Roasts",
+      description:
+        "From delicate, floral cinnamon roasts preserving high-altitude citrus acidity to deep, caramelized dark roasts perfected for the traditional stovetop Jebena.",
+      bgImageSrc: "/images/hero-mountain.jpg",
+      bgImageAlt: "Ethiopian highlands coffee roastery",
+      focalImageSrc: "/images/products/djimmah.jpg",
+      focalImageAlt: "Djimmah Traditional Roast specialty coffee",
+      focalImageIsCutout: false,
+      ctaText: "Shop Roast Profiles",
+      ctaHref: "#category-products",
+      secondaryCtaText: "Buna Ceremony",
+      secondaryCtaHref: `${basePath}/c/buna-ceremony`,
+      pillarsTitle: "Roasting Mastery for Ethiopian Beans",
+      pillars: [
+        {
+          icon: <Flame className="w-6 h-6" />,
+          titleLine1: "Origin-Calibrated",
+          titleLine2: "Thermal Profiling",
+          description:
+            "Custom heat curves respect dense high-altitude seed cell walls to preserve vibrant origin terroir.",
+        },
+        {
+          icon: <Sparkles className="w-6 h-6" />,
+          titleLine1: "Floral to Cocoa",
+          titleLine2: "Flavor Expression",
+          description:
+            "Highlighting delicate jasmine at light roasts and rich dark chocolate at deeper roasts.",
+        },
+        {
+          icon: <HeartHandshake className="w-6 h-6" />,
+          titleLine1: "Traditional & Modern",
+          titleLine2: "Brew Versatility",
+          description:
+            "Tailored roasts optimized for pour-over, espresso, or traditional Jebena boiling.",
+        },
+      ],
+    };
+  } else if (permalink.includes("green")) {
+    heroProps = {
+      badge: undefined,
+      titleLine1: "Raw Green Coffee Lots",
+      titleLine2: "Grade 1 Unroasted Micro-Lots",
+      description:
+        "Pristine, high-altitude raw Arabica beans directly imported from Ethiopia's premier micro-regions for home roasters and artisan coffee craftspeople.",
+      bgImageSrc: "/images/hero-mountain.jpg",
+      bgImageAlt: "Ethiopian green coffee harvest",
+      focalImageSrc: "/images/products/green-coffee.jpg",
+      focalImageAlt: "Yirgacheffe Raw Green Coffee Grade 1",
+      focalImageIsCutout: false,
+      ctaText: "Shop Green Coffee",
+      ctaHref: "#category-products",
+      secondaryCtaText: "Roast Profiles",
+      secondaryCtaHref: `${basePath}/c/roast-profiles`,
+      pillarsTitle: "Artisanal Roasting at Home",
+      pillars: [
+        {
+          icon: <SunMedium className="w-6 h-6" />,
+          titleLine1: "Direct-Trade",
+          titleLine2: "Grade 1 Purity",
+          description:
+            "Meticulously sorted raw beans with zero primary defects and optimal moisture balance.",
+        },
+        {
+          icon: <Mountain className="w-6 h-6" />,
+          titleLine1: "Extreme Altitude",
+          titleLine2: "Bean Density",
+          description:
+            "Grown above 2,000 meters for rock-solid density that withstands high roasting heat.",
+        },
+        {
+          icon: <Flame className="w-6 h-6" />,
+          titleLine1: "Traditional Pan or",
+          titleLine2: "Modern Roaster",
+          description:
+            "Perfect for roasting in an authentic iron Menkeskesha pan or drum roaster.",
         },
       ],
     };
