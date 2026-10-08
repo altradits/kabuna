@@ -278,12 +278,15 @@ describe("cart server actions", () => {
       // First add item to local cart
       const addRes = await addToCart("chelbesa", 1);
       expect(addRes.success).toBe(true);
-      const lineItemId = addRes.cart?.items[0]?.id;
+      if (!addRes.success || !addRes.cart) throw new Error("Expected cart");
+      const lineItemId = addRes.cart.items[0]?.id;
       expect(lineItemId).toBeDefined();
 
       const updateRes = await updateCartItem(lineItemId!, 5);
       expect(updateRes.success).toBe(true);
-      expect(updateRes.cart?.total_quantity).toBe(5);
+      if (!updateRes.success || !updateRes.cart)
+        throw new Error("Expected cart");
+      expect(updateRes.cart.total_quantity).toBe(5);
     });
   });
 
@@ -311,13 +314,17 @@ describe("cart server actions", () => {
       );
 
       const addRes = await addToCart("chelbesa", 1);
-      const lineItemId = addRes.cart?.items[0]?.id;
+      expect(addRes.success).toBe(true);
+      if (!addRes.success || !addRes.cart) throw new Error("Expected cart");
+      const lineItemId = addRes.cart.items[0]?.id;
       expect(lineItemId).toBeDefined();
 
       const removeRes = await removeCartItem(lineItemId!);
       expect(removeRes.success).toBe(true);
-      expect(removeRes.cart?.items.length).toBe(0);
-      expect(removeRes.cart?.total_quantity).toBe(0);
+      if (!removeRes.success || !removeRes.cart)
+        throw new Error("Expected cart");
+      expect(removeRes.cart.items.length).toBe(0);
+      expect(removeRes.cart.total_quantity).toBe(0);
     });
 
     it("returns error on failure", async () => {
