@@ -10,6 +10,7 @@ const storeName = getStoreName();
 const storeDescription = getStoreDescription();
 
 const EXCLUDED_FOOTER_PERMALINKS = new Set([
+  "coffee",
   "single-origin",
   "washed",
   "natural",
@@ -17,6 +18,7 @@ const EXCLUDED_FOOTER_PERMALINKS = new Set([
 ]);
 
 const EXCLUDED_FOOTER_NAMES = new Set([
+  "coffee",
   "single origin varieties",
   "single origin",
   "washed process",
@@ -187,6 +189,14 @@ export async function Footer({ basePath, locale, categoryLinks }: FooterProps) {
                   className="text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
                 >
                   {t("allProducts")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${basePath}/c/coffee`}
+                  className="text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+                >
+                  Coffee
                 </Link>
               </li>
               <li>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid, Home, Search, ShoppingBag } from "lucide-react";
+import { Coffee, Grid, Home, Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -31,10 +31,17 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
       active: isActive(basePath),
     },
     {
+      label: "Coffee",
+      href: `${basePath}/c/coffee`,
+      icon: Coffee,
+      active: isActive(`${basePath}/c/coffee`),
+    },
+    {
       label: "Shop",
       href: `${basePath}/products`,
       icon: Grid,
-      active: isActive(`${basePath}/products`),
+      active:
+        isActive(`${basePath}/products`) && !isActive(`${basePath}/c/coffee`),
     },
   ];
 

@@ -549,6 +549,15 @@ export const CAT_GREEN = createCategory(
   "Direct-trade Grade 1 raw green coffee beans for home roasting.",
 );
 
+export const CAT_COFFEE = createCategory(
+  "cat_coffee",
+  "Coffee",
+  "coffee",
+  "Exceptional single-origin micro-lots, pristine washed and natural fermentations, heritage roast profiles, and unroasted green coffee from Ethiopia's legendary terroirs.",
+  [CAT_SINGLE_ORIGIN, CAT_WASHED, CAT_NATURAL, CAT_ROAST, CAT_GREEN],
+  "/images/products/chelbesa.jpg",
+);
+
 export const CAT_CEREMONY = createCategory(
   "cat_ceremony",
   "Ceremony & Accessories",
@@ -558,14 +567,7 @@ export const CAT_CEREMONY = createCategory(
   "/images/ceremony/ceremony-kit.jpg",
 );
 
-export const KABUNA_CATEGORIES: Category[] = [
-  CAT_SINGLE_ORIGIN,
-  CAT_WASHED,
-  CAT_NATURAL,
-  CAT_ROAST,
-  CAT_GREEN,
-  CAT_CEREMONY,
-];
+export const KABUNA_CATEGORIES: Category[] = [CAT_COFFEE, CAT_CEREMONY];
 
 interface CoffeeSpecProps {
   id: string;
@@ -730,7 +732,9 @@ function buildCoffeeProduct({
     default_variant: defaultVariant,
     option_types: [OPTION_TYPE_BAG_SIZE, OPTION_TYPE_GRIND],
     option_values: [...BAG_SIZES, ...GRIND_OPTIONS],
-    categories,
+    categories: categories.some((c) => c.id === "cat_coffee")
+      ? categories
+      : [CAT_COFFEE, ...categories],
     custom_fields: customFields,
     prior_price: null,
   };

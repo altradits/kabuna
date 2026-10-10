@@ -1,13 +1,32 @@
 "use server";
 
-import type { CategoryListParams, ProductListParams } from "@spree/sdk";
+import type {
+  Category,
+  CategoryListParams,
+  ProductListParams,
+} from "@spree/sdk";
 import { cacheLife, cacheTag } from "next/cache";
 import { getAccessToken, getClient, getLocaleOptions } from "@/lib/spree";
 import {
+  CAT_COFFEE,
   enrichProductWithImages,
   KABUNA_CATEGORIES,
   KABUNA_PRODUCTS,
 } from "./kabuna-coffee-data";
+
+function flattenCategories(categories: Category[]): Category[] {
+  const result: Category[] = [];
+  function recurse(list: Category[]) {
+    for (const cat of list) {
+      result.push(cat);
+      if (cat.children && cat.children.length > 0) {
+        recurse(cat.children);
+      }
+    }
+  }
+  recurse(categories);
+  return result;
+}
 
 async function cachedListCategories(
   params: CategoryListParams | undefined,
@@ -24,7 +43,10 @@ async function cachedListCategories(
         c.permalink?.includes("ceremony") ||
         c.id === "cat_ceremony",
     );
-    if (res.data && res.data.length > 0 && hasCeremony) {
+    const hasCoffee = res.data?.some(
+      (c) => c.permalink === "coffee" || c.id === "cat_coffee",
+    );
+    if (res.data && res.data.length > 0 && hasCeremony && hasCoffee) {
       return res;
     }
     return { data: KABUNA_CATEGORIES } as unknown as Awaited<
@@ -56,6 +78,17 @@ export async function cachedGetCategory(
 
   const idOrPermaLower = idOrPermalink.toLowerCase();
 
+  // Specifically resolve Coffee category to CAT_COFFEE
+  if (
+    idOrPermaLower === "coffee" ||
+    idOrPermaLower === "cat_coffee" ||
+    idOrPermaLower.endsWith("/coffee")
+  ) {
+    return CAT_COFFEE as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+    >;
+  }
+
   // Specifically resolve Buna Ceremony category to KABUNA_CATEGORIES
   if (
     idOrPermaLower.includes("buna-ceremony") ||
@@ -73,10 +106,7 @@ export async function cachedGetCategory(
     }
   }
 
-  const all = [
-    ...KABUNA_CATEGORIES,
-    ...KABUNA_CATEGORIES.flatMap((c) => c.children || []),
-  ];
+  const all = flattenCategories(KABUNA_CATEGORIES);
   const found = all.find(
     (c) =>
       c.permalink?.toLowerCase() === idOrPermaLower ||
@@ -121,6 +151,11 @@ async function cachedListCategoryProducts(
   cacheTag("products", `category-products:${categoryId}`);
 
   const catLower = (categoryId || "").toLowerCase();
+  const isCoffee =
+    catLower === "coffee" ||
+    catLower === "cat_coffee" ||
+    catLower.endsWith("/coffee");
+
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
     catLower.includes("buna") ||
@@ -175,6 +210,16 @@ async function cachedListCategoryProducts(
     catLower === "ctg_kokt9mvfb0";
 
   const localFiltered = KABUNA_PRODUCTS.filter((p) => {
+    if (isCoffee) {
+      return (
+        p.categories?.some(
+          (c) =>
+            c.id === "cat_coffee" ||
+            c.permalink === "coffee" ||
+            c.name.toLowerCase() === "coffee",
+        ) || !p.categories?.some((c) => c.id === "cat_ceremony")
+      );
+    }
     if (isCeremonyCategory) {
       return p.categories?.some(
         (c) =>

@@ -113,6 +113,47 @@ export async function CategoryBanner({
         },
       ],
     };
+  } else if (permalink === "coffee" || permalink.endsWith("/coffee")) {
+    heroProps = {
+      badge: undefined,
+      titleLine1: "Authentic Ethiopian",
+      titleLine2: "Specialty Coffees",
+      description:
+        "Explore Ethiopia's legendary coffee heritage. From high-altitude single-origin micro-lots to sun-dried natural beans and unroasted green lots, discover coffees grown where Arabica was born.",
+      bgImageSrc: "/images/heroes/products-hero.jpg",
+      bgImageAlt: "Ethiopian high-altitude coffee plantation at sunrise",
+      focalImageSrc: "/images/products/chelbesa.jpg",
+      focalImageAlt: "Ethiopian specialty coffee selection",
+      focalImageIsCutout: false,
+      ctaText: "Shop All Coffees",
+      ctaHref: "#category-products",
+      secondaryCtaText: "Ceremony Wares",
+      secondaryCtaHref: `${basePath}/c/buna-ceremony`,
+      pillarsTitle: "The Ethiopian Coffee Heritage",
+      pillars: [
+        {
+          icon: <Mountain className="w-6 h-6" />,
+          titleLine1: "High-Altitude",
+          titleLine2: "Volcanic Terroirs",
+          description:
+            "Cultivated in nutrient-rich highlands exceeding 2,000 meters for exceptional bean density and clarity.",
+        },
+        {
+          icon: <Droplets className="w-6 h-6" />,
+          titleLine1: "Washed & Natural",
+          titleLine2: "Artisan Fermentations",
+          description:
+            "Pristine spring water washing and raised-bed sun drying preserve delicate floral aromatics and fruit sweetness.",
+        },
+        {
+          icon: <HeartHandshake className="w-6 h-6" />,
+          titleLine1: "Direct-Trade",
+          titleLine2: "Farmer Equity",
+          description:
+            "Fully traceable partnerships with smallholder family farms and washing stations across Ethiopia.",
+        },
+      ],
+    };
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {
@@ -552,7 +593,9 @@ export async function CategoryBanner({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <div className="flex flex-wrap gap-2 items-center border-b border-stone-200/80 pb-4">
             <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-2">
-              Regions:
+              {permalink === "coffee" || permalink.endsWith("/coffee")
+                ? "Classifications:"
+                : "Regions:"}
             </span>
             {category.children.map((child) => (
               <Link
