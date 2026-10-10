@@ -178,15 +178,64 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
         f.label.toLowerCase().includes(k),
     )?.value;
 
+  const isHairProduct = Boolean(
+    product.categories?.some(
+      (c) =>
+        c.id === "cat_hair" ||
+        c.permalink === "hair" ||
+        c.permalink?.startsWith("hair/") ||
+        c.name?.toLowerCase().includes("hair"),
+    ) ||
+      product.id?.startsWith("prod_yetsehur") ||
+      product.id?.startsWith("prod_koseret") ||
+      product.id?.startsWith("prod_endod") ||
+      product.id?.startsWith("prod_shuruba") ||
+      product.id?.startsWith("prod_wanza"),
+  );
+
+  const isCeremonyProduct = Boolean(
+    product.categories?.some(
+      (c) =>
+        c.id === "cat_ceremony" ||
+        c.permalink === "buna-ceremony" ||
+        c.name?.toLowerCase().includes("ceremony"),
+    ) ||
+      product.id?.startsWith("prod_jebena") ||
+      product.id?.startsWith("prod_cini") ||
+      product.id?.startsWith("prod_rekebot") ||
+      product.id?.startsWith("prod_girgira") ||
+      product.id?.startsWith("prod_menkeskesha") ||
+      product.id?.startsWith("prod_mukecha") ||
+      product.id?.startsWith("prod_buna_ceremony"),
+  );
+
+  const isCoffeeProduct = !isHairProduct && !isCeremonyProduct;
+
+  // Coffee fields
   const tastingNotes = getField("notes");
   const processMethod = getField("process");
   const roastProfile = getField("roast");
   const elevation = getField("altitude");
-  const region = getField("region");
-  const washingStation = getField("station");
+  const region =
+    getField("region") || (isHairProduct ? getField("origin") : undefined);
+  const _washingStation = getField("station");
   const variety = getField("variety");
   const cuppingScore = getField("score");
   const qualityGrade = getField("grade");
+
+  // Hair fields
+  const hairIngredients = getField("ingredients");
+  const hairOrigin = getField("origin");
+  const hairType = getField("hair_type");
+  const hairUse = getField("use");
+  const hairScent = getField("scent");
+
+  // Ceremony fields
+  const ceremonyMaterial = getField("material");
+  const ceremonyOrigin = getField("origin");
+  const ceremonyDimensions = getField("dimensions");
+  const ceremonyUse = getField("use");
+  const ceremonyCare = getField("care");
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
@@ -245,7 +294,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
           </div>
 
           {/* Tasting Notes & Coffee Highlights Box for Consumers */}
-          {tastingNotes && (
+          {isCoffeeProduct && tastingNotes && (
             <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
               <div className="text-[11px] font-bold uppercase tracking-wider text-amber-900">
                 Cupping Profile & Tasting Notes
@@ -272,6 +321,63 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 {cuppingScore && (
                   <span className="text-xs bg-amber-900 text-amber-50 px-3 py-1 rounded-full font-bold shadow-2xs">
                     Score: {cuppingScore} pts
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Hair Botanical Profile Box */}
+          {isHairProduct && (
+            <div className="mt-4 p-4 rounded-xl bg-emerald-50/80 border border-emerald-200/70">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-900">
+                Native Highland Botanical Profile
+              </div>
+              {hairIngredients && (
+                <div className="text-sm font-semibold text-stone-900 mt-1">
+                  {hairIngredients}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {hairType && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {hairType}
+                  </span>
+                )}
+                {hairScent && (
+                  <span className="text-xs bg-emerald-900 text-emerald-50 px-3 py-1 rounded-full font-medium shadow-2xs">
+                    Notes: {hairScent}
+                  </span>
+                )}
+                {hairOrigin && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {hairOrigin}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Ceremony Artifact Box */}
+          {isCeremonyProduct && (
+            <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-amber-900">
+                Traditional Buna Tetu Heirloom
+              </div>
+              {ceremonyMaterial && (
+                <div className="text-sm font-semibold text-stone-900 mt-1">
+                  Crafted from: {ceremonyMaterial}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {ceremonyOrigin && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {ceremonyOrigin}
+                  </span>
+                )}
+                {ceremonyDimensions && (
+                  <span className="text-xs bg-amber-900 text-amber-50 px-3 py-1 rounded-full font-medium shadow-2xs">
+                    {ceremonyDimensions}
                   </span>
                 )}
               </div>
@@ -353,14 +459,20 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
               </div>
             )}
 
-            {/* 2. Brewing */}
+            {/* 2. How to Use / Ritual / Brewing */}
             <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
               <button
                 type="button"
                 onClick={() => toggleSection("brewing")}
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
-                <span>Brewing</span>
+                <span>
+                  {isHairProduct
+                    ? "Habesha Ritual & Application"
+                    : isCeremonyProduct
+                      ? "Ritual Role & Ceremony Use"
+                      : "Brewing"}
+                </span>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
@@ -370,56 +482,98 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.brewing && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
-                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
-                        Pour-Over (V60 / Kalita)
+                  {isHairProduct ? (
+                    <div className="space-y-3">
+                      <div className="p-3.5 rounded-lg bg-emerald-50/60 border border-emerald-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Ancestral Application Method
+                        </h4>
+                        <p className="text-xs text-stone-700 leading-relaxed">
+                          {hairUse ||
+                            "Apply gently into clean, damp curls or massage directly into scalp with fingertip pads."}
+                        </p>
+                      </div>
+                      {hairType && (
+                        <div className="p-3 rounded-lg bg-stone-50 border border-stone-200/80">
+                          <span className="text-xs font-semibold text-stone-900">
+                            Recommended Textures:{" "}
+                          </span>
+                          <span className="text-xs text-stone-600">
+                            {hairType}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : isCeremonyProduct ? (
+                    <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-100 space-y-2">
+                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider">
+                        Ceremonial Function in Buna Tetu
                       </h4>
-                      <p className="text-xs text-stone-600">
-                        Ratio: 1:16 (15g coffee / 240g water). Temp: 92–94°C.
-                        Accentuates delicate floral aromatics and fruit acidity.
+                      <p className="text-xs text-stone-700 leading-relaxed">
+                        {ceremonyUse ||
+                          "Essential component in the three-round traditional Buna ceremony: Abol (first round), Tona (second), and Baraka (blessing)."}
                       </p>
                     </div>
-                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
-                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
-                        Traditional Buna (Jebena)
-                      </h4>
-                      <p className="text-xs text-stone-600">
-                        Fine grind, bring to a slow boil in Jebena pot, rest for
-                        sediment settling, and serve in traditional cini cups.
-                      </p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Pour-Over (V60 / Kalita)
+                        </h4>
+                        <p className="text-xs text-stone-600">
+                          Ratio: 1:16 (15g coffee / 240g water). Temp: 92–94°C.
+                          Accentuates delicate floral aromatics and fruit
+                          acidity.
+                        </p>
+                      </div>
+                      <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Traditional Buna (Jebena)
+                        </h4>
+                        <p className="text-xs text-stone-600">
+                          Fine grind, bring to a slow boil in Jebena pot, rest
+                          for sediment settling, and serve in traditional cini
+                          cups.
+                        </p>
+                      </div>
+                      <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Aeropress & Cold Brew
+                        </h4>
+                        <p className="text-xs text-stone-600">
+                          Inverted Aeropress or 16-hour cold steep to extract
+                          rich peach and blueberry compote sweetness.
+                        </p>
+                      </div>
+                      <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Espresso Extraction
+                        </h4>
+                        <p className="text-xs text-stone-600">
+                          1:2 to 1:2.2 ratio in 28–30 seconds. Produces vibrant
+                          citrus crema with velvety berry sweetness.
+                        </p>
+                      </div>
                     </div>
-                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
-                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
-                        Aeropress & Cold Brew
-                      </h4>
-                      <p className="text-xs text-stone-600">
-                        Inverted Aeropress or 16-hour cold steep to extract rich
-                        peach and blueberry compote sweetness.
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
-                      <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
-                        Espresso Extraction
-                      </h4>
-                      <p className="text-xs text-stone-600">
-                        1:2 to 1:2.2 ratio in 28–30 seconds. Produces vibrant
-                        citrus crema with velvety berry sweetness.
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* 3. Origin */}
+            {/* 3. Origin / Materials */}
             <div className="rounded-xl border border-stone-200 bg-white overflow-hidden shadow-2xs transition-colors">
               <button
                 type="button"
                 onClick={() => toggleSection("terroir")}
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
-                <span>Origin</span>
+                <span>
+                  {isHairProduct
+                    ? "Botanical Origin"
+                    : isCeremonyProduct
+                      ? "Materials & Craft"
+                      : "Origin"}
+                </span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
                 ) : (
@@ -429,70 +583,122 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.terroir && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm">
-                  <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
-                    <div>
-                      <dt className="text-xs font-medium text-stone-500">
-                        Country & Region
-                      </dt>
-                      <dd className="text-xs font-bold text-stone-900">
-                        {region || "Ethiopian Highlands"}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-medium text-stone-500">
-                        Elevation
-                      </dt>
-                      <dd className="text-xs font-bold text-stone-900">
-                        {elevation || "1,850m – 2,300m"}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-medium text-stone-500">
-                        Varietals
-                      </dt>
-                      <dd className="text-xs font-bold text-stone-900">
-                        {variety || "100% Indigenous Heirloom"}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-medium text-stone-500">
-                        Quality Grade
-                      </dt>
-                      <dd className="text-xs font-bold text-stone-900">
-                        {qualityGrade || "Specialty Grade"}
-                      </dd>
-                    </div>
-                    {processMethod && (
+                  {isHairProduct ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
                       <div>
                         <dt className="text-xs font-medium text-stone-500">
-                          Process
+                          Harvest Provenance
                         </dt>
                         <dd className="text-xs font-bold text-stone-900">
-                          {processMethod}
+                          {hairOrigin || "Ethiopian Highlands"}
                         </dd>
                       </div>
-                    )}
-                    {cuppingScore && (
                       <div>
                         <dt className="text-xs font-medium text-stone-500">
-                          Cupping Score
+                          Texture Suitability
                         </dt>
                         <dd className="text-xs font-bold text-stone-900">
-                          {cuppingScore}
+                          {hairType ||
+                            "Textured Curls, Coils & Protective Styles"}
                         </dd>
                       </div>
-                    )}
-                    {washingStation && (
-                      <div className="col-span-2">
+                      {hairScent && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Aromatherapeutic Profile
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {hairScent}
+                          </dd>
+                        </div>
+                      )}
+                      {hairIngredients && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Active Botanicals
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {hairIngredients}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  ) : isCeremonyProduct ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                      <div>
                         <dt className="text-xs font-medium text-stone-500">
-                          Washing Station / Mill
+                          Artisan Provenance
                         </dt>
                         <dd className="text-xs font-bold text-stone-900">
-                          {washingStation}
+                          {ceremonyOrigin || "Artisan Guilds of Ethiopia"}
                         </dd>
                       </div>
-                    )}
-                  </dl>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Material
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {ceremonyMaterial ||
+                            "Traditional Terracotta & Hardwood"}
+                        </dd>
+                      </div>
+                      {ceremonyDimensions && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Dimensions / Capacity
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {ceremonyDimensions}
+                          </dd>
+                        </div>
+                      )}
+                      {ceremonyCare && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Care & Maintenance
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {ceremonyCare}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  ) : (
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Country & Region
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {region || "Ethiopian Highlands"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Elevation
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {elevation || "1,850m – 2,300m"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Varietals
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {variety || "100% Indigenous Heirloom"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Quality Grade
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {qualityGrade || "Specialty Grade"}
+                        </dd>
+                      </div>
+                    </dl>
+                  )}
                 </div>
               )}
             </div>

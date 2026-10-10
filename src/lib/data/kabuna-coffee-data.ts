@@ -143,6 +143,12 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
     "/images/products/green-coffee.jpg",
     "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85",
   ],
+  // Traditional Ethiopian Organic Hair Care Botanicals
+  "yetsehur-kibe": ["/images/hair/yetsehur-kibe.jpg"],
+  "koseret-scalp-elixir": ["/images/hair/koseret-scalp-elixir.jpg"],
+  "endod-cleanser": ["/images/hair/endod-cleanser.jpg"],
+  "shuruba-mask": ["/images/hair/shuruba-mask.jpg"],
+  "wanza-comb": ["/images/hair/wanza-comb.jpg"],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
@@ -169,6 +175,15 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("menkeskesha")) return "menkeskesha";
   if (s.includes("mukecha") || s.includes("zenezena")) return "mukecha";
   if (s.includes("ceremony") || s.includes("buna")) return "ceremony-kit";
+
+  // Specific Ethiopian Organic Hair Care Botanicals
+  if (s.includes("yetsehur") || s.includes("kibe")) return "yetsehur-kibe";
+  if (s.includes("koseret") || s.includes("elixir") || s.includes("nug"))
+    return "koseret-scalp-elixir";
+  if (s.includes("endod") || s.includes("cleanser")) return "endod-cleanser";
+  if (s.includes("shuruba") || s.includes("mask") || s.includes("conditioning"))
+    return "shuruba-mask";
+  if (s.includes("wanza") || s.includes("comb")) return "wanza-comb";
 
   if (s.includes("yirgacheffe")) return "chelbesa";
   if (s.includes("sidama") || s.includes("sidamo")) return "hamasho";
@@ -958,13 +973,8 @@ function buildHairProduct({
   specs,
 }: HairProductProps): Product {
   const price = createPrice(baseCents, compareAtCents);
-  const gallery = getCoffeeGallery(
-    slug,
-    `${name} - Traditional Ethiopian Organic Hair Care`,
-    id,
-  );
-  const primaryMedia =
-    gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
+  const primaryMedia = createMedia(`media_${id}_1`, imageUrl, name);
+  const gallery = [primaryMedia];
   const variant = createVariant(
     `var_${id}_default`,
     sku,

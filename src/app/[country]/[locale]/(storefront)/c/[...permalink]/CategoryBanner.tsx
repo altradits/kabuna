@@ -154,47 +154,259 @@ export async function CategoryBanner({
         },
       ],
     };
-  } else if (permalink === "hair" || permalink.endsWith("/hair")) {
-    heroProps = {
-      badge: undefined,
-      titleLine1: "Traditional Ethiopian",
-      titleLine2: "Organic Hair Care",
-      description:
-        "Centuries of Habesha beauty wisdom crafted with 100% native Ethiopian botanicals — cultured herbal hair butter (YeTsehur Kibe), cold-pressed Nug scalp elixirs, wild Endod cleansers, and hand-carved Wanza combs.",
-      bgImageSrc: "/images/heroes/hair-hero.jpg",
-      bgImageAlt: "Traditional Ethiopian botanical hair care ritual",
-      focalImageSrc: "/images/hair/yetsehur-kibe.jpg",
-      focalImageAlt: "YeTsehur Kibe Ethiopian herbal hair butter",
-      focalImageIsCutout: false,
-      ctaText: "Shop Hair Care",
-      ctaHref: "#category-products",
-      secondaryCtaText: "Specialty Coffees",
-      secondaryCtaHref: `${basePath}/c/coffee`,
-      pillarsTitle: "The Ancient Habesha Botanical Ritual",
-      pillars: [
-        {
-          icon: <Sparkles className="w-6 h-6" />,
-          titleLine1: "Cultured Grass-Fed",
-          titleLine2: "Herbal Butter (Kibe)",
-          description:
-            "Slow-simmered with wild Koseret and rosemary to penetrate natural coils and deliver deep, long-lasting moisture.",
-        },
-        {
-          icon: <Droplets className="w-6 h-6" />,
-          titleLine1: "Cold-Pressed Nug &",
-          titleLine2: "Black Seed Elixirs",
-          description:
-            "Indigenous highland oils packed with linoleic acid and thymoquinone to nourish scalp follicles and encourage growth.",
-        },
-        {
-          icon: <HeartHandshake className="w-6 h-6" />,
-          titleLine1: "Wild Endod &",
-          titleLine2: "Zero Synthetics",
-          description:
-            "Pure, saponin-rich botanical berries and hand-carved Wanza hardwood combs honoring ancestral Ethiopian heritage.",
-        },
-      ],
-    };
+  } else if (
+    permalink === "hair" ||
+    permalink.startsWith("hair/") ||
+    permalink.includes("/hair") ||
+    permalink.includes("hair")
+  ) {
+    if (permalink.includes("butter")) {
+      heroProps = {
+        badge: "HERBAL BUTTERS & BALMS",
+        titleLine1: "YeTsehur Kibe",
+        titleLine2: "Cultured Hair Butter",
+        description:
+          "Hand-churned grass-fed highland butter slowly infused with wild Koseret, mountain rosemary, and green cardamom for intense moisture and coil repair.",
+        bgImageSrc: "/images/heroes/hair-hero.jpg",
+        bgImageAlt: "Traditional Ethiopian herbal hair butter ritual",
+        focalImageSrc: "/images/hair/yetsehur-kibe.jpg",
+        focalImageAlt: "YeTsehur Kibe Ethiopian herbal hair butter",
+        focalImageIsCutout: false,
+        ctaText: "Shop Hair Butters",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Hair Care",
+        secondaryCtaHref: `${basePath}/c/hair`,
+        pillarsTitle: "Highland Butter Infusion Benefits",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Grass-Fed Highland",
+            titleLine2: "Clarified Butter",
+            description:
+              "Rich in vitamins A, D, and E with essential fatty acids that seal moisture without weight.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Wild Koseret &",
+            titleLine2: "Rosemary Infusion",
+            description:
+              "Wild Lippia adoensis calms itchy scalp and clarifies follicle roots with natural thymol.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Protective Styling",
+            titleLine2: "Deep Hydration",
+            description:
+              "Ideal for locking in post-wash hydration prior to braiding or twisting natural textures.",
+          },
+        ],
+      };
+    } else if (permalink.includes("oil") || permalink.includes("elixir")) {
+      heroProps = {
+        badge: "SCALP OILS & ELIXIRS",
+        titleLine1: "Koseret & Nug",
+        titleLine2: "Scalp Growth Elixir",
+        description:
+          "Cold-pressed indigenous Ethiopian Nug seed oil, wild-foraged Koseret, and Tikur Azmud (black seed) formulated for follicle stimulation and mirror shine.",
+        bgImageSrc: "/images/heroes/hair-hero.jpg",
+        bgImageAlt: "Cold-pressed Ethiopian herbal hair oil",
+        focalImageSrc: "/images/hair/koseret-scalp-elixir.jpg",
+        focalImageAlt: "Koseret and Nug Scalp Elixir",
+        focalImageIsCutout: false,
+        ctaText: "Shop Scalp Oils",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Hair Care",
+        secondaryCtaHref: `${basePath}/c/hair`,
+        pillarsTitle: "Native Highland Oil Properties",
+        pillars: [
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Cold-Pressed Nug",
+            titleLine2: "Linoleic Acid Rich",
+            description:
+              "Indigenous Guizotia abyssinica seeds deliver omega-6 fatty acids to boost cellular renewal.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Tikur Azmud",
+            titleLine2: "Black Seed Vitality",
+            description:
+              "Packed with thymoquinone to soothe scalp inflammation, combat dandruff, and reduce shedding.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Lightweight & Fast",
+            titleLine2: "Non-Greasy Finish",
+            description:
+              "Absorbs rapidly without pore clogging, providing a lustrous weightless botanical sheen.",
+          },
+        ],
+      };
+    } else if (permalink.includes("cleanser") || permalink.includes("endod")) {
+      heroProps = {
+        badge: "BOTANICAL CLEANSERS",
+        titleLine1: "Endod Botanical",
+        titleLine2: "Herbal Scalp Cleansers",
+        description:
+          "Wild-harvested Endod (African soapberry) and ancestral washing powders that clarify gently with natural plant saponins without stripping natural oils.",
+        bgImageSrc: "/images/heroes/hair-hero.jpg",
+        bgImageAlt: "Wild-harvested Endod scalp cleanser",
+        focalImageSrc: "/images/hair/endod-cleanser.jpg",
+        focalImageAlt: "Endod Botanical Cleanser",
+        focalImageIsCutout: false,
+        ctaText: "Shop Cleansers",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Hair Care",
+        secondaryCtaHref: `${basePath}/c/hair`,
+        pillarsTitle: "Wild Saponin Clarifying Science",
+        pillars: [
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Wild Endod Saponins",
+            titleLine2: "Zero Sulfates",
+            description:
+              "Phytolacca dodecandra produces rich botanical foam that sweeps buildup away naturally.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Microbiome Friendly",
+            titleLine2: "Optimal pH Balance",
+            description:
+              "Maintains the scalp's delicate protective acid mantle without stripping vital lipids.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Ancestral Recipe",
+            titleLine2: "100% Biodegradable",
+            description:
+              "Foraged sustainably from wild riverbanks by highland cooperative gatherers.",
+          },
+        ],
+      };
+    } else if (permalink.includes("treatment") || permalink.includes("mask")) {
+      heroProps = {
+        badge: "TREATMENTS & MASKS",
+        titleLine1: "Shuruba Restorative",
+        titleLine2: "Highland Hair Masks",
+        description:
+          "Deep conditioning botanical treatment infused with Ethiopian highland Moringa stenopetala to fortify coils, prevent breakage, and revive braided textures.",
+        bgImageSrc: "/images/heroes/hair-hero.jpg",
+        bgImageAlt: "Shuruba deep conditioning hair mask",
+        focalImageSrc: "/images/hair/shuruba-mask.jpg",
+        focalImageAlt: "Shuruba Deep Conditioning Mask",
+        focalImageIsCutout: false,
+        ctaText: "Shop Hair Masks",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Hair Care",
+        secondaryCtaHref: `${basePath}/c/hair`,
+        pillarsTitle: "Highland Moringa Conditioning Power",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Moringa Stenopetala",
+            titleLine2: "Highland Superfood",
+            description:
+              "Packed with amino acids, plant keratin precursors, and minerals for tensile strength.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Intense Elasticity",
+            titleLine2: "Split End Shield",
+            description:
+              "Restores slip and curl elasticity for effortless detangling without strand snap.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Braiding Preparation",
+            titleLine2: "Long-Lasting Silk",
+            description:
+              "Deeply conditions before and after traditional Shuruba cornrows and protective styles.",
+          },
+        ],
+      };
+    } else if (permalink.includes("tool") || permalink.includes("comb")) {
+      heroProps = {
+        badge: "WOODEN COMBS & ACCESSORIES",
+        titleLine1: "Hand-Carved Wanza",
+        titleLine2: "Artisan Wide-Tooth Combs",
+        description:
+          "Traditional Ethiopian afro picks hand-carved from dense mountain Wanza hardwood with delicate Habesha motifs to detangle curls without static.",
+        bgImageSrc: "/images/heroes/hair-hero.jpg",
+        bgImageAlt: "Hand-carved Wanza hardwood hair comb",
+        focalImageSrc: "/images/hair/wanza-comb.jpg",
+        focalImageAlt: "Wanza Carved Hair Comb",
+        focalImageIsCutout: false,
+        ctaText: "Shop Combs",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Hair Care",
+        secondaryCtaHref: `${basePath}/c/hair`,
+        pillarsTitle: "Artisanal Wanza Wood Craftsmanship",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Solid Mountain Wanza",
+            titleLine2: "Cordia Africana Wood",
+            description:
+              "Prized for centuries for its velvety grain, durability, and smooth seamless tooth finish.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Static-Free Glide",
+            titleLine2: "Snag-Free Teeth",
+            description:
+              "Naturally distributes scalp oils through strands without micro-tearing hair cuticles.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Gondar Guild Carvers",
+            titleLine2: "Generational Art",
+            description:
+              "Individually hand-chiseled by master carvers using traditional geometrical Habesha crosses.",
+          },
+        ],
+      };
+    } else {
+      heroProps = {
+        badge: undefined,
+        titleLine1: "Traditional Ethiopian",
+        titleLine2: "Organic Hair Care",
+        description:
+          "Centuries of Habesha beauty wisdom crafted with 100% native Ethiopian botanicals — cultured herbal hair butter (YeTsehur Kibe), cold-pressed Nug scalp elixirs, wild Endod cleansers, and hand-carved Wanza combs.",
+        bgImageSrc: "/images/heroes/hair-hero.jpg",
+        bgImageAlt: "Traditional Ethiopian botanical hair care ritual",
+        focalImageSrc: "/images/hair/yetsehur-kibe.jpg",
+        focalImageAlt: "YeTsehur Kibe Ethiopian herbal hair butter",
+        focalImageIsCutout: false,
+        ctaText: "Shop Hair Care",
+        ctaHref: "#category-products",
+        secondaryCtaText: "Specialty Coffees",
+        secondaryCtaHref: `${basePath}/c/coffee`,
+        pillarsTitle: "The Ancient Habesha Botanical Ritual",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Cultured Grass-Fed",
+            titleLine2: "Herbal Butter (Kibe)",
+            description:
+              "Slow-simmered with wild Koseret and rosemary to penetrate natural coils and deliver deep, long-lasting moisture.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Cold-Pressed Nug &",
+            titleLine2: "Black Seed Elixirs",
+            description:
+              "Indigenous highland oils packed with linoleic acid and thymoquinone to nourish scalp follicles and encourage growth.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Wild Endod &",
+            titleLine2: "Zero Synthetics",
+            description:
+              "Pure, saponin-rich botanical berries and hand-carved Wanza hardwood combs honoring ancestral Ethiopian heritage.",
+          },
+        ],
+      };
+    }
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {

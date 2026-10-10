@@ -46,7 +46,19 @@ async function cachedListCategories(
     const hasCoffee = res.data?.some(
       (c) => c.permalink === "coffee" || c.id === "cat_coffee",
     );
-    if (res.data && res.data.length > 0 && hasCeremony && hasCoffee) {
+    const hasHair = res.data?.some(
+      (c) =>
+        c.permalink === "hair" ||
+        c.id === "cat_hair" ||
+        c.name.toLowerCase().includes("hair"),
+    );
+    if (
+      res.data &&
+      res.data.length > 0 &&
+      hasCeremony &&
+      hasCoffee &&
+      hasHair
+    ) {
       return res;
     }
     return { data: KABUNA_CATEGORIES } as unknown as Awaited<

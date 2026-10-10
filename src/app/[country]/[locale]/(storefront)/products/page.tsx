@@ -1,4 +1,4 @@
-import { Flame, HeartHandshake, Mountain } from "lucide-react";
+import { Flame, Mountain, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageHeroSection } from "@/components/layout/PageHeroSection";
@@ -48,27 +48,29 @@ export default async function ProductsPage({
       <PageHeroSection
         badge={query ? "SEARCH DISCOVERIES" : undefined}
         titleLine1={
-          query ? t("searchResultsFor", { query }) : "Direct-Trade Heirlooms"
+          query
+            ? t("searchResultsFor", { query })
+            : "Direct-Trade Coffee, Ceremony"
         }
-        titleLine2={query ? undefined : "& Buna Ceremony Wares"}
+        titleLine2={query ? undefined : "& Ancestral Hair Care"}
         description={
           query
-            ? "Discover exceptional single-origin Ethiopian micro-lots and sacred Buna ceremony essentials matching your search."
-            : "Sourced directly from smallholder farms in Yirgacheffe, Sidama, and Guji. Roasted fresh in small batches alongside authentic handcrafted ritual pottery."
+            ? "Discover exceptional single-origin Ethiopian micro-lots, sacred Buna ceremony essentials, and organic Habesha hair care matching your search."
+            : "Sourced directly from smallholder cooperatives across Ethiopia: fresh-roasted heirloom Arabica, handcrafted Buna ceremony pottery, and ancestral organic hair botanicals."
         }
-        ctaText={query ? undefined : "Explore Roasts"}
+        ctaText={query ? undefined : "Explore Catalog"}
         ctaHref={query ? undefined : "#products-collection"}
-        secondaryCtaText={query ? undefined : "Buna Ceremony"}
-        secondaryCtaHref={query ? undefined : `${basePath}/c/buna-ceremony`}
+        secondaryCtaText={query ? undefined : "Organic Hair Care"}
+        secondaryCtaHref={query ? undefined : `${basePath}/c/hair`}
         bgImageSrc="/images/hero-mountain.jpg"
         bgImageAlt="Majestic Ethiopian highlands mountain landscape at dusk"
         focalImageSrc={
-          query ? "/images/hero-cup.png" : "/images/products/chelbesa.jpg"
+          query ? "/images/hero-cup.png" : "/images/heroes/hair-hero.jpg"
         }
         focalImageAlt={
           query
             ? "Ceramic coffee cup"
-            : "Chelbesa Yirgacheffe specialty coffee bag"
+            : "Ancestral Ethiopian organic hair care and botanicals"
         }
         focalImageIsCutout={Boolean(query)}
         pillarsTitle="The Kabuna Ethiopian Heritage"
@@ -81,18 +83,18 @@ export default async function ProductsPage({
               "High elevation slows cherry development, unlocking complex jasmine, stone fruit, and vibrant bergamot acidity.",
           },
           {
-            icon: <HeartHandshake className="w-6 h-6" />,
-            titleLine1: "Ethical & Direct",
-            titleLine2: "Cooperative Trade",
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Sacred Buna Tetu",
+            titleLine2: "Ceremony Heirlooms",
             description:
-              "We work directly with generational smallholders and washing stations, ensuring equity, transparency, and dignity.",
+              "Artisanal burnished clay Jebena pots, Cini cups, and brass-trimmed Rekebot tables crafted by generational guilds.",
           },
           {
-            icon: <Flame className="w-6 h-6" />,
-            titleLine1: "Small-Batch Fresh",
-            titleLine2: "Roast to Order",
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Ancestral Habesha",
+            titleLine2: "Hair Botanicals",
             description:
-              "Every harvest micro-lot is roasted strictly upon order and heat-sealed with a one-way aroma degassing valve.",
+              "Wild Koseret, golden Nug seed oil, Endod saponin washes, and carved Wanza wood combs for coil moisture and scalp vitality.",
           },
         ]}
       />

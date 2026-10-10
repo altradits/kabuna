@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { CategoryShowcaseSection } from "@/components/home/CategoryShowcaseSection";
 import { FeaturedProductsSection } from "@/components/home/FeaturedProductsSection";
+import { HairCareShowcaseSection } from "@/components/home/HairCareShowcaseSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { resolveCurrency } from "@/lib/data/markets";
 import { generateHomeMetadata } from "@/lib/metadata/home";
@@ -26,6 +28,8 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <div>
       <HeroSection basePath={basePath} locale={locale} />
+      <CategoryShowcaseSection basePath={basePath} />
+      <HairCareShowcaseSection basePath={basePath} currency={currency} />
       <FeaturedProductsSection
         basePath={basePath}
         locale={locale}
