@@ -89,6 +89,22 @@ export async function cachedGetCategory(
     >;
   }
 
+  // Specifically resolve Hair category to KABUNA_CATEGORIES
+  if (
+    idOrPermaLower === "hair" ||
+    idOrPermaLower === "cat_hair" ||
+    idOrPermaLower.endsWith("/hair")
+  ) {
+    const hairCat = KABUNA_CATEGORIES.find(
+      (c) => c.permalink === "hair" || c.id === "cat_hair",
+    );
+    if (hairCat) {
+      return hairCat as unknown as Awaited<
+        ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+      >;
+    }
+  }
+
   // Specifically resolve Buna Ceremony category to KABUNA_CATEGORIES
   if (
     idOrPermaLower.includes("buna-ceremony") ||
@@ -156,6 +172,34 @@ async function cachedListCategoryProducts(
     catLower === "cat_coffee" ||
     catLower.endsWith("/coffee");
 
+  const isHair =
+    catLower === "hair" ||
+    catLower === "cat_hair" ||
+    catLower.endsWith("/hair");
+
+  const isHairButters =
+    catLower.includes("butter") || catLower === "cat_hair_butters";
+
+  const isHairOils =
+    catLower.includes("oil") ||
+    catLower.includes("elixir") ||
+    catLower === "cat_hair_oils";
+
+  const isHairCleansers =
+    catLower.includes("cleanser") ||
+    catLower.includes("endod") ||
+    catLower === "cat_hair_cleansers";
+
+  const isHairMasks =
+    catLower.includes("treatment") ||
+    catLower.includes("mask") ||
+    catLower === "cat_hair_masks";
+
+  const isHairTools =
+    catLower.includes("tool") ||
+    catLower.includes("comb") ||
+    catLower === "cat_hair_tools";
+
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
     catLower.includes("buna") ||
@@ -211,14 +255,35 @@ async function cachedListCategoryProducts(
 
   const localFiltered = KABUNA_PRODUCTS.filter((p) => {
     if (isCoffee) {
-      return (
-        p.categories?.some(
-          (c) =>
-            c.id === "cat_coffee" ||
-            c.permalink === "coffee" ||
-            c.name.toLowerCase() === "coffee",
-        ) || !p.categories?.some((c) => c.id === "cat_ceremony")
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_coffee" ||
+          c.permalink === "coffee" ||
+          c.name.toLowerCase() === "coffee",
       );
+    }
+    if (isHair) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_hair" ||
+          c.permalink === "hair" ||
+          c.name.toLowerCase().includes("hair"),
+      );
+    }
+    if (isHairButters) {
+      return p.categories?.some((c) => c.id === "cat_hair_butters");
+    }
+    if (isHairOils) {
+      return p.categories?.some((c) => c.id === "cat_hair_oils");
+    }
+    if (isHairCleansers) {
+      return p.categories?.some((c) => c.id === "cat_hair_cleansers");
+    }
+    if (isHairMasks) {
+      return p.categories?.some((c) => c.id === "cat_hair_masks");
+    }
+    if (isHairTools) {
+      return p.categories?.some((c) => c.id === "cat_hair_tools");
     }
     if (isCeremonyCategory) {
       return p.categories?.some(

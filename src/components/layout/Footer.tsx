@@ -15,6 +15,7 @@ const EXCLUDED_FOOTER_PERMALINKS = new Set([
   "washed",
   "natural",
   "buna-ceremony",
+  "hair",
 ]);
 
 const EXCLUDED_FOOTER_NAMES = new Set([
@@ -26,6 +27,8 @@ const EXCLUDED_FOOTER_NAMES = new Set([
   "ceremony & accessories",
   "buna ceremony & accessories",
   "buna ceremony",
+  "organic hair care",
+  "hair",
 ]);
 
 function InstagramIcon({ className = "size-4" }: { className?: string }) {
@@ -197,6 +200,14 @@ export async function Footer({ basePath, locale, categoryLinks }: FooterProps) {
                   className="text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
                 >
                   Coffee
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${basePath}/c/hair`}
+                  className="text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+                >
+                  Organic Hair Care
                 </Link>
               </li>
               <li>

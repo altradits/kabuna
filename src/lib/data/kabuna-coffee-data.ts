@@ -567,7 +567,61 @@ export const CAT_CEREMONY = createCategory(
   "/images/ceremony/ceremony-kit.jpg",
 );
 
-export const KABUNA_CATEGORIES: Category[] = [CAT_COFFEE, CAT_CEREMONY];
+export const CAT_HAIR_BUTTERS = createCategory(
+  "cat_hair_butters",
+  "Herbal Butters & Balms",
+  "hair/butters",
+  "Cultured grass-fed herbal hair butter (YeTsehur Kibe) infused with wild mountain aromatics for intense moisture and curl definition.",
+);
+
+export const CAT_HAIR_OILS = createCategory(
+  "cat_hair_oils",
+  "Scalp Oils & Elixirs",
+  "hair/oils",
+  "Cold-pressed Ethiopian Nug seed oil, wild Koseret, and Tikur Azmud (black seed) formulated for follicle stimulation and length retention.",
+);
+
+export const CAT_HAIR_CLEANSERS = createCategory(
+  "cat_hair_cleansers",
+  "Botanical Cleansers",
+  "hair/cleansers",
+  "Wild-harvested Endod (African soapberry) and herbal washing powders that clarify gently without stripping natural scalp moisture.",
+);
+
+export const CAT_HAIR_MASKS = createCategory(
+  "cat_hair_masks",
+  "Treatments & Masks",
+  "hair/treatments",
+  "Restorative deep conditioning masks enriched with highland Moringa stenopetala and ancestral herbal infusions for strengthening braids and natural coils.",
+);
+
+export const CAT_HAIR_TOOLS = createCategory(
+  "cat_hair_tools",
+  "Wooden Combs & Accessories",
+  "hair/tools",
+  "Authentic hand-carved Wanza hardwood wide-tooth combs and traditional Habesha afro picks designed to detangle delicate curls seamlessly.",
+);
+
+export const CAT_HAIR = createCategory(
+  "cat_hair",
+  "Organic Hair Care",
+  "hair",
+  "Ancestral Habesha beauty rituals formulated with 100% native Ethiopian botanicals — herbal hair butters (YeTsehur Kibe), cold-pressed Nug oils, wild Endod cleansers, and hand-carved Wanza combs.",
+  [
+    CAT_HAIR_BUTTERS,
+    CAT_HAIR_OILS,
+    CAT_HAIR_CLEANSERS,
+    CAT_HAIR_MASKS,
+    CAT_HAIR_TOOLS,
+  ],
+  "/images/hair/yetsehur-kibe.jpg",
+);
+
+export const KABUNA_CATEGORIES: Category[] = [
+  CAT_COFFEE,
+  CAT_HAIR,
+  CAT_CEREMONY,
+];
 
 interface CoffeeSpecProps {
   id: string;
@@ -861,6 +915,138 @@ function buildCeremonyProduct({
     option_types: [],
     option_values: [],
     categories: [CAT_CEREMONY],
+    custom_fields: customFields,
+    prior_price: null,
+  };
+}
+
+interface HairProductProps {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  compareAtCents?: number;
+  imageUrl: string;
+  sku: string;
+  weight: number;
+  tags: string[];
+  categories: Category[];
+  specs: {
+    ingredients: string;
+    botanicalOrigin: string;
+    hairType: string;
+    ritualUse: string;
+    scentProfile: string;
+  };
+}
+
+function buildHairProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  compareAtCents,
+  imageUrl,
+  sku,
+  weight,
+  tags,
+  categories,
+  specs,
+}: HairProductProps): Product {
+  const price = createPrice(baseCents, compareAtCents);
+  const gallery = getCoffeeGallery(
+    slug,
+    `${name} - Traditional Ethiopian Organic Hair Care`,
+    id,
+  );
+  const primaryMedia =
+    gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
+  const variant = createVariant(
+    `var_${id}_default`,
+    sku,
+    baseCents,
+    [],
+    "Standard",
+    weight,
+  );
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_ingredients`,
+      "Active Botanicals",
+      "ingredients",
+      specs.ingredients,
+    ),
+    createCustomField(
+      `cf_${id}_origin`,
+      "Harvest Provenance",
+      "origin",
+      specs.botanicalOrigin,
+    ),
+    createCustomField(
+      `cf_${id}_hair_type`,
+      "Recommended Hair Textures",
+      "hair_type",
+      specs.hairType,
+    ),
+    createCustomField(
+      `cf_${id}_use`,
+      "Traditional Habesha Ritual",
+      "use",
+      specs.ritualUse,
+    ),
+    createCustomField(
+      `cf_${id}_scent`,
+      "Aromatherapeutic Notes",
+      "scent",
+      specs.scentProfile,
+    ),
+  ];
+
+  const productCategories = categories.some((c) => c.id === "cat_hair")
+    ? categories
+    : [CAT_HAIR, ...categories];
+
+  return {
+    id,
+    name,
+    slug,
+    meta_title: `${name} | Ethiopian Organic Hair Care | Kabuna`,
+    meta_description: subtitle,
+    meta_keywords: `Ethiopian organic hair care, Habesha hair, ${name}, ${tags.join(", ")}`,
+    variant_count: 1,
+    available_on: "2024-01-01T00:00:00.000Z",
+    preorder_ships_at: null,
+    purchasable: true,
+    preorder: false,
+    in_stock: true,
+    backorderable: false,
+    available: true,
+    description: `${subtitle}\n\n${description}`,
+    description_html: `<p><strong>${subtitle}</strong></p><p>${description}</p>`,
+    default_variant_id: variant.id,
+    buy_box_variant_id: variant.id,
+    thumbnail_url: imageUrl,
+    tags: [
+      "Organic Hair Care",
+      "Ethiopian Botanicals",
+      "Habesha Hair Ritual",
+      ...tags,
+    ],
+    price,
+    original_price: compareAtCents ? createPrice(compareAtCents) : price,
+    seller_id: null,
+    primary_media: primaryMedia,
+    media: gallery.length > 0 ? gallery : [primaryMedia],
+    variants: [variant],
+    default_variant: variant,
+    option_types: [],
+    option_values: [],
+    categories: productCategories,
     custom_fields: customFields,
     prior_price: null,
   };
@@ -1356,6 +1542,175 @@ export const KABUNA_PRODUCTS: Product[] = [
       ritualUse:
         "Enables the full three-round traditional Buna Tetu ceremony: roasting, grinding, incense, and serving",
       care: "Includes comprehensive illustrated English/Amharic ritual care and brewing manual",
+    },
+  }),
+
+  // 18. YeTsehur Kibe (Highland Herbal Hair Butter)
+  buildHairProduct({
+    id: "prod_yetsehur_kibe",
+    name: "YeTsehur Kibe",
+    slug: "yetsehur-kibe-herbal-hair-butter",
+    subtitle:
+      "Cultured Grass-Fed Butter Infused with Wild Koseret, Rosemary & Cardamom",
+    description:
+      "An ancient secret of Habesha hair care passed down across generations. Hand-churned from grass-fed highland milk and slowly infused over low embers with wild Koseret (Lippia adoensis), Ethiopian highland rosemary, and green cardamom pods. This rich, whipped golden butter melts effortlessly upon skin and scalp contact, delivering vital fatty acids and deep cellular moisture to replenish dry coils, lock in post-wash hydration, and shield natural hair from harsh sun exposure.",
+    baseCents: 2800,
+    compareAtCents: 3400,
+    imageUrl: "/images/hair/yetsehur-kibe.jpg",
+    sku: "KBN-HAIR-KIBE",
+    weight: 0.35,
+    tags: [
+      "YeTsehur Kibe",
+      "Hair Butter",
+      "Koseret",
+      "Deep Moisture",
+      "Habesha Hair",
+    ],
+    categories: [CAT_HAIR, CAT_HAIR_BUTTERS],
+    specs: {
+      ingredients:
+        "Clarified Grass-Fed Highland Butter, Wild Koseret (Lippia adoensis), Rosemary Extract, Green Cardamom, Black Seed (Tikur Azmud)",
+      botanicalOrigin:
+        "Shewa Highlands & Gojjam Organic Cooperatives, Ethiopia",
+      hairType: "Textured, Type 3 & 4 Coils, High Porosity, Protective Styles",
+      ritualUse:
+        "Warm a hazelnut-sized portion between palms; gently massage into scalp and smooth through ends after washing or prior to braiding",
+      scentProfile:
+        "Warm herbal Koseret, comforting minty citrus, and roasted mountain butter",
+    },
+  }),
+
+  // 19. Koseret & Nug Scalp Elixir (100% Organic Cold-Pressed Hair Oil)
+  buildHairProduct({
+    id: "prod_koseret_scalp_elixir",
+    name: "Koseret & Nug Scalp Elixir",
+    slug: "koseret-nug-scalp-elixir",
+    subtitle:
+      "Cold-Pressed Ethiopian Nug Seed Oil with Wild Koseret & Black Cumin",
+    description:
+      "A sacred growth and scalp vitality elixir formulating Ethiopia's indigenous golden Nug seed (Guizotia abyssinica) with wild-foraged Koseret and Tikur Azmud (Nigella sativa / Black Cumin). Rich in linoleic acid, omega-6 fatty acids, and thymoquinone, this fast-absorbing botanical oil stimulates blood microcirculation around follicles, calms dry or irritated scalps, reduces shedding, and leaves a lustrous, weightless mirror shine.",
+    baseCents: 3200,
+    compareAtCents: 3800,
+    imageUrl: "/images/hair/koseret-scalp-elixir.jpg",
+    sku: "KBN-HAIR-ELIXIR",
+    weight: 0.25,
+    tags: ["Scalp Elixir", "Nug Oil", "Koseret", "Hair Growth", "Cold Pressed"],
+    categories: [CAT_HAIR, CAT_HAIR_OILS],
+    specs: {
+      ingredients:
+        "Cold-Pressed Ethiopian Nug Seed Oil (Guizotia abyssinica), Wild Koseret Infusion, Tikur Azmud (Black Cumin Seed Oil), Cold-Pressed Sesame Seed Oil",
+      botanicalOrigin:
+        "Gondar Volcanic Plateaus & Tigray Valley Farms, Ethiopia",
+      hairType:
+        "All Curls & Coils, Dry Scalp, Thinning Edges, Low & High Porosity",
+      ritualUse:
+        "Part hair into sections; apply 3–5 drops directly to scalp and massage in circular motions for 5 minutes; ideal for nightly scalp stimulation or hot oil treatments",
+      scentProfile:
+        "Earthy botanical seed warmth with invigorating wild herbal Koseret top notes",
+    },
+  }),
+
+  // 20. Endod Botanical Cleanser (Wild Saponin Hair & Scalp Wash)
+  buildHairProduct({
+    id: "prod_endod_cleanser",
+    name: "Endod Botanical Cleanser",
+    slug: "endod-botanical-cleanser",
+    subtitle:
+      "Wild Saponin-Rich Phytolacca Dodecandra Powder for Gentle Scalp Clarifying",
+    description:
+      "Centuries before modern shampoos existed, Ethiopian communities relied on Endod (African soapberry / Phytolacca dodecandra) to purify hair naturally. Harvested sustainably from wild riverbank shrubs in the central plateau, our dried Endod berries are ground into a silky cleansing powder rich in botanical saponins. When mixed with warm water, it creates a gentle, low-lather foam that lifts product buildup, excess sebum, and environmental impurities without stripping the scalp's delicate acid mantle.",
+    baseCents: 2400,
+    compareAtCents: 2900,
+    imageUrl: "/images/hair/endod-cleanser.jpg",
+    sku: "KBN-HAIR-ENDOD",
+    weight: 0.3,
+    tags: [
+      "Endod",
+      "Saponin Wash",
+      "Clarifying Powder",
+      "Zero Chemicals",
+      "Herbal Cleanser",
+    ],
+    categories: [CAT_HAIR, CAT_HAIR_CLEANSERS],
+    specs: {
+      ingredients:
+        "100% Wild-Crafted Phytolacca Dodecandra (Endod Berry Powder), Gesho Leaf Powder, Dried Hibiscus Calyx",
+      botanicalOrigin:
+        "Bishoftu Rift Valley & Blue Nile Basin Wild Groves, Ethiopia",
+      hairType:
+        "Sensitive Scalp, Sensitive Skin, Product-Heavy Curls, Color-Treated Hair",
+      ritualUse:
+        "Mix 1–2 tablespoons with 1 cup warm water until a gentle frothy tea forms; pour slowly over damp hair, massage through scalp, and rinse thoroughly",
+      scentProfile:
+        "Clean earthy green tea with subtle wild mountain berry undertones",
+    },
+  }),
+
+  // 21. Shuruba Deep Conditioning Mask (Moringa & Herbal Fortifying Treatment)
+  buildHairProduct({
+    id: "prod_shuruba_mask",
+    name: "Shuruba Deep Conditioning Mask",
+    slug: "shuruba-deep-conditioning-mask",
+    subtitle:
+      "Highland Moringa Stenopetala & Traditional Herbal Strengthening Cream",
+    description:
+      "Specially crafted for traditional Ethiopian cornrow and braid ceremonies (*Shuruba*), this decadent fortifying treatment delivers intensive protein-moisture balance. Formulated with wild-harvested Ethiopian Moringa stenopetala leaves (celebrated in the Konso highlands as the tree of life), cold-pressed Nug butter, and softening marshmallow root. It repairs damaged keratin bonds, seals porous cuticles, and provides unmatched slip for effortless finger-detangling.",
+    baseCents: 3400,
+    compareAtCents: 4000,
+    imageUrl: "/images/hair/shuruba-mask.jpg",
+    sku: "KBN-HAIR-SHURUBA",
+    weight: 0.45,
+    tags: [
+      "Shuruba",
+      "Conditioning Mask",
+      "Moringa Stenopetala",
+      "Deep Treatment",
+      "Slip & Elasticity",
+    ],
+    categories: [CAT_HAIR, CAT_HAIR_MASKS],
+    specs: {
+      ingredients:
+        "Wild Highland Moringa Stenopetala Extract, Cold-Pressed Nug Butter, Shea Fruit Butter, Aloe Ferox Gel, Herbal Rosemary & Clove Infusion",
+      botanicalOrigin:
+        "Konso Cultural Landscape & Southern Rift Highlands, Ethiopia",
+      hairType:
+        "Damaged, Dry, High Porosity, Transitioning Curls, Braided Protective Styles",
+      ritualUse:
+        "Apply generously from roots to ends on clean, damp hair; leave on for 20–30 minutes under a warm towel or steamer, then rinse with cool water",
+      scentProfile:
+        "Lush green Moringa canopy, sweet herbal clove, and subtle citrus zest",
+    },
+  }),
+
+  // 22. Wanza Carved Hair Comb (Handcrafted Habesha Hardwood Pick)
+  buildHairProduct({
+    id: "prod_wanza_comb",
+    name: "Wanza Carved Hair Comb",
+    slug: "wanza-carved-hair-comb",
+    subtitle: "Handcrafted Ethiopian Cordia Africana Hardwood Detangling Comb",
+    description:
+      "An heirloom styling artifact handcrafted by master woodcarvers in Gondar from dense Ethiopian Wanza (Cordia africana) hardwood. Each wide tooth is individually hand-sanded to a glass-smooth finish to glide effortlessly through the densest 4C coils without friction, snagging, or static. Features traditional etched Habesha cross geometry on the ergonomic handle. Naturally anti-static and conditions over time as it absorbs herbal hair butters and oils.",
+    baseCents: 2200,
+    compareAtCents: 2800,
+    imageUrl: "/images/hair/wanza-comb.jpg",
+    sku: "KBN-HAIR-COMB",
+    weight: 0.18,
+    tags: [
+      "Wanza Wood",
+      "Habesha Comb",
+      "Afro Pick",
+      "Hand Carved",
+      "Anti-Static",
+    ],
+    categories: [CAT_HAIR, CAT_HAIR_TOOLS],
+    specs: {
+      ingredients:
+        "Solid Ethiopian Wanza (Cordia africana) Mountain Hardwood; conditioned with organic Nug oil",
+      botanicalOrigin: "Gondar Artisan Guilds & Amhara Highlands, Ethiopia",
+      hairType: "All Curl Types (3A–4C), Thick Textured Hair, Beards",
+      ritualUse:
+        "Use on damp or buttered hair to gently detangle from ends upward; excellent for lifting roots and creating fullness",
+      scentProfile: "Subtle natural woody warmth from mountain hardwood",
     },
   }),
 ];

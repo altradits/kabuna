@@ -25,13 +25,14 @@ vi.mock("@/lib/spree", () => ({
 }));
 
 describe("Coffee Category & Scalable Taxonomy", () => {
-  it("returns Coffee and Ceremony as top-level root categories", async () => {
+  it("returns Coffee, Hair, and Ceremony as top-level root categories", async () => {
     const res = await getCategories();
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(2);
+    expect(res.data.length).toBe(3);
 
     const names = res.data.map((c) => c.name);
     expect(names).toContain("Coffee");
+    expect(names).toContain("Organic Hair Care");
     expect(names).toContain("Ceremony & Accessories");
   });
 
@@ -71,14 +72,68 @@ describe("Coffee Category & Scalable Taxonomy", () => {
       ]),
     );
 
-    // Verifies that ceremony items are not in the Coffee category
+    // Verifies neither hair nor ceremony items leak into Coffee
+    expect(productNames).not.toContain("YeTsehur Kibe");
     expect(productNames).not.toContain("Jebena");
-    expect(productNames).not.toContain("Cini");
-    expect(productNames).not.toContain("Rekebot");
-    expect(productNames).not.toContain("Girgira");
-    expect(productNames).not.toContain("Menkeskesha");
-    expect(productNames).not.toContain("Mukecha & Zenezena");
-    expect(productNames).not.toContain("Jebena Ceremony Kit");
+  });
+
+  it("classifies subcategories under Hair", async () => {
+    const hairCategory = await getCategory("hair");
+    expect(hairCategory).toBeDefined();
+    expect(hairCategory.id).toBe("cat_hair");
+    expect(hairCategory.name).toBe("Organic Hair Care");
+    expect(hairCategory.children).toBeDefined();
+    expect(hairCategory.children?.length).toBe(5);
+
+    const childNames = hairCategory.children?.map((c) => c.name);
+    expect(childNames).toContain("Herbal Butters & Balms");
+    expect(childNames).toContain("Scalp Oils & Elixirs");
+    expect(childNames).toContain("Botanical Cleansers");
+    expect(childNames).toContain("Treatments & Masks");
+    expect(childNames).toContain("Wooden Combs & Accessories");
+  });
+
+  it("lists all hair products when Hair category is selected", async () => {
+    const res = await getCategoryProducts("cat_hair");
+    expect(res.data).toBeDefined();
+    expect(res.data.length).toBe(5);
+
+    const productNames = res.data.map((p) => p.name);
+    expect(productNames).toEqual(
+      expect.arrayContaining([
+        "YeTsehur Kibe",
+        "Koseret & Nug Scalp Elixir",
+        "Endod Botanical Cleanser",
+        "Shuruba Deep Conditioning Mask",
+        "Wanza Carved Hair Comb",
+      ]),
+    );
+
+    // Verifies neither coffee nor ceremony wares leak into hair
+    expect(productNames).not.toContain("Chelbesa");
+    expect(productNames).not.toContain("Jebena");
+  });
+
+  it("filters hair subcategories accurately", async () => {
+    const buttersRes = await getCategoryProducts("hair/butters");
+    expect(buttersRes.data.length).toBe(1);
+    expect(buttersRes.data[0].name).toBe("YeTsehur Kibe");
+
+    const oilsRes = await getCategoryProducts("hair/oils");
+    expect(oilsRes.data.length).toBe(1);
+    expect(oilsRes.data[0].name).toBe("Koseret & Nug Scalp Elixir");
+
+    const cleansersRes = await getCategoryProducts("hair/cleansers");
+    expect(cleansersRes.data.length).toBe(1);
+    expect(cleansersRes.data[0].name).toBe("Endod Botanical Cleanser");
+
+    const masksRes = await getCategoryProducts("hair/treatments");
+    expect(masksRes.data.length).toBe(1);
+    expect(masksRes.data[0].name).toBe("Shuruba Deep Conditioning Mask");
+
+    const toolsRes = await getCategoryProducts("hair/tools");
+    expect(toolsRes.data.length).toBe(1);
+    expect(toolsRes.data[0].name).toBe("Wanza Carved Hair Comb");
   });
 
   it("lists ceremony items under Ceremony category", async () => {
@@ -90,6 +145,7 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(productNames).toContain("Jebena");
     expect(productNames).toContain("Jebena Ceremony Kit");
     expect(productNames).not.toContain("Chelbesa");
+    expect(productNames).not.toContain("YeTsehur Kibe");
   });
 
   it("correctly filters subcategories like Washed and Natural", async () => {

@@ -154,6 +154,47 @@ export async function CategoryBanner({
         },
       ],
     };
+  } else if (permalink === "hair" || permalink.endsWith("/hair")) {
+    heroProps = {
+      badge: undefined,
+      titleLine1: "Traditional Ethiopian",
+      titleLine2: "Organic Hair Care",
+      description:
+        "Centuries of Habesha beauty wisdom crafted with 100% native Ethiopian botanicals — cultured herbal hair butter (YeTsehur Kibe), cold-pressed Nug scalp elixirs, wild Endod cleansers, and hand-carved Wanza combs.",
+      bgImageSrc: "/images/heroes/hair-hero.jpg",
+      bgImageAlt: "Traditional Ethiopian botanical hair care ritual",
+      focalImageSrc: "/images/hair/yetsehur-kibe.jpg",
+      focalImageAlt: "YeTsehur Kibe Ethiopian herbal hair butter",
+      focalImageIsCutout: false,
+      ctaText: "Shop Hair Care",
+      ctaHref: "#category-products",
+      secondaryCtaText: "Specialty Coffees",
+      secondaryCtaHref: `${basePath}/c/coffee`,
+      pillarsTitle: "The Ancient Habesha Botanical Ritual",
+      pillars: [
+        {
+          icon: <Sparkles className="w-6 h-6" />,
+          titleLine1: "Cultured Grass-Fed",
+          titleLine2: "Herbal Butter (Kibe)",
+          description:
+            "Slow-simmered with wild Koseret and rosemary to penetrate natural coils and deliver deep, long-lasting moisture.",
+        },
+        {
+          icon: <Droplets className="w-6 h-6" />,
+          titleLine1: "Cold-Pressed Nug &",
+          titleLine2: "Black Seed Elixirs",
+          description:
+            "Indigenous highland oils packed with linoleic acid and thymoquinone to nourish scalp follicles and encourage growth.",
+        },
+        {
+          icon: <HeartHandshake className="w-6 h-6" />,
+          titleLine1: "Wild Endod &",
+          titleLine2: "Zero Synthetics",
+          description:
+            "Pure, saponin-rich botanical berries and hand-carved Wanza hardwood combs honoring ancestral Ethiopian heritage.",
+        },
+      ],
+    };
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {
@@ -593,7 +634,10 @@ export async function CategoryBanner({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6">
           <div className="flex flex-wrap gap-2 items-center border-b border-stone-200/80 pb-4">
             <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-2">
-              {permalink === "coffee" || permalink.endsWith("/coffee")
+              {permalink === "coffee" ||
+              permalink.endsWith("/coffee") ||
+              permalink === "hair" ||
+              permalink.endsWith("/hair")
                 ? "Classifications:"
                 : "Regions:"}
             </span>
