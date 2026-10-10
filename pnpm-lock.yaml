@@ -31,9 +31,6 @@ importers:
       '@stripe/stripe-js':
         specifier: ^8.7.0
         version: 8.11.0
-      '@swc/helpers':
-        specifier: ^0.5.21
-        version: 0.5.23
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(next@16.3.8(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
