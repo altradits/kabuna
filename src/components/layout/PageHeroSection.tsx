@@ -159,17 +159,20 @@ export function PageHeroSection({
 
       {/* Bottom Section: Warm Sandstone 3 Value Pillars */}
       {pillars && pillars.length > 0 && (
-        <section className="relative z-10 bg-[#f4efe8] border-b border-stone-200/70 pt-10 sm:pt-14 lg:pt-16 pb-9 sm:pb-12 lg:pb-14">
-          <div className="container mx-auto px-6 sm:px-8 lg:px-12">
+        <section className="relative z-10 bg-[#f4efe8] border-b border-stone-200/70 pt-6 sm:pt-12 lg:pt-16 pb-6 sm:pb-10 lg:pb-14">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-12">
             {pillarsTitle && (
-              <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl font-normal text-stone-900 tracking-tight mb-7 sm:mb-9">
+              <h2 className="font-serif text-lg sm:text-2xl lg:text-3xl font-normal text-stone-900 tracking-tight mb-4 sm:mb-8">
                 {pillarsTitle}
               </h2>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-7 sm:gap-9 lg:gap-11">
+            <div className="flex overflow-x-auto no-scrollbar snap-x gap-4 pb-2 md:grid md:grid-cols-3 md:gap-9 lg:gap-11">
               {pillars.map((pillar, idx) => (
-                <div key={idx} className="flex flex-col">
+                <div
+                  key={idx}
+                  className="flex flex-col min-w-[250px] sm:min-w-[280px] md:min-w-0 snap-start bg-white/60 md:bg-transparent p-4 md:p-0 rounded-xl md:rounded-none border border-stone-200/60 md:border-0"
+                >
                   <div className="flex items-center gap-3 mb-2.5">
                     <div className="text-[#a37947] shrink-0 [&>svg]:w-6 [&>svg]:h-6 sm:[&>svg]:w-7 sm:[&>svg]:h-7">
                       {pillar.icon}

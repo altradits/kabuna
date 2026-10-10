@@ -76,8 +76,8 @@ export function ProductCarousel({
       </button>
       <SwiperComponent
         modules={[Navigation]}
-        spaceBetween={24}
-        slidesPerView={1}
+        spaceBetween={16}
+        slidesPerView={1.2}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
@@ -88,7 +88,8 @@ export function ProductCarousel({
         onReachEnd={updateNavState}
         onAfterInit={updateNavState}
         breakpoints={{
-          640: { slidesPerView: 2, spaceBetween: 24 },
+          480: { slidesPerView: 1.5, spaceBetween: 16 },
+          640: { slidesPerView: 2, spaceBetween: 20 },
           768: { slidesPerView: 3, spaceBetween: 24 },
           1024: { slidesPerView: 4, spaceBetween: 24 },
         }}

@@ -7,6 +7,7 @@ import type {
 import { Search } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { type ReactElement, Suspense } from "react";
+import { CategoryQuickPills } from "@/components/products/CategoryQuickPills";
 import { InfiniteProductList } from "@/components/products/InfiniteProductList";
 import { ListingAnalytics } from "@/components/products/ListingAnalytics";
 import { ListingFilterBar } from "@/components/products/ListingFilterBar";
@@ -21,7 +22,7 @@ import {
   wrapInRansackParams,
 } from "@/lib/utils/product-query";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 24;
 
 interface ProductListingProps {
   state: ListingSearchParams;
@@ -152,6 +153,7 @@ async function ProductListingInner({
 
   return (
     <>
+      <CategoryQuickPills basePath={basePath} />
       <ListingFilterBar
         filtersData={filtersResponse}
         activeFilters={state.filters}

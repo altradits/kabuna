@@ -250,6 +250,12 @@ export const FilterBar = memo(function FilterBar({
           )}
         </button>
 
+        <span className="text-xs text-stone-500 font-medium">
+          {t("productCount", {
+            count: typeof totalCount === "number" ? totalCount : 0,
+          })}
+        </span>
+
         <div className="ml-auto">
           <FilterDropdown
             label={t("sort")}

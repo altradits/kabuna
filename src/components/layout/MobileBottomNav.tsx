@@ -1,10 +1,8 @@
 "use client";
 
-import { Coffee, Grid, Home, Search, ShoppingBag } from "lucide-react";
+import { Coffee, Flame, Grid, Home, ShoppingBag, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { SearchBar } from "@/components/search/SearchBar";
 import { useCart } from "@/contexts/CartContext";
 
 interface MobileBottomNavProps {
@@ -14,34 +12,64 @@ interface MobileBottomNavProps {
 export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
   const pathname = usePathname();
   const { itemCount, openCart } = useCart();
-  const [searchOpen, setSearchOpen] = useState(false);
 
-  const isActive = (path: string) => {
-    if (path === basePath) {
-      return pathname === basePath || pathname === `${basePath}/`;
-    }
-    return pathname.startsWith(path);
-  };
+  const isCoffeeActive =
+    pathname === `${basePath}/c/coffee` ||
+    pathname.startsWith(`${basePath}/c/coffee/`) ||
+    pathname === `${basePath}/c/single-origin` ||
+    pathname.startsWith(`${basePath}/c/single-origin/`) ||
+    pathname === `${basePath}/c/washed` ||
+    pathname === `${basePath}/c/natural` ||
+    pathname === `${basePath}/c/roast-profiles` ||
+    pathname === `${basePath}/c/green-coffee`;
+
+  const isHairActive =
+    pathname === `${basePath}/c/hair` ||
+    pathname.startsWith(`${basePath}/c/hair/`);
+
+  const isCeremonyActive =
+    pathname === `${basePath}/c/buna-ceremony` ||
+    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
+
+  const isShopActive =
+    (pathname === `${basePath}/products` ||
+      pathname.startsWith(`${basePath}/products/`)) &&
+    !isCoffeeActive &&
+    !isHairActive &&
+    !isCeremonyActive;
+
+  const isHomeActive = pathname === basePath || pathname === `${basePath}/`;
 
   const navItems = [
     {
       label: "Home",
       href: basePath,
       icon: Home,
-      active: isActive(basePath),
+      active: isHomeActive,
     },
     {
       label: "Coffee",
       href: `${basePath}/c/coffee`,
       icon: Coffee,
-      active: isActive(`${basePath}/c/coffee`),
+      active: isCoffeeActive,
+    },
+    {
+      label: "Hair",
+      href: `${basePath}/c/hair`,
+      icon: Sparkles,
+      active: isHairActive,
+    },
+    {
+      label: "Ceremony",
+      href: `${basePath}/c/buna-ceremony`,
+      icon: Flame,
+      active: isCeremonyActive,
     },
     {
       label: "Shop",
       href: `${basePath}/products`,
       icon: Grid,
-      active:
-        isActive(`${basePath}/products`) && !isActive(`${basePath}/c/coffee`),
+      active: isShopActive,
     },
   ];
 
@@ -59,37 +87,28 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg transition-colors min-w-[54px] ${
+                className={`flex flex-col items-center justify-center py-1 px-0.5 rounded-lg transition-colors flex-1 min-w-0 ${
                   item.active
                     ? "text-amber-900 font-bold"
                     : "text-stone-500 hover:text-stone-900 font-medium"
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 mb-0.5 ${item.active ? "text-amber-800 scale-110" : ""}`}
+                  className={`w-5 h-5 mb-0.5 shrink-0 ${item.active ? "text-amber-800 scale-110" : ""}`}
                 />
-                <span className="text-[10px] tracking-tight">{item.label}</span>
+                <span className="text-[10px] tracking-tight truncate max-w-[54px]">
+                  {item.label}
+                </span>
               </Link>
             );
           })}
-
-          {/* Quick Search Tab */}
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            aria-label="Search"
-            className="flex flex-col items-center justify-center py-1 px-2 rounded-lg text-stone-500 hover:text-stone-900 font-medium transition-colors min-w-[54px]"
-          >
-            <Search className="w-5 h-5 mb-0.5" />
-            <span className="text-[10px] tracking-tight">Search</span>
-          </button>
 
           {/* Cart Tab with Live Counter */}
           <button
             type="button"
             onClick={openCart}
             aria-label="Cart"
-            className="relative flex flex-col items-center justify-center py-1 px-2 rounded-lg text-stone-600 hover:text-stone-900 font-medium transition-colors min-w-[54px]"
+            className="relative flex flex-col items-center justify-center py-1 px-0.5 rounded-lg text-stone-600 hover:text-stone-900 font-medium transition-colors flex-1 min-w-0 cursor-pointer"
           >
             <div className="relative">
               <ShoppingBag className="w-5 h-5 mb-0.5 text-stone-700" />
@@ -103,35 +122,6 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
           </button>
         </div>
       </nav>
-
-      {/* Mobile Search Modal Drawer */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col md:hidden animate-in fade-in duration-200">
-          <div className="bg-white p-4 pt-6 shadow-xl border-b border-stone-200">
-            <div className="flex items-center gap-3">
-              <div className="flex-1">
-                <SearchBar
-                  basePath={basePath}
-                  autoFocus
-                  onNavigate={() => setSearchOpen(false)}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => setSearchOpen(false)}
-                className="text-sm font-semibold text-stone-600 hover:text-stone-900 px-2 py-1.5 rounded-md"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-          <div
-            className="flex-1"
-            onClick={() => setSearchOpen(false)}
-            role="presentation"
-          />
-        </div>
-      )}
     </>
   );
 }

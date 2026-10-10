@@ -153,7 +153,7 @@ export async function Footer({ basePath, locale, categoryLinks }: FooterProps) {
 
   return (
     <footer className="bg-primary text-gray-300">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 md:pb-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 items-start">
           {/* Brand & Socials */}
           <div className="sm:col-span-2">

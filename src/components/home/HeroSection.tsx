@@ -67,15 +67,15 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
       </section>
 
       {/* Bottom Section: Why choose us? */}
-      <section className="relative z-10 bg-[#f4efe8] border-b border-stone-200/70 pt-16 sm:pt-20 lg:pt-24 pb-14 sm:pb-16 lg:pb-20">
-        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-stone-900 tracking-tight mb-8 sm:mb-10 lg:mb-12">
+      <section className="relative z-10 bg-[#f4efe8] border-b border-stone-200/70 pt-8 sm:pt-16 lg:pt-20 pb-8 sm:pb-14 lg:pb-16">
+        <div className="container mx-auto px-4 sm:px-8 lg:px-12">
+          <h2 className="font-serif text-xl sm:text-3xl lg:text-4xl font-normal text-stone-900 tracking-tight mb-4 sm:mb-8 lg:mb-10">
             {t("whyChooseUs")}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
+          <div className="flex overflow-x-auto no-scrollbar snap-x gap-4 pb-2 md:grid md:grid-cols-3 md:gap-10 lg:gap-12">
             {/* Feature 1: High-quality ingredients */}
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[260px] sm:min-w-[280px] md:min-w-0 snap-start bg-white/60 md:bg-transparent p-4 md:p-0 rounded-xl md:rounded-none border border-stone-200/60 md:border-0">
               <div className="flex items-center gap-3.5 mb-3">
                 <svg
                   viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
             </div>
 
             {/* Feature 2: Professional baristas / roasting */}
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[260px] sm:min-w-[280px] md:min-w-0 snap-start bg-white/60 md:bg-transparent p-4 md:p-0 rounded-xl md:rounded-none border border-stone-200/60 md:border-0">
               <div className="flex items-center gap-3.5 mb-3">
                 <svg
                   viewBox="0 0 24 24"
@@ -127,7 +127,7 @@ export async function HeroSection({ basePath, locale }: HeroSectionProps) {
             </div>
 
             {/* Feature 3: Friendly atmosphere / Buna hospitality */}
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-[260px] sm:min-w-[280px] md:min-w-0 snap-start bg-white/60 md:bg-transparent p-4 md:p-0 rounded-xl md:rounded-none border border-stone-200/60 md:border-0">
               <div className="flex items-center gap-3.5 mb-3">
                 <svg
                   viewBox="0 0 24 24"

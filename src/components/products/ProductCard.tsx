@@ -141,7 +141,7 @@ export const ProductCard = memo(function ProductCard({
 
       {/* Content */}
       <div className="p-3 sm:p-4 flex flex-col flex-1">
-        <h3 className="text-sm font-semibold text-stone-900 group-hover:text-[#a37947] transition-colors leading-snug line-clamp-1">
+        <h3 className="text-sm font-semibold text-stone-900 group-hover:text-[#a37947] transition-colors leading-snug line-clamp-2 min-h-[2.5rem] sm:min-h-0 sm:line-clamp-1">
           {/* Stretched link: the ::after overlay keeps the whole card clickable
               without wrapping the content in an <a> — HiddenPricePrompt renders
               its own link, and anchors can't nest. */}
@@ -183,7 +183,7 @@ export const ProductCard = memo(function ProductCard({
           {isAvailable ? (
             <div className="relative z-10 flex items-center gap-1.5 sm:gap-2">
               {/* Quantity Stepper (clean, no icon, unicode minus/plus) */}
-              <div className="inline-flex items-center border border-stone-200/90 rounded-full bg-stone-50/90 px-1 py-0.5 shadow-2xs">
+              <div className="hidden sm:inline-flex items-center border border-stone-200/90 rounded-full bg-stone-50/90 px-1 py-0.5 shadow-2xs">
                 <button
                   type="button"
                   disabled={isAdding || quantity <= 1}
@@ -220,7 +220,7 @@ export const ProductCard = memo(function ProductCard({
                 type="button"
                 disabled={isAdding}
                 onClick={handleAddToCart}
-                className="shrink-0 inline-flex items-center justify-center min-h-[30px] sm:min-h-[34px] py-1 sm:py-1.5 px-2.5 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
+                className="shrink-0 inline-flex items-center justify-center min-h-[30px] sm:min-h-[34px] py-1 sm:py-1.5 px-3 sm:px-3.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-wide bg-stone-900 hover:bg-[#a37947] active:bg-[#8e6534] text-white shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer whitespace-nowrap"
                 aria-label={`${t("addToCart")} - ${product.name}`}
               >
                 {isAdding ? t("adding") : isSuccess ? "Added" : t("addToCart")}
