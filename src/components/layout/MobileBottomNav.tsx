@@ -1,6 +1,14 @@
 "use client";
 
-import { Coffee, Flame, Grid, Home, ShoppingBag, Sparkles } from "lucide-react";
+import {
+  Coffee,
+  Flame,
+  Grid,
+  Home,
+  ShoppingBag,
+  Sparkles,
+  Wheat,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
@@ -27,6 +35,10 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
     pathname === `${basePath}/c/hair` ||
     pathname.startsWith(`${basePath}/c/hair/`);
 
+  const isSnacksActive =
+    pathname === `${basePath}/c/snacks` ||
+    pathname.startsWith(`${basePath}/c/snacks/`);
+
   const isCeremonyActive =
     pathname === `${basePath}/c/buna-ceremony` ||
     pathname.startsWith(`${basePath}/c/buna-ceremony/`);
@@ -36,6 +48,7 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
       pathname.startsWith(`${basePath}/products/`)) &&
     !isCoffeeActive &&
     !isHairActive &&
+    !isSnacksActive &&
     !isCeremonyActive;
 
   const isHomeActive = pathname === basePath || pathname === `${basePath}/`;
@@ -58,6 +71,12 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
       href: `${basePath}/c/hair`,
       icon: Sparkles,
       active: isHairActive,
+    },
+    {
+      label: "Snacks",
+      href: `${basePath}/c/snacks`,
+      icon: Wheat,
+      active: isSnacksActive,
     },
     {
       label: "Ceremony",

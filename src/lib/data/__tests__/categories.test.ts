@@ -25,13 +25,14 @@ vi.mock("@/lib/spree", () => ({
 }));
 
 describe("Coffee Category & Scalable Taxonomy", () => {
-  it("returns Coffee, Hair, and Ceremony as top-level root categories", async () => {
+  it("returns Coffee, Snacks, Hair, and Ceremony as top-level root categories", async () => {
     const res = await getCategories();
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(3);
+    expect(res.data.length).toBe(4);
 
     const names = res.data.map((c) => c.name);
     expect(names).toContain("Coffee");
+    expect(names).toContain("Organic Snacks");
     expect(names).toContain("Organic Hair Care");
     expect(names).toContain("Ceremony & Accessories");
   });
@@ -146,6 +147,66 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(productNames).toContain("Jebena Ceremony Kit");
     expect(productNames).not.toContain("Chelbesa");
     expect(productNames).not.toContain("YeTsehur Kibe");
+  });
+
+  it("classifies subcategories under Snacks", async () => {
+    const snacksCategory = await getCategory("snacks");
+    expect(snacksCategory).toBeDefined();
+    expect(snacksCategory.id).toBe("cat_snacks");
+    expect(snacksCategory.name).toBe("Organic Snacks");
+    expect(snacksCategory.children).toBeDefined();
+    expect(snacksCategory.children?.length).toBe(5);
+
+    const childNames = snacksCategory.children?.map((c) => c.name);
+    expect(childNames).toContain("Heritage Kolo Grains");
+    expect(childNames).toContain("Spiced Dabo Kolo");
+    expect(childNames).toContain("Beso Energy Clusters");
+    expect(childNames).toContain("Telba & Nug Seed Crisps");
+    expect(childNames).toContain("Roasted Shimbra & Pulses");
+  });
+
+  it("lists all snack products when Snacks category is selected", async () => {
+    const res = await getCategoryProducts("cat_snacks");
+    expect(res.data).toBeDefined();
+    expect(res.data.length).toBe(5);
+
+    const productNames = res.data.map((p) => p.name);
+    expect(productNames).toEqual(
+      expect.arrayContaining([
+        "Highland Heritage Kolo",
+        "Berbere Spiced Dabo Kolo",
+        "Wild Honey Beso Energy Clusters",
+        "Toasted Telba & Nug Seed Crisps",
+        "Crispy Smoked Shimbra",
+      ]),
+    );
+
+    // Verifies neither coffee, hair, nor ceremony wares leak into snacks
+    expect(productNames).not.toContain("Chelbesa");
+    expect(productNames).not.toContain("YeTsehur Kibe");
+    expect(productNames).not.toContain("Jebena");
+  });
+
+  it("filters snack subcategories accurately", async () => {
+    const koloRes = await getCategoryProducts("snacks/kolo");
+    expect(koloRes.data.length).toBe(1);
+    expect(koloRes.data[0].name).toBe("Highland Heritage Kolo");
+
+    const daboRes = await getCategoryProducts("snacks/dabo-kolo");
+    expect(daboRes.data.length).toBe(1);
+    expect(daboRes.data[0].name).toBe("Berbere Spiced Dabo Kolo");
+
+    const besoRes = await getCategoryProducts("snacks/beso");
+    expect(besoRes.data.length).toBe(1);
+    expect(besoRes.data[0].name).toBe("Wild Honey Beso Energy Clusters");
+
+    const seedsRes = await getCategoryProducts("snacks/seeds");
+    expect(seedsRes.data.length).toBe(1);
+    expect(seedsRes.data[0].name).toBe("Toasted Telba & Nug Seed Crisps");
+
+    const pulsesRes = await getCategoryProducts("snacks/pulses");
+    expect(pulsesRes.data.length).toBe(1);
+    expect(pulsesRes.data[0].name).toBe("Crispy Smoked Shimbra");
   });
 
   it("correctly filters subcategories like Washed and Natural", async () => {

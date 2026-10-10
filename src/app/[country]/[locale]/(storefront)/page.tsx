@@ -3,6 +3,7 @@ import { CategoryShowcaseSection } from "@/components/home/CategoryShowcaseSecti
 import { FeaturedProductsSection } from "@/components/home/FeaturedProductsSection";
 import { HairCareShowcaseSection } from "@/components/home/HairCareShowcaseSection";
 import { HeroSection } from "@/components/home/HeroSection";
+import { SnacksShowcaseSection } from "@/components/home/SnacksShowcaseSection";
 import { resolveCurrency } from "@/lib/data/markets";
 import { generateHomeMetadata } from "@/lib/metadata/home";
 
@@ -30,6 +31,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <HeroSection basePath={basePath} locale={locale} />
       <CategoryShowcaseSection basePath={basePath} />
       <HairCareShowcaseSection basePath={basePath} currency={currency} />
+      <SnacksShowcaseSection basePath={basePath} currency={currency} />
       <FeaturedProductsSection
         basePath={basePath}
         locale={locale}

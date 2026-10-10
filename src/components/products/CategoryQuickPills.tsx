@@ -1,6 +1,6 @@
 "use client";
 
-import { Coffee, Flame, Grid, Sparkles } from "lucide-react";
+import { Coffee, Flame, Grid, Sparkles, Wheat } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -25,6 +25,10 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
     pathname === `${basePath}/c/hair` ||
     pathname.startsWith(`${basePath}/c/hair/`);
 
+  const isSnacks =
+    pathname === `${basePath}/c/snacks` ||
+    pathname.startsWith(`${basePath}/c/snacks/`);
+
   const isCeremony =
     pathname === `${basePath}/c/buna-ceremony` ||
     pathname.startsWith(`${basePath}/c/buna-ceremony/`);
@@ -34,13 +38,14 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
       pathname.startsWith(`${basePath}/products/`)) &&
     !isCoffee &&
     !isHair &&
+    !isSnacks &&
     !isCeremony;
 
   const categories = [
     {
       id: "all",
       label: "All Products",
-      count: "22",
+      count: "27",
       icon: Grid,
       href: `${basePath}/products`,
       active: isAll,
@@ -62,6 +67,14 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
       active: isHair,
     },
     {
+      id: "snacks",
+      label: "Organic Snacks",
+      count: "5",
+      icon: Wheat,
+      href: `${basePath}/c/snacks`,
+      active: isSnacks,
+    },
+    {
       id: "ceremony",
       label: "Buna Ceremony",
       count: "7",
@@ -78,7 +91,7 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
           Filter by Category
         </span>
         <span className="text-xs text-stone-400 font-medium">
-          22 Products Total
+          27 Products Total
         </span>
       </div>
       <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">

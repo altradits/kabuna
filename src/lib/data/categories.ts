@@ -52,12 +52,19 @@ async function cachedListCategories(
         c.id === "cat_hair" ||
         c.name.toLowerCase().includes("hair"),
     );
+    const hasSnacks = res.data?.some(
+      (c) =>
+        c.permalink === "snacks" ||
+        c.id === "cat_snacks" ||
+        c.name.toLowerCase().includes("snack"),
+    );
     if (
       res.data &&
       res.data.length > 0 &&
       hasCeremony &&
       hasCoffee &&
-      hasHair
+      hasHair &&
+      hasSnacks
     ) {
       return res;
     }
@@ -112,6 +119,22 @@ export async function cachedGetCategory(
     );
     if (hairCat) {
       return hairCat as unknown as Awaited<
+        ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+      >;
+    }
+  }
+
+  // Specifically resolve Snacks category to KABUNA_CATEGORIES
+  if (
+    idOrPermaLower === "snacks" ||
+    idOrPermaLower === "cat_snacks" ||
+    idOrPermaLower.endsWith("/snacks")
+  ) {
+    const snackCat = KABUNA_CATEGORIES.find(
+      (c) => c.permalink === "snacks" || c.id === "cat_snacks",
+    );
+    if (snackCat) {
+      return snackCat as unknown as Awaited<
         ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
       >;
     }
@@ -212,6 +235,31 @@ async function cachedListCategoryProducts(
     catLower.includes("comb") ||
     catLower === "cat_hair_tools";
 
+  const isSnacks =
+    catLower === "snacks" ||
+    catLower === "cat_snacks" ||
+    catLower.endsWith("/snacks");
+
+  const isSnacksKolo =
+    (catLower.includes("kolo") && !catLower.includes("dabo")) ||
+    catLower === "cat_snacks_kolo";
+
+  const isSnacksDaboKolo =
+    catLower.includes("dabo") || catLower === "cat_snacks_dabo_kolo";
+
+  const isSnacksBeso =
+    catLower.includes("beso") || catLower === "cat_snacks_beso";
+
+  const isSnacksSeeds =
+    catLower.includes("telba") ||
+    catLower.includes("seeds") ||
+    catLower === "cat_snacks_seeds";
+
+  const isSnacksPulses =
+    catLower.includes("shimbra") ||
+    catLower.includes("pulses") ||
+    catLower === "cat_snacks_pulses";
+
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
     catLower.includes("buna") ||
@@ -296,6 +344,29 @@ async function cachedListCategoryProducts(
     }
     if (isHairTools) {
       return p.categories?.some((c) => c.id === "cat_hair_tools");
+    }
+    if (isSnacks) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_snacks" ||
+          c.permalink === "snacks" ||
+          c.name.toLowerCase().includes("snack"),
+      );
+    }
+    if (isSnacksKolo) {
+      return p.categories?.some((c) => c.id === "cat_snacks_kolo");
+    }
+    if (isSnacksDaboKolo) {
+      return p.categories?.some((c) => c.id === "cat_snacks_dabo_kolo");
+    }
+    if (isSnacksBeso) {
+      return p.categories?.some((c) => c.id === "cat_snacks_beso");
+    }
+    if (isSnacksSeeds) {
+      return p.categories?.some((c) => c.id === "cat_snacks_seeds");
+    }
+    if (isSnacksPulses) {
+      return p.categories?.some((c) => c.id === "cat_snacks_pulses");
     }
     if (isCeremonyCategory) {
       return p.categories?.some(

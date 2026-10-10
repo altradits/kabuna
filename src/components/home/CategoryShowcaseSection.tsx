@@ -1,4 +1,4 @@
-import { ArrowRight, Coffee, Flame, Sparkles } from "lucide-react";
+import { ArrowRight, Coffee, Flame, Sparkles, Wheat } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,6 +34,20 @@ const DEPARTMENTS = [
     badgeText: "Native Botanicals",
     accentBg: "bg-emerald-950/60",
     accentBorder: "border-emerald-700/40",
+  },
+  {
+    id: "snacks",
+    title: "Organic Highland Snacks",
+    subtitle: "5 Native Grain & Seed Snacks",
+    description:
+      "Heritage roasted Kolo grains, Berbere Dabo Kolo, wild honey Beso bites, Telba flax crisps & smoked Shimbra.",
+    image: "/images/heroes/snacks-hero.jpg",
+    alt: "Artisanal Ethiopian snacks with traditional Jebena and Buna table",
+    href: "/c/snacks",
+    icon: Wheat,
+    badgeText: "Native Superfoods",
+    accentBg: "bg-amber-950/60",
+    accentBorder: "border-amber-700/40",
     featuredBadge: "NEW COLLECTION",
   },
   {
@@ -68,12 +82,12 @@ export function CategoryShowcaseSection({
             </h2>
           </div>
           <p className="text-sm text-stone-600 max-w-md mt-2 md:mt-0">
-            From volcanic single-origin coffee to sacred ceremony pottery and
-            native botanical hair care.
+            From volcanic single-origin coffee to organic hair care, native
+            highland snacks, and sacred ceremony wares.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {DEPARTMENTS.map((dept) => {
             const Icon = dept.icon;
             return (

@@ -149,6 +149,13 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   "endod-cleanser": ["/images/hair/endod-cleanser.jpg"],
   "shuruba-mask": ["/images/hair/shuruba-mask.jpg"],
   "wanza-comb": ["/images/hair/wanza-comb.jpg"],
+
+  // Traditional Ethiopian Organic Snacks
+  "heritage-kolo": ["/images/snacks/heritage-kolo.jpg"],
+  "dabo-kolo": ["/images/snacks/dabo-kolo.jpg"],
+  "beso-clusters": ["/images/snacks/beso-clusters.jpg"],
+  "telba-crisps": ["/images/snacks/telba-crisps.jpg"],
+  "smoked-shimbra": ["/images/snacks/smoked-shimbra.jpg"],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
@@ -184,6 +191,13 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("shuruba") || s.includes("mask") || s.includes("conditioning"))
     return "shuruba-mask";
   if (s.includes("wanza") || s.includes("comb")) return "wanza-comb";
+
+  // Specific Ethiopian Organic Snacks
+  if (s.includes("dabo-kolo") || s.includes("dabo")) return "dabo-kolo";
+  if (s.includes("heritage-kolo") || s.includes("kolo")) return "heritage-kolo";
+  if (s.includes("beso")) return "beso-clusters";
+  if (s.includes("telba") || s.includes("crisps")) return "telba-crisps";
+  if (s.includes("shimbra")) return "smoked-shimbra";
 
   if (s.includes("yirgacheffe")) return "chelbesa";
   if (s.includes("sidama") || s.includes("sidamo")) return "hamasho";
@@ -632,8 +646,59 @@ export const CAT_HAIR = createCategory(
   "/images/hair/yetsehur-kibe.jpg",
 );
 
+export const CAT_SNACKS_KOLO = createCategory(
+  "cat_snacks_kolo",
+  "Heritage Kolo Grains",
+  "snacks/kolo",
+  "Traditional dry-roasted whole barley, crunchy chickpeas, and toasted niger seeds — the beloved grain accompaniment to Buna Tetu.",
+);
+
+export const CAT_SNACKS_DABO_KOLO = createCategory(
+  "cat_snacks_dabo_kolo",
+  "Spiced Dabo Kolo",
+  "snacks/dabo-kolo",
+  "Artisanal crunchy diamond-cut spiced pastry morsels seasoned with highland Berbere and whole black cumin seeds (Tikur Azmud).",
+);
+
+export const CAT_SNACKS_BESO = createCategory(
+  "cat_snacks_beso",
+  "Beso Energy Clusters",
+  "snacks/beso",
+  "Roasted highland barley flour bites gently rolled with raw wild acacia forest honey and toasted sesame seeds.",
+);
+
+export const CAT_SNACKS_SEEDS = createCategory(
+  "cat_snacks_seeds",
+  "Telba & Nug Seed Crisps",
+  "snacks/seeds",
+  "Artisan high-omega seed wafer crackers crafted from whole roasted Ethiopian flaxseeds (Telba) and niger seeds (Nug).",
+);
+
+export const CAT_SNACKS_PULSES = createCategory(
+  "cat_snacks_pulses",
+  "Roasted Shimbra & Pulses",
+  "snacks/pulses",
+  "Ember-roasted whole highland chickpeas seasoned with volcanic mineral sea salt and wild mountain rosemary.",
+);
+
+export const CAT_SNACKS = createCategory(
+  "cat_snacks",
+  "Organic Snacks",
+  "snacks",
+  "Time-honored Ethiopian highland grain, seed, and pulse snacks — Heritage roasted Kolo, Berbere spiced Dabo Kolo, wild honey Beso energy bites, Telba flax crisps, and ember-roasted Shimbra.",
+  [
+    CAT_SNACKS_KOLO,
+    CAT_SNACKS_DABO_KOLO,
+    CAT_SNACKS_BESO,
+    CAT_SNACKS_SEEDS,
+    CAT_SNACKS_PULSES,
+  ],
+  "/images/snacks/heritage-kolo.jpg",
+);
+
 export const KABUNA_CATEGORIES: Category[] = [
   CAT_COFFEE,
+  CAT_SNACKS,
   CAT_HAIR,
   CAT_CEREMONY,
 ];
@@ -1052,6 +1117,128 @@ function buildHairProduct({
     seller_id: null,
     primary_media: primaryMedia,
     media: gallery.length > 0 ? gallery : [primaryMedia],
+    variants: [variant],
+    default_variant: variant,
+    option_types: [],
+    option_values: [],
+    categories: productCategories,
+    custom_fields: customFields,
+    prior_price: null,
+  };
+}
+
+interface SnackProductProps {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  compareAtCents?: number;
+  imageUrl: string;
+  sku: string;
+  weight: number;
+  tags: string[];
+  categories: Category[];
+  specs: {
+    ingredients: string;
+    origin: string;
+    dietary: string;
+    pairing: string;
+    flavor: string;
+  };
+}
+
+function buildSnackProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  compareAtCents,
+  imageUrl,
+  sku,
+  weight,
+  tags,
+  categories,
+  specs,
+}: SnackProductProps): Product {
+  const price = createPrice(baseCents, compareAtCents);
+  const primaryMedia = createMedia(`media_${id}_1`, imageUrl, name);
+  const gallery = [primaryMedia];
+  const variant = createVariant(
+    `var_${id}_default`,
+    sku,
+    baseCents,
+    [],
+    "Standard",
+    weight,
+  );
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_ingredients`,
+      "Ingredients",
+      "ingredients",
+      specs.ingredients,
+    ),
+    createCustomField(
+      `cf_${id}_origin`,
+      "Harvest Provenance",
+      "origin",
+      specs.origin,
+    ),
+    createCustomField(
+      `cf_${id}_dietary`,
+      "Dietary & Nutritional Profile",
+      "dietary",
+      specs.dietary,
+    ),
+    createCustomField(
+      `cf_${id}_pairing`,
+      "Buna Tetu Pairing",
+      "pairing",
+      specs.pairing,
+    ),
+    createCustomField(
+      `cf_${id}_flavor`,
+      "Flavor & Texture Profile",
+      "flavor",
+      specs.flavor,
+    ),
+  ];
+
+  const productCategories = categories.some((c) => c.id === "cat_snacks")
+    ? categories
+    : [CAT_SNACKS, ...categories];
+
+  return {
+    id,
+    name,
+    slug,
+    meta_title: `${name} | Ethiopian Organic Snacks | Kabuna`,
+    meta_description: subtitle,
+    meta_keywords: `Ethiopian organic snacks, Buna Tetu, ${name}, ${tags.join(", ")}`,
+    variant_count: 1,
+    available_on: "2024-01-01T00:00:00.000Z",
+    preorder_ships_at: null,
+    purchasable: true,
+    preorder: false,
+    in_stock: true,
+    backorderable: false,
+    available: true,
+    description: `${subtitle}\n\n${description}`,
+    description_html: `<p><strong>${subtitle}</strong></p><p>${description}</p>`,
+    default_variant_id: variant.id,
+    buy_box_variant_id: variant.id,
+    thumbnail_url: imageUrl,
+    tags: ["Organic Snacks", "Ethiopian Grains", "Buna Tetu Snack", ...tags],
+    price,
+    original_price: compareAtCents ? createPrice(compareAtCents) : price,
+    seller_id: null,
+    primary_media: primaryMedia,
+    media: gallery,
     variants: [variant],
     default_variant: variant,
     option_types: [],
@@ -1721,6 +1908,181 @@ export const KABUNA_PRODUCTS: Product[] = [
       ritualUse:
         "Use on damp or buttered hair to gently detangle from ends upward; excellent for lifting roots and creating fullness",
       scentProfile: "Subtle natural woody warmth from mountain hardwood",
+    },
+  }),
+
+  // 23. Highland Heritage Kolo (Roasted Barley, Chickpeas & Niger Seed Mix)
+  buildSnackProduct({
+    id: "prod_heritage_kolo",
+    name: "Highland Heritage Kolo",
+    slug: "heritage-kolo",
+    subtitle:
+      "Traditional Roasted Whole Barley, Chickpeas & Niger Seed Buna Tetu Snack",
+    description:
+      "The quintessential grain companion to the Ethiopian Buna Tetu ceremony. Sourced directly from smallholder grain cooperatives in the high-elevation volcanic plains of Shewa and Amhara. Hand-selected whole highland barley (Gebs), plump golden chickpeas (Shimbra), and nutty black niger seeds (Nug) are slow-roasted to crunchy perfection on an artisanal earthenware mitad without added oils. Seasoned lightly with solar-evaporated volcanic rift salt.",
+    baseCents: 1400,
+    compareAtCents: 1800,
+    imageUrl: "/images/snacks/heritage-kolo.jpg",
+    sku: "KBN-SNACK-KOLO",
+    weight: 0.35,
+    tags: [
+      "Heritage Kolo",
+      "Roasted Barley",
+      "Buna Snack",
+      "Oil-Free Roasted",
+      "High Fiber",
+    ],
+    categories: [CAT_SNACKS, CAT_SNACKS_KOLO],
+    specs: {
+      ingredients:
+        "Dry-Roasted Highland Whole Barley (Gebs), Golden Chickpeas (Shimbra), Toasted Niger Seeds (Nug), Flaky Volcanic Salt",
+      origin: "Amhara & Shewa Highlands, Ethiopia",
+      dietary:
+        "100% Organic, 100% Plant-Based / Vegan, Whole Grain, Non-GMO, Oil-Free Roasted",
+      pairing:
+        "Traditionally enjoyed alongside hot freshly brewed Buna from the Jebena; also wonderful as a crisp midday grain snack",
+      flavor:
+        "Nutty, earthy, deeply toasty grain crunch with delicate aromatic warmth from toasted niger seeds",
+    },
+  }),
+
+  // 24. Berbere Spiced Dabo Kolo (Artisanal Diamond-Cut Crunchy Morsels)
+  buildSnackProduct({
+    id: "prod_dabo_kolo",
+    name: "Berbere Spiced Dabo Kolo",
+    slug: "dabo-kolo",
+    subtitle:
+      "Artisanal Crunchy Diamond-Cut Morsels with Highland Berbere & Tikur Azmud",
+    description:
+      "Beloved across Ethiopian holiday tables and festive gatherings. These bite-sized diamond-cut wheat flour pastry morsels are handcrafted, lightly kneaded with cold-pressed Nug oil, and baked until shatteringly crisp. Infused with aromatic highland Berbere chili blend, Ethiopian black cardamom (Korarima), and whole black cumin seeds (Tikur Azmud) for a balanced warm kick.",
+    baseCents: 1600,
+    compareAtCents: 2000,
+    imageUrl: "/images/snacks/dabo-kolo.jpg",
+    sku: "KBN-SNACK-DABO",
+    weight: 0.3,
+    tags: [
+      "Dabo Kolo",
+      "Berbere Spiced",
+      "Black Cumin",
+      "Artisan Pastry",
+      "Habesha Snack",
+    ],
+    categories: [CAT_SNACKS, CAT_SNACKS_DABO_KOLO],
+    specs: {
+      ingredients:
+        "Highland Organic Wheat Flour, Cold-Pressed Nug Seed Oil, Sun-Dried Berbere Spice Blend (Chili, Garlic, Korarima, Fenugreek, Rue), Tikur Azmud (Black Seed), Cane Sugar, Sea Salt",
+      origin: "Addis Ababa & Central Highlands, Ethiopia",
+      dietary:
+        "100% Organic, Vegan, Dairy-Free, Low Sugar, No Artificial Preservatives",
+      pairing:
+        "Pairs remarkably with bright citrusy Yirgacheffe washed coffee, spiced black tea, or craft beverages",
+      flavor:
+        "Crunchy, savory-spicy warmth, gentle sweetness, and lingering peppery aromatics of black cardamom",
+    },
+  }),
+
+  // 25. Wild Honey Beso Energy Clusters (Roasted Barley & Raw Acacia Honey Bites)
+  buildSnackProduct({
+    id: "prod_beso_clusters",
+    name: "Wild Honey Beso Energy Clusters",
+    slug: "beso-clusters",
+    subtitle:
+      "Roasted Highland Barley Flour Bites Rolled with Wild Acacia Honey & Sesame",
+    description:
+      "Rooted in ancient Ethiopian endurance nutrition favored by high-altitude runners and highland travellers. Crafted from Beso — whole barley grains that are slowly roasted over embers and stone-ground into a fine aromatic flour. Hand-kneaded with pure, unheated raw acacia forest honey gathered from the wild woodlands of Bale and rolled in golden toasted sesame seeds.",
+    baseCents: 1800,
+    compareAtCents: 2200,
+    imageUrl: "/images/snacks/beso-clusters.jpg",
+    sku: "KBN-SNACK-BESO",
+    weight: 0.28,
+    tags: [
+      "Beso",
+      "Wild Acacia Honey",
+      "Energy Clusters",
+      "Barley Superfood",
+      "Highland Fuel",
+    ],
+    categories: [CAT_SNACKS, CAT_SNACKS_BESO],
+    specs: {
+      ingredients:
+        "Stone-Ground Roasted Highland Barley Flour (Beso), 100% Raw Wild Acacia Forest Honey, Toasted White Sesame Seeds, Ground Korarima (Cardamom)",
+      origin: "Bale Mountain Forest & Arsi Highlands, Ethiopia",
+      dietary:
+        "100% Organic, Vegetarian, Dairy-Free, Refined-Sugar Free, High Complex Carbohydrates",
+      pairing:
+        "Ideal morning coffee companion, natural endurance booster before running, or wholesome afternoon sweet bite",
+      flavor:
+        "Malty roasted barley richness, delicate floral honey notes, and nutty sesame finish",
+    },
+  }),
+
+  // 26. Toasted Telba & Nug Seed Crisps (High-Omega Flax & Niger Seed Crackers)
+  buildSnackProduct({
+    id: "prod_telba_crisps",
+    name: "Toasted Telba & Nug Seed Crisps",
+    slug: "telba-crisps",
+    subtitle:
+      "Artisan High-Omega Crisp Crackers from Ethiopian Golden Flaxseed & Niger Seeds",
+    description:
+      "A tribute to Ethiopia's ancient seed biodiversity. Golden Telba (highland flaxseed) and mineral-packed Nug (niger seeds) are gently sprouted, lightly roasted, and crisp-baked into paper-thin wafer crackers. Lightly seasoned with volcanic black salt and Korarima. Exceptionally nutrient-dense with abundant plant-based Omega-3 fatty acids, plant lignans, and prebiotic gut fiber.",
+    baseCents: 1500,
+    compareAtCents: 1900,
+    imageUrl: "/images/snacks/telba-crisps.jpg",
+    sku: "KBN-SNACK-TELBA",
+    weight: 0.22,
+    tags: [
+      "Telba Crisps",
+      "Flaxseed",
+      "Nug Seeds",
+      "Omega-3 Superfood",
+      "Keto Friendly",
+    ],
+    categories: [CAT_SNACKS, CAT_SNACKS_SEEDS],
+    specs: {
+      ingredients:
+        "Whole Roasted Ethiopian Flaxseeds (Telba), Roasted Niger Seeds (Nug), White Sesame Seeds, Crushed Korarima (Cardamom), Flaky Rift Sea Salt",
+      origin: "Gojjam & Gondar Highlands, Ethiopia",
+      dietary:
+        "100% Organic, Vegan, Naturally Gluten-Free, Keto-Friendly, High Omega-3 & Prebiotic Fiber",
+      pairing:
+        "Savor standalone, dip into raw forest honey, or pair with a dark roast Djimmah or Limu coffee",
+      flavor:
+        "Intensely nutty, crisp, delicately savory with a warm citrus-cardamom undertone",
+    },
+  }),
+
+  // 27. Crispy Smoked Shimbra (Ember-Roasted Highland Chickpeas)
+  buildSnackProduct({
+    id: "prod_smoked_shimbra",
+    name: "Crispy Smoked Shimbra",
+    slug: "smoked-shimbra",
+    subtitle:
+      "Ember-Roasted Highland Chickpeas with Volcanic Sea Salt & Wild Mountain Rosemary",
+    description:
+      "Harvested from nutrient-dense volcanic black cotton soils in the Shewa heartland. Whole heirloom chickpeas (Shimbra) are soaked, dried under highland sunshine, and roasted over slow-burning acacia embers until delightfully crunchy. Tossed while warm with volcanic smoked rift salt and wild mountain rosemary (Yetetsehur Tsid) gathered from alpine ravines.",
+    baseCents: 1300,
+    compareAtCents: 1700,
+    imageUrl: "/images/snacks/smoked-shimbra.jpg",
+    sku: "KBN-SNACK-SHIMBRA",
+    weight: 0.3,
+    tags: [
+      "Smoked Shimbra",
+      "Roasted Chickpeas",
+      "High Protein",
+      "Wild Rosemary",
+      "Volcanic Salt",
+    ],
+    categories: [CAT_SNACKS, CAT_SNACKS_PULSES],
+    specs: {
+      ingredients:
+        "Roasted Whole Highland Chickpeas (Shimbra), Smoked Black Volcanic Sea Salt, Wild Dried Mountain Rosemary, Touch of Cold-Pressed Nug Seed Oil",
+      origin: "Shewa Volcanic Plains, Ethiopia",
+      dietary:
+        "100% Organic, Vegan, Naturally Gluten-Free, High Plant-Based Protein (19g/serving), High Fiber",
+      pairing:
+        "The ultimate savory finger snack for social Buna gatherings, road trips, and afternoon energy dips",
+      flavor:
+        "Crunchy, lightly smoky, savory, with aromatic herbal pine notes from wild mountain rosemary",
     },
   }),
 ];

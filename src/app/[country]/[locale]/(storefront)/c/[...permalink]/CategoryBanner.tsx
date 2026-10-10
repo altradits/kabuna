@@ -407,6 +407,259 @@ export async function CategoryBanner({
         ],
       };
     }
+  } else if (
+    permalink === "snacks" ||
+    permalink.startsWith("snacks/") ||
+    permalink.includes("/snacks") ||
+    permalink.includes("snack")
+  ) {
+    if (permalink.includes("kolo") && !permalink.includes("dabo")) {
+      heroProps = {
+        badge: "HERITAGE KOLO GRAINS",
+        titleLine1: "Highland Heritage Kolo",
+        titleLine2: "Whole Roasted Grains",
+        description:
+          "Traditional Ethiopian dry-roasted whole barley kernels, toasted golden chickpeas, and mineral-rich niger seeds — prepared on earthenware skillets for the ultimate buna pairing.",
+        bgImageSrc: "/images/heroes/snacks-hero.jpg",
+        bgImageAlt: "Highland Heritage Kolo with Ethiopian Buna Jebena",
+        focalImageSrc: "/images/snacks/heritage-kolo.jpg",
+        focalImageAlt: "Highland Heritage Kolo",
+        focalImageIsCutout: false,
+        ctaText: "Shop Kolo Grains",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Snacks",
+        secondaryCtaHref: `${basePath}/c/snacks`,
+        pillarsTitle: "Highland Grain Roasting Craft",
+        pillars: [
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Mitad Skillet Roasted",
+            titleLine2: "Zero Added Oils",
+            description:
+              "Slow-toasted over gentle embers to produce a crisp, satisfying crunch while preserving dietary fiber.",
+          },
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Heirloom Barley &",
+            titleLine2: "Volcanic Chickpeas",
+            description:
+              "Directly harvested from high-elevation agricultural cooperatives in Shewa and Amhara.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Ancient Buna Tetu",
+            titleLine2: "Social Companion",
+            description:
+              "The time-honored snack served across three ceremonial rounds of Ethiopian coffee.",
+          },
+        ],
+      };
+    } else if (permalink.includes("dabo")) {
+      heroProps = {
+        badge: "SPICED DABO KOLO",
+        titleLine1: "Berbere Spiced",
+        titleLine2: "Artisan Dabo Kolo",
+        description:
+          "Crisp diamond-cut pastry morsels seasoned with fragrant sun-dried Berbere chili spices, korarima cardamom, and aromatic black cumin seeds (Tikur Azmud).",
+        bgImageSrc: "/images/heroes/snacks-hero.jpg",
+        bgImageAlt: "Artisanal crunchy Dabo Kolo",
+        focalImageSrc: "/images/snacks/dabo-kolo.jpg",
+        focalImageAlt: "Berbere Spiced Dabo Kolo",
+        focalImageIsCutout: false,
+        ctaText: "Shop Dabo Kolo",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Snacks",
+        secondaryCtaHref: `${basePath}/c/snacks`,
+        pillarsTitle: "Habesha Spice & Pastry Tradition",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Sun-Dried Berbere",
+            titleLine2: "Aromatic Warmth",
+            description:
+              "Mild chili warmth balanced with garlic, rue, and sweet korarima cardamom aromatics.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Cold-Pressed Nug Oil",
+            titleLine2: "Diamond Cut Crisp",
+            description:
+              "Hand-rolled and baked to deliver a shatteringly crisp texture without heavy grease.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Tikur Azmud Seeds",
+            titleLine2: "Black Cumin Finish",
+            description:
+              "Nutty, peppery black seeds renowned for digestive wellness and festive hospitality.",
+          },
+        ],
+      };
+    } else if (permalink.includes("beso")) {
+      heroProps = {
+        badge: "BESO ENERGY CLUSTERS",
+        titleLine1: "Wild Forest Honey",
+        titleLine2: "Beso Energy Bites",
+        description:
+          "Ancient Ethiopian runner superfood — roasted highland barley flour (Beso) hand-rolled with raw organic acacia forest honey and golden toasted sesame seeds.",
+        bgImageSrc: "/images/heroes/snacks-hero.jpg",
+        bgImageAlt: "Ethiopian Beso and honey energy clusters",
+        focalImageSrc: "/images/snacks/beso-clusters.jpg",
+        focalImageAlt: "Wild Honey Beso Energy Clusters",
+        focalImageIsCutout: false,
+        ctaText: "Shop Beso Bites",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Snacks",
+        secondaryCtaHref: `${basePath}/c/snacks`,
+        pillarsTitle: "Highland Endurance Nutrition",
+        pillars: [
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Roasted Barley Beso",
+            titleLine2: "Complex Carbs",
+            description:
+              "Slow-burning sustainable energy cherished by legendary Ethiopian long-distance runners.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Bale Rainforest",
+            titleLine2: "Raw Wild Honey",
+            description:
+              "Pure unheated acacia honey bursting with live natural enzymes and floral sweetness.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Toasted Sesame",
+            titleLine2: "Mineral Rich",
+            description:
+              "High in calcium, iron, and healthy plant fats for a nutritious midday snack.",
+          },
+        ],
+      };
+    } else if (permalink.includes("seed") || permalink.includes("telba")) {
+      heroProps = {
+        badge: "HIGH-OMEGA SEED CRISPS",
+        titleLine1: "Toasted Telba & Nug",
+        titleLine2: "Artisan Seed Crisps",
+        description:
+          "Gourmet wafer crackers baked purely from whole roasted golden Ethiopian flaxseed (Telba) and niger seeds (Nug), lightly seasoned with volcanic salt.",
+        bgImageSrc: "/images/heroes/snacks-hero.jpg",
+        bgImageAlt: "Artisanal Ethiopian Telba seed crisps",
+        focalImageSrc: "/images/snacks/telba-crisps.jpg",
+        focalImageAlt: "Toasted Telba and Nug Seed Crisps",
+        focalImageIsCutout: false,
+        ctaText: "Shop Seed Crisps",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Snacks",
+        secondaryCtaHref: `${basePath}/c/snacks`,
+        pillarsTitle: "Ethiopian Oilseed Superfoods",
+        pillars: [
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Plant Omega-3s",
+            titleLine2: "High-Alpha Linolenic",
+            description:
+              "Ethiopian Telba contains one of nature's highest botanical concentrations of heart-healthy ALA.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Prebiotic Fiber",
+            titleLine2: "Gut Health Boost",
+            description:
+              "Whole ground flax and nug seeds deliver soluble mucilage fiber for healthy digestion.",
+          },
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Naturally Grain-Free",
+            titleLine2: "Keto Friendly",
+            description:
+              "100% plant-based seed crackers with clean, low-net-carb nutrition.",
+          },
+        ],
+      };
+    } else if (permalink.includes("pulse") || permalink.includes("shimbra")) {
+      heroProps = {
+        badge: "CRISPY HIGHLAND PULSES",
+        titleLine1: "Crispy Smoked Shimbra",
+        titleLine2: "Ember-Roasted Chickpeas",
+        description:
+          "Whole heirloom chickpeas slow-roasted over acacia embers and tossed with volcanic sea salt and wild mountain rosemary for a savory, high-protein bite.",
+        bgImageSrc: "/images/heroes/snacks-hero.jpg",
+        bgImageAlt: "Crispy smoked roasted chickpeas",
+        focalImageSrc: "/images/snacks/smoked-shimbra.jpg",
+        focalImageAlt: "Crispy Smoked Shimbra",
+        focalImageIsCutout: false,
+        ctaText: "Shop Roasted Shimbra",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Snacks",
+        secondaryCtaHref: `${basePath}/c/snacks`,
+        pillarsTitle: "High-Protein Highland Superfoods",
+        pillars: [
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Ember-Roasted",
+            titleLine2: "Shattering Crunch",
+            description:
+              "Dry-roasted over embers to achieve irresistible crispiness without deep-frying.",
+          },
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "19g Plant Protein",
+            titleLine2: "Heirloom Chickpeas",
+            description:
+              "Grown in nutrient-rich Shewa volcanic soils for exceptional mineral richness.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Volcanic Rift Salt &",
+            titleLine2: "Alpine Rosemary",
+            description:
+              "Fragrant mountain botanicals infuse every bite with an earthy, savory aroma.",
+          },
+        ],
+      };
+    } else {
+      heroProps = {
+        badge: undefined,
+        titleLine1: "Authentic Ethiopian",
+        titleLine2: "Organic Highland Snacks",
+        description:
+          "Ancient whole grains, sun-toasted oilseeds, and spiced artisan morsels native to Ethiopia — Heritage roasted Kolo, Berbere Dabo Kolo, wild honey Beso bites, Telba flax crisps, and ember-roasted Shimbra.",
+        bgImageSrc: "/images/heroes/snacks-hero.jpg",
+        bgImageAlt: "Artisan Ethiopian snacks with coffee ceremony setting",
+        focalImageSrc: "/images/snacks/heritage-kolo.jpg",
+        focalImageAlt: "Highland Heritage Kolo snack",
+        focalImageIsCutout: false,
+        ctaText: "Shop All Snacks",
+        ctaHref: "#category-products",
+        secondaryCtaText: "Specialty Coffees",
+        secondaryCtaHref: `${basePath}/c/coffee`,
+        pillarsTitle: "The Ethiopian Highland Snacking Heritage",
+        pillars: [
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Ancient Highland Grains",
+            titleLine2: "Barley & Heirloom Pulses",
+            description:
+              "Cultivated in volcanic highland soils and roasted on traditional mitad earthen cookware.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Wild Acacia Honey &",
+            titleLine2: "Native High-Omega Seeds",
+            description:
+              "Pure rainforest forest honey, organic Telba flax, and cold-pressed Nug seeds for clean energy.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "The Buna Tetu Ritual",
+            titleLine2: "Warm Hospitality",
+            description:
+              "Generational snacking traditions passed down to honor community, conversation, and coffee ceremonies.",
+          },
+        ],
+      };
+    }
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {

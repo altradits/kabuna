@@ -24,6 +24,10 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
     pathname === `${basePath}/c/hair` ||
     pathname.startsWith(`${basePath}/c/hair/`);
 
+  const isSnacksActive =
+    pathname === `${basePath}/c/snacks` ||
+    pathname.startsWith(`${basePath}/c/snacks/`);
+
   const isCeremonyActive =
     pathname === `${basePath}/c/buna-ceremony` ||
     pathname.startsWith(`${basePath}/c/buna-ceremony/`);
@@ -33,6 +37,7 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
       pathname.startsWith(`${basePath}/products/`)) &&
     !isCoffeeActive &&
     !isHairActive &&
+    !isSnacksActive &&
     !isCeremonyActive;
 
   const linkBase =
@@ -54,6 +59,12 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
         className={`${linkBase} ${isHairActive ? activeClass : inactiveClass}`}
       >
         <span>Hair</span>
+      </Link>
+      <Link
+        href={`${basePath}/c/snacks`}
+        className={`${linkBase} ${isSnacksActive ? activeClass : inactiveClass}`}
+      >
+        <span>Snacks</span>
       </Link>
       <Link
         href={`${basePath}/c/buna-ceremony`}

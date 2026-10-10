@@ -193,6 +193,21 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_wanza"),
   );
 
+  const isSnackProduct = Boolean(
+    product.categories?.some(
+      (c) =>
+        c.id === "cat_snacks" ||
+        c.permalink === "snacks" ||
+        c.permalink?.startsWith("snacks/") ||
+        c.name?.toLowerCase().includes("snack"),
+    ) ||
+      product.id?.startsWith("prod_heritage_kolo") ||
+      product.id?.startsWith("prod_dabo_kolo") ||
+      product.id?.startsWith("prod_beso_clusters") ||
+      product.id?.startsWith("prod_telba_crisps") ||
+      product.id?.startsWith("prod_smoked_shimbra"),
+  );
+
   const isCeremonyProduct = Boolean(
     product.categories?.some(
       (c) =>
@@ -209,7 +224,8 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_buna_ceremony"),
   );
 
-  const isCoffeeProduct = !isHairProduct && !isCeremonyProduct;
+  const isCoffeeProduct =
+    !isHairProduct && !isCeremonyProduct && !isSnackProduct;
 
   // Coffee fields
   const tastingNotes = getField("notes");
@@ -217,7 +233,8 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const roastProfile = getField("roast");
   const elevation = getField("altitude");
   const region =
-    getField("region") || (isHairProduct ? getField("origin") : undefined);
+    getField("region") ||
+    (isHairProduct || isSnackProduct ? getField("origin") : undefined);
   const _washingStation = getField("station");
   const variety = getField("variety");
   const cuppingScore = getField("score");
@@ -229,6 +246,13 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const hairType = getField("hair_type");
   const hairUse = getField("use");
   const hairScent = getField("scent");
+
+  // Snack fields
+  const snackIngredients = getField("ingredients");
+  const snackOrigin = getField("origin");
+  const snackDietary = getField("dietary");
+  const snackPairing = getField("pairing");
+  const snackFlavor = getField("flavor");
 
   // Ceremony fields
   const ceremonyMaterial = getField("material");
@@ -358,6 +382,32 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
             </div>
           )}
 
+          {/* Snack Nutritional & Grain Profile Box */}
+          {isSnackProduct && (
+            <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-amber-900">
+                Traditional Highland Snacking Profile
+              </div>
+              {snackFlavor && (
+                <div className="text-sm font-semibold text-stone-900 mt-1">
+                  {snackFlavor}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {snackDietary && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {snackDietary}
+                  </span>
+                )}
+                {snackOrigin && (
+                  <span className="text-xs bg-amber-900 text-amber-50 px-3 py-1 rounded-full font-medium shadow-2xs">
+                    Origin: {snackOrigin}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Ceremony Artifact Box */}
           {isCeremonyProduct && (
             <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
@@ -471,7 +521,9 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                     ? "Habesha Ritual & Application"
                     : isCeremonyProduct
                       ? "Ritual Role & Ceremony Use"
-                      : "Brewing"}
+                      : isSnackProduct
+                        ? "Buna Tetu Pairing & Serving"
+                        : "Brewing"}
                 </span>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -482,7 +534,29 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.brewing && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
-                  {isHairProduct ? (
+                  {isSnackProduct ? (
+                    <div className="space-y-3">
+                      <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Buna Tetu Ceremony Pairing
+                        </h4>
+                        <p className="text-xs text-stone-700 leading-relaxed">
+                          {snackPairing ||
+                            "Traditionally offered to honoured guests alongside steaming Abol, Tona, and Baraka rounds of Ethiopian Buna from the clay Jebena."}
+                        </p>
+                      </div>
+                      {snackIngredients && (
+                        <div className="p-3 rounded-lg bg-stone-50 border border-stone-200/80">
+                          <span className="text-xs font-semibold text-stone-900">
+                            Whole Ingredients:{" "}
+                          </span>
+                          <span className="text-xs text-stone-600">
+                            {snackIngredients}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : isHairProduct ? (
                     <div className="space-y-3">
                       <div className="p-3.5 rounded-lg bg-emerald-50/60 border border-emerald-100">
                         <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
@@ -572,7 +646,9 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                     ? "Botanical Origin"
                     : isCeremonyProduct
                       ? "Materials & Craft"
-                      : "Origin"}
+                      : isSnackProduct
+                        ? "Grain Provenance & Dietary"
+                        : "Origin"}
                 </span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -583,7 +659,46 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.terroir && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm">
-                  {isHairProduct ? (
+                  {isSnackProduct ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Harvest Provenance
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {snackOrigin || "Ethiopian Highlands"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Dietary Classification
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {snackDietary || "100% Organic & Plant-Based"}
+                        </dd>
+                      </div>
+                      {snackFlavor && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Flavor & Texture Profile
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {snackFlavor}
+                          </dd>
+                        </div>
+                      )}
+                      {snackIngredients && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Active Ingredients
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {snackIngredients}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  ) : isHairProduct ? (
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
                       <div>
                         <dt className="text-xs font-medium text-stone-500">
