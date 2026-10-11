@@ -659,6 +659,259 @@ export async function CategoryBanner({
         ],
       };
     }
+  } else if (
+    permalink === "body" ||
+    permalink.startsWith("body/") ||
+    permalink.includes("/body") ||
+    permalink.includes("scent")
+  ) {
+    if (permalink.includes("fragrance") || permalink.includes("perfume")) {
+      heroProps = {
+        badge: "HIGHLAND PERFUME OILS",
+        titleLine1: "Itan Boswellia",
+        titleLine2: "Highland Fragrance Oils",
+        description:
+          "Sacred Tigray frankincense (Boswellia papyrifera) and Ogaden myrrh distilled into pure botanical perfume oils — opening with citrus-pine resin and melting into warm balsamic amber.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Itan Boswellia highland perfume oil",
+        focalImageSrc: "/images/body/itan-perfume.jpg",
+        focalImageAlt: "Itan Boswellia Highland Perfume Oil",
+        focalImageIsCutout: false,
+        ctaText: "Shop Fragrances",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Body & Scents",
+        secondaryCtaHref: `${basePath}/c/body`,
+        pillarsTitle: "Sacred Highland Resin Alchemy",
+        pillars: [
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Wild Boswellia",
+            titleLine2: "Papyrifera Tears",
+            description:
+              "Harvested sustainably from ancient high-elevation frankincense trees in Tigray cliffs.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "100% Pure Botanical",
+            titleLine2: "Zero Synthetics",
+            description:
+              "Free of phthalates, synthetic fixatives, alcohol, and artificial fragrance compounds.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Moringa Carrier",
+            titleLine2: "Deep Absorption",
+            description:
+              "Cold-pressed Ethiopian moringa oil locks in botanical volatiles for all-day intimate wear.",
+          },
+        ],
+      };
+    } else if (permalink.includes("ointment") || permalink.includes("balm")) {
+      heroProps = {
+        badge: "RESTORATIVE OINTMENTS & BALMS",
+        titleLine1: "Korarima & Black Cumin",
+        titleLine2: "Warming Herbal Salves",
+        description:
+          "Deep-penetrating ancestral ointment formulated with cold-pressed Tikur Azmud (black seed), crushed Korarima false cardamom, and wild beeswax to soothe muscles and joints.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Korarima warming ointment balm",
+        focalImageSrc: "/images/body/korarima-ointment.jpg",
+        focalImageAlt: "Korarima & Black Cumin Warming Ointment",
+        focalImageIsCutout: false,
+        ctaText: "Shop Ointments",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Body & Scents",
+        secondaryCtaHref: `${basePath}/c/body`,
+        pillarsTitle: "Ancestral Ethiopian Balm Craft",
+        pillars: [
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Korarima Cardamom",
+            titleLine2: "Deep Heat Sensation",
+            description:
+              "Aframomum corrorima stimulates local microcirculation to ease joint stiffness naturally.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Cold-Pressed Tikur Azmud",
+            titleLine2: "Thymoquinone Rich",
+            description:
+              "Pure Ethiopian black cumin seed oil renowned across the highlands for cellular repair.",
+          },
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Wild Highland Beeswax",
+            titleLine2: "Barrier Defense",
+            description:
+              "Creates a breathable seal protecting dry weather skin from high-altitude winds.",
+          },
+        ],
+      };
+    } else if (permalink.includes("wash") && !permalink.includes("washed")) {
+      heroProps = {
+        badge: "BOTANICAL BODY WASHES",
+        titleLine1: "Koseret & Enset",
+        titleLine2: "Clarifying Body Wash",
+        description:
+          "Invigorating botanical body wash crafted with wild highland Koseret lemon-verbena herbs and deeply soothing Enset false banana mucilage for silky, refreshed skin.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Koseret & Enset botanical body wash",
+        focalImageSrc: "/images/body/koseret-body-wash.jpg",
+        focalImageAlt: "Koseret & Enset Clarifying Body Wash",
+        focalImageIsCutout: false,
+        ctaText: "Shop Body Wash",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Body & Scents",
+        secondaryCtaHref: `${basePath}/c/body`,
+        pillarsTitle: "Wild Botanical Cleansing Science",
+        pillars: [
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Wild Koseret Herbs",
+            titleLine2: "Lippia Abyssinica",
+            description:
+              "High-mountain herbal verbena with innate antibacterial clarity and uplifting citrus aromatics.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Raw Enset Mucilage",
+            titleLine2: "Intense Hydration",
+            description:
+              "Indigenous false banana extracts cushion the skin barrier against moisture loss.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Endod Soapberry Foam",
+            titleLine2: "Gentle Saponins",
+            description:
+              "Biodegradable plant-derived lather that rinses effortlessly without chemical residue.",
+          },
+        ],
+      };
+    } else if (permalink.includes("mist")) {
+      heroProps = {
+        badge: "HERBAL SCENTS & MISTS",
+        titleLine1: "Tenadam & Citrus",
+        titleLine2: "Highland Botanical Mist",
+        description:
+          "Clarifying aromatherapeutic body and space mist distilled from sacred highland Tenadam (Rue) and wild Rift Valley orange blossoms to awaken senses and elevate spirit.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Tenadam botanical body mist",
+        focalImageSrc: "/images/body/tenadam-mist.jpg",
+        focalImageAlt: "Tenadam & Citrus Blossom Botanical Mist",
+        focalImageIsCutout: false,
+        ctaText: "Shop Mists",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Body & Scents",
+        secondaryCtaHref: `${basePath}/c/body`,
+        pillarsTitle: "Highland Aromatherapeutic Ritual",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Sacred Tenadam",
+            titleLine2: "Ruta Chalepensis",
+            description:
+              "Revered in every Ethiopian household for cleansing the aura and clearing mental fog.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Wild Citrus Blossoms",
+            titleLine2: "Rift Valley Flora",
+            description:
+              "Delicate, dewy floral waters that tone and refresh throughout warm afternoons.",
+          },
+          {
+            icon: <Wind className="w-6 h-6" />,
+            titleLine1: "Highland Spring Water",
+            titleLine2: "Micro-Atomized",
+            description:
+              "Ultra-fine mist technology delivers instant skin hydration with a lingering botanical halo.",
+          },
+        ],
+      };
+    } else if (permalink.includes("scrub") || permalink.includes("polish")) {
+      heroProps = {
+        badge: "VOLCANIC CLAY & POLISHES",
+        titleLine1: "Rift Valley Volcanic Clay",
+        titleLine2: "Mineral Body Polish",
+        description:
+          "Exfoliating mineral scrub blending Great Rift Valley obsidian volcanic earth, micro-milled Teff grains, and alpine rosemary to unveil polished, illuminated skin.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Volcanic clay mineral body scrub",
+        focalImageSrc: "/images/body/volcanic-clay-scrub.jpg",
+        focalImageAlt: "Rift Valley Volcanic Clay Body Polish",
+        focalImageIsCutout: false,
+        ctaText: "Shop Body Polish",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Body & Scents",
+        secondaryCtaHref: `${basePath}/c/body`,
+        pillarsTitle: "Geothermal Earth Exfoliation",
+        pillars: [
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Obsidian Mineral Clay",
+            titleLine2: "Rift Valley Soils",
+            description:
+              "Rich in trace minerals and silica to gently detoxify and resurface dull epidermal cells.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Milled Teff Grains",
+            titleLine2: "Enzymatic Polish",
+            description:
+              "Micro-fine grain spheres offer gentle non-abrasive buffing suitable for sensitive skin.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Alpine Rosemary",
+            titleLine2: "Cold-Pressed Nug Oil",
+            description:
+              "Restores lipid moisture immediately so skin feels conditioned directly from the bath.",
+          },
+        ],
+      };
+    } else {
+      heroProps = {
+        badge: undefined,
+        titleLine1: "Authentic Ethiopian",
+        titleLine2: "Organic Body & Scents",
+        description:
+          "Highland scents, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) perfume oils, warming Korarima salves, fresh Koseret cleansers, Tenadam mists, and volcanic clay polishes.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Ethiopian highland body sanctuary and native scents",
+        focalImageSrc: "/images/body/itan-perfume.jpg",
+        focalImageAlt: "Itan Boswellia Highland Perfume Oil",
+        focalImageIsCutout: false,
+        ctaText: "Shop Body & Scents",
+        ctaHref: "#category-products",
+        secondaryCtaText: "Specialty Coffees",
+        secondaryCtaHref: `${basePath}/c/coffee`,
+        pillarsTitle: "The Highland Bath & Fragrance Ritual",
+        pillars: [
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Wild Tigray Frankincense",
+            titleLine2: "Sacred Itan Resins",
+            description:
+              "Ancient aromatic tears distilled without synthetics into grounding highland perfume oils.",
+          },
+          {
+            icon: <Droplets className="w-6 h-6" />,
+            titleLine1: "Restorative Ointments",
+            titleLine2: "Korarima & Tikur Azmud",
+            description:
+              "Ancestral warming balms blended with wild beeswax to soothe joints and muscles.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Highland Mountain Herbs",
+            titleLine2: "Koseret, Enset & Tenadam",
+            description:
+              "Clarifying cleansers, floral hydrosols, and geothermal clay scrubs native to Ethiopia.",
+          },
+        ],
+      };
+    }
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {

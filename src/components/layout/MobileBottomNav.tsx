@@ -3,6 +3,7 @@
 import type { Category } from "@spree/sdk";
 import {
   Coffee,
+  Flower2,
   Home,
   Package,
   ShoppingBag,
@@ -33,6 +34,7 @@ export function MobileBottomNav({
     if (p.includes("coffee")) return Coffee;
     if (p.includes("snack")) return Wheat;
     if (p.includes("hair")) return Sparkles;
+    if (p.includes("body") || p.includes("scent")) return Flower2;
     return Package;
   };
 
@@ -40,6 +42,11 @@ export function MobileBottomNav({
     if (name.toLowerCase().includes("coffee")) return "Coffee";
     if (name.toLowerCase().includes("snack")) return "Snacks";
     if (name.toLowerCase().includes("hair")) return "Hair";
+    if (
+      name.toLowerCase().includes("body") ||
+      name.toLowerCase().includes("scent")
+    )
+      return "Body & Scents";
     return name.replace(/^Organic\s+/i, "");
   };
 

@@ -28,6 +28,11 @@ export function HeaderNavLinks({
     if (name.toLowerCase().includes("coffee")) return "Coffee";
     if (name.toLowerCase().includes("snack")) return "Snacks";
     if (name.toLowerCase().includes("hair")) return "Hair";
+    if (
+      name.toLowerCase().includes("body") ||
+      name.toLowerCase().includes("scent")
+    )
+      return "Body & Scents";
     return name.replace(/^Organic\s+/i, "");
   };
 

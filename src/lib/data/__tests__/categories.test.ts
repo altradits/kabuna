@@ -25,15 +25,16 @@ vi.mock("@/lib/spree", () => ({
 }));
 
 describe("Coffee Category & Scalable Taxonomy", () => {
-  it("returns Coffee, Snacks, and Hair as top-level root categories", async () => {
+  it("returns Coffee, Snacks, Hair, and Body & Scents as top-level root categories", async () => {
     const res = await getCategories();
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(3);
+    expect(res.data.length).toBe(4);
 
     const names = res.data.map((c) => c.name);
     expect(names).toContain("Coffee");
     expect(names).toContain("Organic Snacks");
     expect(names).toContain("Organic Hair Care");
+    expect(names).toContain("Organic Body & Scents");
     expect(names).not.toContain("Ceremony & Accessories");
   });
 
@@ -233,5 +234,73 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     const naturalNames = naturalRes.data.map((p) => p.name);
     expect(naturalNames).toContain("Hamasho");
     expect(naturalNames).toContain("Dimtu Tora");
+  });
+
+  it("classifies subcategories under Body & Scents", async () => {
+    const bodyCategory = await getCategory("body");
+    expect(bodyCategory).toBeDefined();
+    expect(bodyCategory.id).toBe("cat_body");
+    expect(bodyCategory.name).toBe("Organic Body & Scents");
+    expect(bodyCategory.children).toBeDefined();
+    expect(bodyCategory.children?.length).toBe(5);
+
+    const childNames = bodyCategory.children?.map((c) => c.name);
+    expect(childNames).toContain("Highland Fragrances & Perfume Oils");
+    expect(childNames).toContain("Restorative Herbal Ointments & Balms");
+    expect(childNames).toContain("Botanical Body Washes & Cleansers");
+    expect(childNames).toContain("Herbal Scents & Botanical Mists");
+    expect(childNames).toContain("Volcanic Clay & Body Polishes");
+  });
+
+  it("lists all body & scent products when Body category is selected", async () => {
+    const res = await getCategoryProducts("cat_body");
+    expect(res.data).toBeDefined();
+    expect(res.data.length).toBe(5);
+
+    const productNames = res.data.map((p) => p.name);
+    expect(productNames).toEqual(
+      expect.arrayContaining([
+        "Itan Boswellia Highland Perfume Oil",
+        "Koseret & Enset Clarifying Body Wash",
+        "Korarima & Black Cumin Warming Ointment",
+        "Tenadam & Citrus Blossom Botanical Mist",
+        "Rift Valley Volcanic Clay & Rosemary Body Polish",
+      ]),
+    );
+
+    // Verifies neither coffee, hair, nor snacks leak into body
+    expect(productNames).not.toContain("Chelbesa");
+    expect(productNames).not.toContain("YeTsehur Kibe");
+    expect(productNames).not.toContain("Highland Heritage Kolo");
+  });
+
+  it("filters body & scent subcategories accurately", async () => {
+    const fragranceRes = await getCategoryProducts("body/fragrances");
+    expect(fragranceRes.data.length).toBe(1);
+    expect(fragranceRes.data[0].name).toBe(
+      "Itan Boswellia Highland Perfume Oil",
+    );
+
+    const ointmentRes = await getCategoryProducts("body/ointments");
+    expect(ointmentRes.data.length).toBe(1);
+    expect(ointmentRes.data[0].name).toBe(
+      "Korarima & Black Cumin Warming Ointment",
+    );
+
+    const washRes = await getCategoryProducts("body/wash");
+    expect(washRes.data.length).toBe(1);
+    expect(washRes.data[0].name).toBe("Koseret & Enset Clarifying Body Wash");
+
+    const mistRes = await getCategoryProducts("body/mists");
+    expect(mistRes.data.length).toBe(1);
+    expect(mistRes.data[0].name).toBe(
+      "Tenadam & Citrus Blossom Botanical Mist",
+    );
+
+    const scrubRes = await getCategoryProducts("body/scrubs");
+    expect(scrubRes.data.length).toBe(1);
+    expect(scrubRes.data[0].name).toBe(
+      "Rift Valley Volcanic Clay & Rosemary Body Polish",
+    );
   });
 });

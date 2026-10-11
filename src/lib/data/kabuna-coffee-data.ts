@@ -156,6 +156,13 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   "beso-clusters": ["/images/snacks/beso-clusters.jpg"],
   "telba-crisps": ["/images/snacks/telba-crisps.jpg"],
   "smoked-shimbra": ["/images/snacks/smoked-shimbra.jpg"],
+
+  // Traditional Ethiopian Organic Body & Native Scents
+  "itan-perfume": ["/images/body/itan-perfume.jpg"],
+  "koseret-body-wash": ["/images/body/koseret-body-wash.jpg"],
+  "korarima-ointment": ["/images/body/korarima-ointment.jpg"],
+  "tenadam-mist": ["/images/body/tenadam-mist.jpg"],
+  "volcanic-clay-scrub": ["/images/body/volcanic-clay-scrub.jpg"],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
@@ -185,12 +192,36 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
 
   // Specific Ethiopian Organic Hair Care Botanicals
   if (s.includes("yetsehur") || s.includes("kibe")) return "yetsehur-kibe";
-  if (s.includes("koseret") || s.includes("elixir") || s.includes("nug"))
+  if (
+    (s.includes("koseret") &&
+      (s.includes("elixir") || s.includes("scalp") || s.includes("nug"))) ||
+    s.includes("koseret-scalp")
+  )
     return "koseret-scalp-elixir";
-  if (s.includes("endod") || s.includes("cleanser")) return "endod-cleanser";
+  if (s.includes("endod") || (s.includes("cleanser") && !s.includes("body")))
+    return "endod-cleanser";
   if (s.includes("shuruba") || s.includes("mask") || s.includes("conditioning"))
     return "shuruba-mask";
   if (s.includes("wanza") || s.includes("comb")) return "wanza-comb";
+
+  // Specific Ethiopian Organic Body & Scents
+  if (s.includes("itan") || s.includes("perfume") || s.includes("boswellia"))
+    return "itan-perfume";
+  if (
+    s.includes("enset") ||
+    s.includes("body-wash") ||
+    (s.includes("koseret") && s.includes("wash"))
+  )
+    return "koseret-body-wash";
+  if (
+    s.includes("ointment") ||
+    s.includes("balm") ||
+    (s.includes("korarima") && !s.includes("telba"))
+  )
+    return "korarima-ointment";
+  if (s.includes("tenadam") || s.includes("mist")) return "tenadam-mist";
+  if (s.includes("volcanic") || s.includes("scrub") || s.includes("polish"))
+    return "volcanic-clay-scrub";
 
   // Specific Ethiopian Organic Snacks
   if (s.includes("dabo-kolo") || s.includes("dabo")) return "dabo-kolo";
@@ -703,7 +734,62 @@ export const CAT_SNACKS = createCategory(
   "/images/snacks/heritage-kolo.jpg",
 );
 
-export const KABUNA_CATEGORIES: Category[] = [CAT_COFFEE, CAT_SNACKS, CAT_HAIR];
+export const CAT_BODY_FRAGRANCE = createCategory(
+  "cat_body_fragrance",
+  "Highland Fragrances & Perfume Oils",
+  "body/fragrances",
+  "Sacred wild Tigray Boswellia frankincense (Itan) and pure botanical perfume distillations without synthetic additives.",
+);
+
+export const CAT_BODY_OINTMENTS = createCategory(
+  "cat_body_ointments",
+  "Restorative Herbal Ointments & Balms",
+  "body/ointments",
+  "Deep-penetrating warming herbal salves crafted with highland Korarima cardamom, black cumin (Tikur Azmud), and virgin beeswax.",
+);
+
+export const CAT_BODY_WASH = createCategory(
+  "cat_body_wash",
+  "Botanical Body Washes & Cleansers",
+  "body/wash",
+  "Invigorating botanical body washes formulated with wild mountain Koseret herbs and moisturizing Enset false banana mucilage.",
+);
+
+export const CAT_BODY_MISTS = createCategory(
+  "cat_body_mists",
+  "Herbal Scents & Botanical Mists",
+  "body/mists",
+  "Clarifying aromatherapeutic body and space mists distilled from sacred Tenadam (rue) and wild citrus blossoms.",
+);
+
+export const CAT_BODY_SCRUBS = createCategory(
+  "cat_body_scrubs",
+  "Volcanic Clay & Body Polishes",
+  "body/scrubs",
+  "Exfoliating mineral polishes blending Great Rift Valley volcanic obsidian clay, micro-milled Teff, and alpine rosemary.",
+);
+
+export const CAT_BODY = createCategory(
+  "cat_body",
+  "Organic Body & Scents",
+  "body",
+  "Highland scents, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) perfume oils, warming Korarima salves, Koseret enset cleansers, and Tenadam mists.",
+  [
+    CAT_BODY_FRAGRANCE,
+    CAT_BODY_OINTMENTS,
+    CAT_BODY_WASH,
+    CAT_BODY_MISTS,
+    CAT_BODY_SCRUBS,
+  ],
+  "/images/body/itan-perfume.jpg",
+);
+
+export const KABUNA_CATEGORIES: Category[] = [
+  CAT_COFFEE,
+  CAT_SNACKS,
+  CAT_HAIR,
+  CAT_BODY,
+];
 
 interface CoffeeSpecProps {
   id: string;
@@ -1236,6 +1322,133 @@ function buildSnackProduct({
     buy_box_variant_id: variant.id,
     thumbnail_url: imageUrl,
     tags: ["Organic Snacks", "Ethiopian Grains", "Buna Tetu Snack", ...tags],
+    price,
+    original_price: compareAtCents ? createPrice(compareAtCents) : price,
+    seller_id: null,
+    primary_media: primaryMedia,
+    media: gallery,
+    variants: [variant],
+    default_variant: variant,
+    option_types: [],
+    option_values: [],
+    categories: productCategories,
+    custom_fields: customFields,
+    prior_price: null,
+  };
+}
+
+interface BodyProductProps {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  compareAtCents?: number;
+  imageUrl: string;
+  sku: string;
+  weight: number;
+  tags: string[];
+  categories: Category[];
+  specs: {
+    ingredients: string;
+    origin: string;
+    scent: string;
+    use: string;
+    format: string;
+  };
+}
+
+function buildBodyProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  compareAtCents,
+  imageUrl,
+  sku,
+  weight,
+  tags,
+  categories,
+  specs,
+}: BodyProductProps): Product {
+  const price = createPrice(baseCents, compareAtCents);
+  const primaryMedia = createMedia(`media_${id}_1`, imageUrl, name);
+  const gallery = [primaryMedia];
+  const variant = createVariant(
+    `var_${id}_default`,
+    sku,
+    baseCents,
+    [],
+    "Standard",
+    weight,
+  );
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_ingredients`,
+      "Native Botanical Ingredients",
+      "ingredients",
+      specs.ingredients,
+    ),
+    createCustomField(
+      `cf_${id}_origin`,
+      "Harvest Provenance",
+      "origin",
+      specs.origin,
+    ),
+    createCustomField(
+      `cf_${id}_scent`,
+      "Scent Profile & Notes",
+      "scent",
+      specs.scent,
+    ),
+    createCustomField(
+      `cf_${id}_use`,
+      "Ritual Application & Use",
+      "use",
+      specs.use,
+    ),
+    createCustomField(
+      `cf_${id}_format`,
+      "Formulation & Packaging",
+      "format",
+      specs.format,
+    ),
+  ];
+
+  const productCategories = categories.some((c) => c.id === "cat_body")
+    ? categories
+    : [CAT_BODY, ...categories];
+
+  return {
+    id,
+    name,
+    slug,
+    meta_title: `${name} | Ethiopian Organic Body & Scents | Kabuna`,
+    meta_description: subtitle,
+    meta_keywords: `Ethiopian organic body scents, native fragrances, ${name}, ${tags.join(", ")}`,
+    variant_count: 1,
+    available_on: "2024-01-01T00:00:00.000Z",
+    preorder_ships_at: null,
+    purchasable: true,
+    preorder: false,
+    in_stock: true,
+    backorderable: false,
+    available: true,
+    description: `${subtitle}\n\n${description}`,
+    description_html: `<p><strong>${subtitle}</strong></p><p>${description}</p>`,
+    default_variant_id: variant.id,
+    buy_box_variant_id: variant.id,
+    thumbnail_url: imageUrl,
+    tags: [
+      "Organic Body & Scents",
+      "Native Ethiopian Botanicals",
+      "Highland Fragrance",
+      ...tags,
+    ],
     price,
     original_price: compareAtCents ? createPrice(compareAtCents) : price,
     seller_id: null,
@@ -2085,6 +2298,178 @@ export const KABUNA_PRODUCTS: Product[] = [
         "The ultimate savory finger snack for social Buna gatherings, road trips, and afternoon energy dips",
       flavor:
         "Crunchy, lightly smoky, savory, with aromatic herbal pine notes from wild mountain rosemary",
+    },
+  }),
+
+  // 28. Itan Boswellia Highland Perfume Oil (Wild Frankincense & Myrrh Botanical Extract)
+  buildBodyProduct({
+    id: "prod_itan_perfume",
+    name: "Itan Boswellia Highland Perfume Oil",
+    slug: "itan-boswellia-perfume",
+    subtitle:
+      "High-Altitude Pure Botanical Perfume Oil with Wild Tigray Boswellia Papyrifera & Rare Myrrh",
+    description:
+      "Crafted from sacred Ethiopian resins harvested across the rugged highland cliffs of Tigray and Ogaden. Distilled in micro-batches with wild-foraged Boswellia papyrifera (sacred Frankincense / Itan) and sweet Ogaden Myrrh (Karam), steeped in cold-pressed golden jojoba and Ethiopian moringa oil. Opens with crystalline citrus-pine incensed resin, melting into warm balsamic amber, sacred smoke, and velvety highland woods. 100% pure botanical oil with zero synthetic aldehydes or chemical fixatives.",
+    baseCents: 5400,
+    compareAtCents: 6800,
+    imageUrl: "/images/body/itan-perfume.jpg",
+    sku: "KBN-BODY-ITAN",
+    weight: 0.15,
+    tags: [
+      "Itan Frankincense",
+      "Boswellia Papyrifera",
+      "Wild Myrrh",
+      "Botanical Perfume",
+      "Sacred Resin",
+      "Highland Fragrance",
+    ],
+    categories: [CAT_BODY, CAT_BODY_FRAGRANCE],
+    specs: {
+      ingredients:
+        "100% Wild Ethiopian Boswellia Papyrifera (Frankincense) Resin Distillate, Commiphora Myrrha Resin, Cold-Pressed Moringa Stenopetala Seed Oil, Organic Simmondsia Chinensis Seed Oil",
+      origin: "Tigray & Ogaden Highland Escarpments, Ethiopia",
+      scent:
+        "Crystalline incense resin, warm balsam, wild golden amber, sacred smoked cedar, delicate citrus-pine undertones",
+      use: "Warm 2-3 drops between pulse points, wrists, and neck. Inhale deeply for grounding ancestral presence.",
+      format:
+        "50ml Heavy Amber Crystal Flacon with Ornate Brass Dropper Pipette",
+    },
+  }),
+
+  // 29. Koseret & Enset Clarifying Body Wash (Wild Mountain Herbs & False Banana Hydration)
+  buildBodyProduct({
+    id: "prod_koseret_body_wash",
+    name: "Koseret & Enset Clarifying Body Wash",
+    slug: "koseret-enset-body-wash",
+    subtitle:
+      "Hydrating Botanical Cleanser with Wild Koseret Herbs & Highland False Banana (Enset) Mucilage",
+    description:
+      "An invigorating daily cleansing ritual inspired by the volcanic mountain streams of Gurage and Sidama. Infused with wild-harvested highland Koseret (Lippia abyssinica) known for its crisp herbal lemon-verbena aroma and antibacterial clarity, whipped with nutritive soothing mucilage extracted from indigenous Enset (false banana). Creates a velvety, ultra-gentle foaming lather that dissolves impurities without stripping the cutaneous barrier.",
+    baseCents: 3400,
+    compareAtCents: 4200,
+    imageUrl: "/images/body/koseret-body-wash.jpg",
+    sku: "KBN-BODY-WASH",
+    weight: 0.35,
+    tags: [
+      "Koseret Cleanser",
+      "Enset Hydration",
+      "Wild Herbs",
+      "Clarifying Body Wash",
+      "Botanical Bath",
+      "Sulfate Free",
+    ],
+    categories: [CAT_BODY, CAT_BODY_WASH],
+    specs: {
+      ingredients:
+        "Highland Koseret (Lippia abyssinica) Hydrosol, Wild Saponin Endod Berry Extract, Raw Enset Leaf Mucilage, Vegetable Glycerin, Wild Mountain Rosemary Leaf Oil",
+      origin: "Sidama & Gurage Highlands, Ethiopia",
+      scent:
+        "Crisp wild mountain lemon verbena, fresh rain on green volcanic soil, sweet crushed herbs",
+      use: "Massage onto damp skin to create a rich botanical foam. Rinse thoroughly in warm water.",
+      format: "250ml Frosted Apothecary Pump Bottle with Brass Finish",
+    },
+  }),
+
+  // 30. Korarima & Black Cumin Warming Ointment (Ancestral Restorative Herbal Balm)
+  buildBodyProduct({
+    id: "prod_korarima_ointment",
+    name: "Korarima & Black Cumin Warming Ointment",
+    slug: "korarima-warming-ointment",
+    subtitle:
+      "Ancestral Restorative Herbal Balm with Ethiopian Korarima Cardamom & Cold-Pressed Tikur Azmud",
+    description:
+      "A deeply penetrating ancestral ointment formulation crafted for joint recovery, muscle tension, and dry weather resilience. Blends cold-pressed Tikur Azmud (black seed / Nigella sativa) oil with stone-crushed Korarima (Ethiopian false cardamom / Aframomum corrorima) seeds and wild beeswax. Creates a soothing radiant warmth that stimulates circulation and relieves fatigue across shoulders, legs, and dry joints.",
+    baseCents: 3800,
+    compareAtCents: 4800,
+    imageUrl: "/images/body/korarima-ointment.jpg",
+    sku: "KBN-BODY-OINT",
+    weight: 0.2,
+    tags: [
+      "Korarima Balm",
+      "Tikur Azmud",
+      "Black Seed",
+      "Warming Ointment",
+      "Ancestral Salve",
+      "Muscle Relief",
+    ],
+    categories: [CAT_BODY, CAT_BODY_OINTMENTS],
+    specs: {
+      ingredients:
+        "Cold-Pressed Tikur Azmud (Black Seed Oil), Wild Aframomum Corrorima (Korarima) Seed Extract, Raw Ethiopian Highland Beeswax, Grass-Fed Tallow Infusion, Wild Ginger Rhizome Oil",
+      origin: "Kaffa Cloud Forest & Gojjam Highlands, Ethiopia",
+      scent:
+        "Warming smoky black cardamom, spicy peppery resin, deep earthy herbal warmth",
+      use: "Warm a dime-sized amount between palms and massage firmly into fatigued joints, muscles, or dry elbows.",
+      format:
+        "100ml Heavy Amber Glass Ointment Tub with Turned Bamboo Wooden Lid",
+    },
+  }),
+
+  // 31. Tenadam & Citrus Blossom Botanical Mist (Purifying Highland Facial & Body Spritz)
+  buildBodyProduct({
+    id: "prod_tenadam_mist",
+    name: "Tenadam & Citrus Blossom Botanical Mist",
+    slug: "tenadam-botanical-mist",
+    subtitle:
+      "Clarifying Highland Aromatherapeutic Mist with Sacred Rue (Tenadam) & Wild Orange Blossoms",
+    description:
+      "The sacred uplifting aura of Ethiopian household gardens distilled into a luminous fine body mist. Features steam-distilled Tenadam (Ruta chalepensis / Rue), a revered highland herb celebrated for purifying energy, sharpening mental clarity, and warding off spiritual heaviness. Layered with wild Rift Valley citrus blossoms and highland spring water for an instantly revitalizing morning and midday spritz.",
+    baseCents: 3600,
+    compareAtCents: 4400,
+    imageUrl: "/images/body/tenadam-mist.jpg",
+    sku: "KBN-BODY-MIST",
+    weight: 0.22,
+    tags: [
+      "Tenadam Mist",
+      "Sacred Rue",
+      "Highland Citrus",
+      "Purifying Spritz",
+      "Aromatherapeutic",
+      "Floral Hydrosol",
+    ],
+    categories: [CAT_BODY, CAT_BODY_MISTS],
+    specs: {
+      ingredients:
+        "100% Pure Steam-Distilled Tenadam (Ruta Chalepensis) Floral Water, Wild Orange Blossom Hydrosol, Highland Spring Water, Frankincense Resin Distillate",
+      origin: "Shewa Highlands & Rift Valley Escarpment, Ethiopia",
+      scent:
+        "Bright uplifting herbal rue, delicate orange blossom floral, citrus peel freshness, dew drops",
+      use: "Mist generously across face, neck, and body throughout the day for an aromatic uplifting reset.",
+      format: "100ml Frosted Cylindrical Glass Atomizer with Matte Finish",
+    },
+  }),
+
+  // 32. Rift Valley Volcanic Clay & Rosemary Body Polish (Exfoliating Mineral Scrub)
+  buildBodyProduct({
+    id: "prod_volcanic_clay_scrub",
+    name: "Rift Valley Volcanic Clay & Rosemary Body Polish",
+    slug: "volcanic-clay-body-polish",
+    subtitle:
+      "Exfoliating Mineral Body Scrub with Obsidian Mineral Earth, Teff Grains & Wild Alpine Rosemary",
+    description:
+      "Formulated with mineral-dense volcanic earth and basalt silt gathered from the mineral hot springs of the Great Rift Valley. Blended with micro-milled golden Teff flour and wild highland rosemary for gentle mechanical and enzymatic exfoliation. Sloughs away dead skin cells, stimulates lymph flow, and leaves skin touchably smooth, illuminated, and supple.",
+    baseCents: 3200,
+    compareAtCents: 4000,
+    imageUrl: "/images/body/volcanic-clay-scrub.jpg",
+    sku: "KBN-BODY-SCRUB",
+    weight: 0.32,
+    tags: [
+      "Volcanic Polish",
+      "Obsidian Clay",
+      "Teff Scrub",
+      "Wild Rosemary",
+      "Mineral Body Polish",
+      "Highland Spa",
+    ],
+    categories: [CAT_BODY, CAT_BODY_SCRUBS],
+    specs: {
+      ingredients:
+        "Rift Valley Volcanic Obsidian Clay, Micro-Milled Golden Teff (Eragrostis tef) Flour, Wild Highland Rosemary Leaf Extract, Cold-Pressed Nug Seed Oil, Mineral Salt",
+      origin: "Great Rift Valley & Entoto Highlands, Ethiopia",
+      scent:
+        "Earthy warm volcanic stone, crisp piney mountain rosemary, fresh highland rain",
+      use: "Buff gently in circular motions over damp skin in the bath or shower 2-3 times per week. Rinse thoroughly.",
+      format: "200ml Artisanal Terracotta Ceramic Jar with Wooden Lid",
     },
   }),
 ];

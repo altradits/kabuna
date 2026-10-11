@@ -187,7 +187,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
         c.name?.toLowerCase().includes("hair"),
     ) ||
       product.id?.startsWith("prod_yetsehur") ||
-      product.id?.startsWith("prod_koseret") ||
+      product.id?.startsWith("prod_koseret_scalp") ||
       product.id?.startsWith("prod_endod") ||
       product.id?.startsWith("prod_shuruba") ||
       product.id?.startsWith("prod_wanza"),
@@ -208,6 +208,22 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_smoked_shimbra"),
   );
 
+  const isBodyProduct = Boolean(
+    product.categories?.some(
+      (c) =>
+        c.id === "cat_body" ||
+        c.permalink === "body" ||
+        c.permalink?.startsWith("body/") ||
+        c.name?.toLowerCase().includes("body") ||
+        c.name?.toLowerCase().includes("scent"),
+    ) ||
+      product.id?.startsWith("prod_itan") ||
+      product.id?.startsWith("prod_koseret_body") ||
+      product.id?.startsWith("prod_korarima") ||
+      product.id?.startsWith("prod_tenadam") ||
+      product.id?.startsWith("prod_volcanic"),
+  );
+
   const isCeremonyProduct = Boolean(
     product.categories?.some(
       (c) =>
@@ -226,7 +242,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   );
 
   const isCoffeeProduct =
-    !isHairProduct && !isCeremonyProduct && !isSnackProduct;
+    !isHairProduct && !isCeremonyProduct && !isSnackProduct && !isBodyProduct;
 
   // Coffee fields
   const tastingNotes = getField("notes");
@@ -235,7 +251,9 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const elevation = getField("altitude");
   const region =
     getField("region") ||
-    (isHairProduct || isSnackProduct ? getField("origin") : undefined);
+    (isHairProduct || isSnackProduct || isBodyProduct
+      ? getField("origin")
+      : undefined);
   const _washingStation = getField("station");
   const variety = getField("variety");
   const cuppingScore = getField("score");
@@ -254,6 +272,13 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const snackDietary = getField("dietary");
   const snackPairing = getField("pairing");
   const snackFlavor = getField("flavor");
+
+  // Body fields
+  const bodyIngredients = getField("ingredients");
+  const bodyOrigin = getField("origin");
+  const bodyScent = getField("scent");
+  const bodyUse = getField("use");
+  const bodyFormat = getField("format");
 
   // Ceremony fields
   const ceremonyMaterial = getField("material");
@@ -518,13 +543,15 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
                 <span>
-                  {isHairProduct
-                    ? "Habesha Ritual & Application"
-                    : isCeremonyProduct
-                      ? "Ritual Role & Ceremony Use"
-                      : isSnackProduct
-                        ? "Buna Tetu Pairing & Serving"
-                        : "Brewing"}
+                  {isBodyProduct
+                    ? "Ritual Application & Bathing"
+                    : isHairProduct
+                      ? "Habesha Ritual & Application"
+                      : isCeremonyProduct
+                        ? "Ritual Role & Ceremony Use"
+                        : isSnackProduct
+                          ? "Buna Tetu Pairing & Serving"
+                          : "Brewing"}
                 </span>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -535,7 +562,29 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.brewing && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
-                  {isSnackProduct ? (
+                  {isBodyProduct ? (
+                    <div className="space-y-3">
+                      <div className="p-3.5 rounded-lg bg-rose-50/60 border border-rose-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Native Ethiopian Ritual Application
+                        </h4>
+                        <p className="text-xs text-stone-700 leading-relaxed">
+                          {bodyUse ||
+                            "Apply with conscious intention onto clean skin, pulse points, or warm water bath to indulge in pure ancestral wellness."}
+                        </p>
+                      </div>
+                      {bodyFormat && (
+                        <div className="p-3 rounded-lg bg-stone-50 border border-stone-200/80">
+                          <span className="text-xs font-semibold text-stone-900">
+                            Formulation & Format:{" "}
+                          </span>
+                          <span className="text-xs text-stone-600">
+                            {bodyFormat}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : isSnackProduct ? (
                     <div className="space-y-3">
                       <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-100">
                         <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
@@ -643,13 +692,15 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
                 <span>
-                  {isHairProduct
-                    ? "Botanical Origin"
-                    : isCeremonyProduct
-                      ? "Materials & Craft"
-                      : isSnackProduct
-                        ? "Grain Provenance & Dietary"
-                        : "Origin"}
+                  {isBodyProduct
+                    ? "Botanical Provenance & Notes"
+                    : isHairProduct
+                      ? "Botanical Origin"
+                      : isCeremonyProduct
+                        ? "Materials & Craft"
+                        : isSnackProduct
+                          ? "Grain Provenance & Dietary"
+                          : "Origin"}
                 </span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -660,7 +711,46 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.terroir && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm">
-                  {isSnackProduct ? (
+                  {isBodyProduct ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Harvest Provenance
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {bodyOrigin || "Ethiopian Highlands & Cloud Forests"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Packaging & Presentation
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {bodyFormat || "Artisanal Apothecary Glass"}
+                        </dd>
+                      </div>
+                      {bodyScent && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Aromatherapeutic & Scent Profile
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {bodyScent}
+                          </dd>
+                        </div>
+                      )}
+                      {bodyIngredients && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Native Botanical Ingredients
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {bodyIngredients}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  ) : isSnackProduct ? (
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
                       <div>
                         <dt className="text-xs font-medium text-stone-500">

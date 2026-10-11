@@ -1,4 +1,4 @@
-import { ArrowRight, Coffee, Sparkles, Wheat } from "lucide-react";
+import { ArrowRight, Coffee, Flower2, Sparkles, Wheat } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,7 +34,6 @@ const DEPARTMENTS = [
     badgeText: "Native Superfoods",
     accentBg: "bg-amber-950/60",
     accentBorder: "border-amber-700/40",
-    featuredBadge: "NEW COLLECTION",
   },
   {
     id: "hair",
@@ -49,6 +48,21 @@ const DEPARTMENTS = [
     badgeText: "Native Botanicals",
     accentBg: "bg-emerald-950/60",
     accentBorder: "border-emerald-700/40",
+  },
+  {
+    id: "body",
+    title: "Organic Body & Scents",
+    subtitle: "5 Native Scents, Washes & Balms",
+    description:
+      "Wild Tigray Boswellia perfume oils, warming Korarima ointments, fresh Koseret body washes & Tenadam mists.",
+    image: "/images/heroes/body-hero.jpg",
+    alt: "Artisanal Ethiopian botanical perfume oils, ointments, and highland body care",
+    href: "/c/body",
+    icon: Flower2,
+    badgeText: "Native Scents & Washes",
+    accentBg: "bg-rose-950/60",
+    accentBorder: "border-rose-700/40",
+    featuredBadge: "NEW DEPARTMENT",
   },
 ];
 
@@ -69,25 +83,26 @@ export function CategoryShowcaseSection({
           </div>
           <p className="text-sm text-stone-600 max-w-md mt-2 md:mt-0">
             From volcanic single-origin coffee and sacred ceremony wares to
-            native highland snacks and ancestral organic hair care.
+            native highland snacks, ancestral hair care, and native highland
+            scents.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {DEPARTMENTS.map((dept) => {
             const Icon = dept.icon;
             return (
               <Link
                 key={dept.id}
                 href={`${basePath}${dept.href}`}
-                className="group relative flex flex-col justify-end overflow-hidden rounded-2xl bg-stone-900 min-h-[380px] sm:min-h-[420px] p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-300 ring-1 ring-black/5 hover:ring-[#a37947]/40"
+                className="group relative flex flex-col justify-end overflow-hidden rounded-2xl bg-stone-900 min-h-[380px] sm:min-h-[420px] p-6 sm:p-7 shadow-sm hover:shadow-xl transition-all duration-300 ring-1 ring-black/5 hover:ring-[#a37947]/40"
               >
                 {/* Background Image with Zoom on Hover */}
                 <Image
                   src={dept.image}
                   alt={dept.alt}
                   fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
 

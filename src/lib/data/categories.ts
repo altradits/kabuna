@@ -8,6 +8,7 @@ import type {
 import { cacheLife, cacheTag } from "next/cache";
 import { getAccessToken, getClient, getLocaleOptions } from "@/lib/spree";
 import {
+  CAT_BODY,
   CAT_CEREMONY,
   CAT_COFFEE,
   enrichProductWithImages,
@@ -53,7 +54,21 @@ async function cachedListCategories(
         c.id === "cat_snacks" ||
         c.name.toLowerCase().includes("snack"),
     );
-    if (res.data && res.data.length > 0 && hasCoffee && hasHair && hasSnacks) {
+    const hasBody = res.data?.some(
+      (c) =>
+        c.permalink === "body" ||
+        c.id === "cat_body" ||
+        c.name.toLowerCase().includes("body") ||
+        c.name.toLowerCase().includes("scent"),
+    );
+    if (
+      res.data &&
+      res.data.length > 0 &&
+      hasCoffee &&
+      hasHair &&
+      hasSnacks &&
+      hasBody
+    ) {
       return res;
     }
     return { data: KABUNA_CATEGORIES } as unknown as Awaited<
@@ -137,6 +152,20 @@ export async function cachedGetCategory(
     idOrPermaLower === "ctg_so8jagonyx"
   ) {
     return CAT_CEREMONY as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+    >;
+  }
+
+  // Specifically resolve Body & Scents category to CAT_BODY
+  if (
+    idOrPermaLower === "body" ||
+    idOrPermaLower === "scents" ||
+    idOrPermaLower === "body-scents" ||
+    idOrPermaLower === "cat_body" ||
+    idOrPermaLower.endsWith("/body") ||
+    idOrPermaLower.endsWith("/scents")
+  ) {
+    return CAT_BODY as unknown as Awaited<
       ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
     >;
   }
@@ -243,6 +272,35 @@ async function cachedListCategoryProducts(
     catLower.includes("shimbra") ||
     catLower.includes("pulses") ||
     catLower === "cat_snacks_pulses";
+
+  const isBody =
+    catLower === "body" ||
+    catLower === "scents" ||
+    catLower === "cat_body" ||
+    catLower.endsWith("/body") ||
+    catLower.endsWith("/scents");
+
+  const isBodyFragrance =
+    catLower.includes("fragrance") ||
+    catLower.includes("perfume") ||
+    catLower === "cat_body_fragrance";
+
+  const isBodyOintments =
+    catLower.includes("ointment") ||
+    catLower.includes("balm") ||
+    catLower === "cat_body_ointments";
+
+  const isBodyWash =
+    (catLower.includes("wash") && !catLower.includes("washed")) ||
+    catLower === "cat_body_wash";
+
+  const isBodyMists =
+    catLower.includes("mist") || catLower === "cat_body_mists";
+
+  const isBodyScrubs =
+    catLower.includes("scrub") ||
+    catLower.includes("polish") ||
+    catLower === "cat_body_scrubs";
 
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
@@ -351,6 +409,30 @@ async function cachedListCategoryProducts(
     }
     if (isSnacksPulses) {
       return p.categories?.some((c) => c.id === "cat_snacks_pulses");
+    }
+    if (isBody) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_body" ||
+          c.permalink === "body" ||
+          c.name.toLowerCase().includes("body") ||
+          c.name.toLowerCase().includes("scent"),
+      );
+    }
+    if (isBodyFragrance) {
+      return p.categories?.some((c) => c.id === "cat_body_fragrance");
+    }
+    if (isBodyOintments) {
+      return p.categories?.some((c) => c.id === "cat_body_ointments");
+    }
+    if (isBodyWash) {
+      return p.categories?.some((c) => c.id === "cat_body_wash");
+    }
+    if (isBodyMists) {
+      return p.categories?.some((c) => c.id === "cat_body_mists");
+    }
+    if (isBodyScrubs) {
+      return p.categories?.some((c) => c.id === "cat_body_scrubs");
     }
     if (isCeremonyCategory) {
       return p.categories?.some(
