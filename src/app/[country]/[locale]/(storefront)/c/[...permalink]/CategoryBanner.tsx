@@ -8,8 +8,6 @@ import {
   SunMedium,
   Wind,
 } from "lucide-react";
-import { cacheLife, cacheTag } from "next/cache";
-import Link from "next/link";
 import { PageHeroSection } from "@/components/layout/PageHeroSection";
 
 interface CategoryBannerProps {
@@ -1075,49 +1073,22 @@ export async function CategoryBanner({
   }
 
   return (
-    <>
-      <PageHeroSection
-        badge={heroProps.badge}
-        titleLine1={heroProps.titleLine1}
-        titleLine2={heroProps.titleLine2}
-        description={heroProps.description}
-        ctaText={heroProps.ctaText}
-        ctaHref={heroProps.ctaHref}
-        secondaryCtaText={heroProps.secondaryCtaText}
-        secondaryCtaHref={heroProps.secondaryCtaHref}
-        bgImageSrc={heroProps.bgImageSrc}
-        bgImageAlt={heroProps.bgImageAlt}
-        focalImageSrc={heroProps.focalImageSrc}
-        focalImageAlt={heroProps.focalImageAlt}
-        focalImageIsCutout={heroProps.focalImageIsCutout}
-        pillarsTitle={heroProps.pillarsTitle}
-        pillars={heroProps.pillars}
-      />
-
-      {/* Subcategories Pills */}
-      {category.children && category.children.length > 0 && (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-          <div className="flex flex-wrap gap-2 items-center border-b border-stone-200/80 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 mr-2">
-              {permalink === "coffee" ||
-              permalink.endsWith("/coffee") ||
-              permalink === "hair" ||
-              permalink.endsWith("/hair")
-                ? "Classifications:"
-                : "Regions:"}
-            </span>
-            {category.children.map((child) => (
-              <Link
-                key={child.id}
-                href={`${basePath}/c/${child.permalink}`}
-                className="px-3 py-1.5 rounded-full text-xs font-medium bg-stone-100 hover:bg-[#a37947] hover:text-white text-stone-700 transition-colors"
-              >
-                {child.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
+    <PageHeroSection
+      badge={heroProps.badge}
+      titleLine1={heroProps.titleLine1}
+      titleLine2={heroProps.titleLine2}
+      description={heroProps.description}
+      ctaText={heroProps.ctaText}
+      ctaHref={heroProps.ctaHref}
+      secondaryCtaText={heroProps.secondaryCtaText}
+      secondaryCtaHref={heroProps.secondaryCtaHref}
+      bgImageSrc={heroProps.bgImageSrc}
+      bgImageAlt={heroProps.bgImageAlt}
+      focalImageSrc={heroProps.focalImageSrc}
+      focalImageAlt={heroProps.focalImageAlt}
+      focalImageIsCutout={heroProps.focalImageIsCutout}
+      pillarsTitle={heroProps.pillarsTitle}
+      pillars={heroProps.pillars}
+    />
   );
 }

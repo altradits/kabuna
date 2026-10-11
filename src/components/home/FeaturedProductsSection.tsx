@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
-import { CategoryQuickPills } from "@/components/products/CategoryQuickPills";
 import { FeaturedProducts } from "@/components/products/FeaturedProducts";
 import { ProductCardSkeleton } from "@/components/products/ProductCardSkeleton";
 import { Button } from "@/components/ui/button";
@@ -44,8 +43,6 @@ export async function FeaturedProductsSection({
           <Link href={`${basePath}/products`}>{t("viewAll")} &rarr;</Link>
         </Button>
       </div>
-
-      <CategoryQuickPills basePath={basePath} />
 
       <Suspense fallback={<CarouselSkeleton />}>
         <FeaturedProducts

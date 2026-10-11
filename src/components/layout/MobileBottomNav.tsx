@@ -1,46 +1,69 @@
 "use client";
 
-import { Coffee, Grid, Home, ShoppingBag, Sparkles, Wheat } from "lucide-react";
+import type { Category } from "@spree/sdk";
+import {
+  Coffee,
+  Home,
+  Package,
+  ShoppingBag,
+  Sparkles,
+  Wheat,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
+import { KABUNA_CATEGORIES } from "@/lib/data/kabuna-coffee-data";
 
 interface MobileBottomNavProps {
   basePath: string;
+  categories?: Category[];
 }
 
-export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
+export function MobileBottomNav({
+  basePath,
+  categories = KABUNA_CATEGORIES,
+}: MobileBottomNavProps) {
   const pathname = usePathname();
   const { itemCount, openCart } = useCart();
 
-  const isCoffeeActive =
-    pathname === `${basePath}/c/coffee` ||
-    pathname.startsWith(`${basePath}/c/coffee/`) ||
-    pathname === `${basePath}/c/single-origin` ||
-    pathname.startsWith(`${basePath}/c/single-origin/`) ||
-    pathname === `${basePath}/c/washed` ||
-    pathname === `${basePath}/c/natural` ||
-    pathname === `${basePath}/c/roast-profiles` ||
-    pathname === `${basePath}/c/green-coffee` ||
-    pathname === `${basePath}/c/buna-ceremony` ||
-    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
-
-  const isHairActive =
-    pathname === `${basePath}/c/hair` ||
-    pathname.startsWith(`${basePath}/c/hair/`);
-
-  const isSnacksActive =
-    pathname === `${basePath}/c/snacks` ||
-    pathname.startsWith(`${basePath}/c/snacks/`);
-
-  const isShopActive =
-    (pathname === `${basePath}/products` ||
-      pathname.startsWith(`${basePath}/products/`)) &&
-    !isCoffeeActive &&
-    !isHairActive &&
-    !isSnacksActive;
-
   const isHomeActive = pathname === basePath || pathname === `${basePath}/`;
+
+  const getCategoryIcon = (permalink: string) => {
+    const p = permalink.toLowerCase();
+    if (p.includes("coffee")) return Coffee;
+    if (p.includes("snack")) return Wheat;
+    if (p.includes("hair")) return Sparkles;
+    return Package;
+  };
+
+  const getCleanLabel = (name: string) => {
+    if (name.toLowerCase().includes("coffee")) return "Coffee";
+    if (name.toLowerCase().includes("snack")) return "Snacks";
+    if (name.toLowerCase().includes("hair")) return "Hair";
+    return name.replace(/^Organic\s+/i, "");
+  };
+
+  const isCategoryActive = (c: Category) => {
+    const permalink = c.permalink || "";
+    if (permalink === "coffee") {
+      return (
+        pathname === `${basePath}/c/coffee` ||
+        pathname.startsWith(`${basePath}/c/coffee/`) ||
+        pathname === `${basePath}/c/single-origin` ||
+        pathname.startsWith(`${basePath}/c/single-origin/`) ||
+        pathname === `${basePath}/c/washed` ||
+        pathname === `${basePath}/c/natural` ||
+        pathname === `${basePath}/c/roast-profiles` ||
+        pathname === `${basePath}/c/green-coffee` ||
+        pathname === `${basePath}/c/buna-ceremony` ||
+        pathname.startsWith(`${basePath}/c/buna-ceremony/`)
+      );
+    }
+    return (
+      pathname === `${basePath}/c/${permalink}` ||
+      pathname.startsWith(`${basePath}/c/${permalink}/`)
+    );
+  };
 
   const navItems = [
     {
@@ -49,30 +72,12 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
       icon: Home,
       active: isHomeActive,
     },
-    {
-      label: "Coffee",
-      href: `${basePath}/c/coffee`,
-      icon: Coffee,
-      active: isCoffeeActive,
-    },
-    {
-      label: "Snacks",
-      href: `${basePath}/c/snacks`,
-      icon: Wheat,
-      active: isSnacksActive,
-    },
-    {
-      label: "Hair",
-      href: `${basePath}/c/hair`,
-      icon: Sparkles,
-      active: isHairActive,
-    },
-    {
-      label: "Shop",
-      href: `${basePath}/products`,
-      icon: Grid,
-      active: isShopActive,
-    },
+    ...categories.map((cat) => ({
+      label: getCleanLabel(cat.name),
+      href: `${basePath}/c/${cat.permalink}`,
+      icon: getCategoryIcon(cat.permalink || ""),
+      active: isCategoryActive(cat),
+    })),
   ];
 
   return (

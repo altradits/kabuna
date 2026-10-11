@@ -211,13 +211,6 @@ export function MobileMenu({
               >
                 {t("home")}
               </Link>
-              <Link
-                href={`${basePath}/products`}
-                onClick={() => setOpen(false)}
-                className={linkClass}
-              >
-                Shop
-              </Link>
               {rootCategories.map((category) =>
                 category.children && category.children.length > 0 ? (
                   <div

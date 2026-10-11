@@ -1,41 +1,22 @@
 "use client";
 
+import type { Category } from "@spree/sdk";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { KABUNA_CATEGORIES } from "@/lib/data/kabuna-coffee-data";
 
 interface NavbarProps {
   basePath: string;
 }
 
-export function HeaderNavLinks({ basePath }: { basePath: string }) {
+export function HeaderNavLinks({
+  basePath,
+  categories = KABUNA_CATEGORIES,
+}: {
+  basePath: string;
+  categories?: Category[];
+}) {
   const pathname = usePathname();
-
-  const isCoffeeActive =
-    pathname === `${basePath}/c/coffee` ||
-    pathname.startsWith(`${basePath}/c/coffee/`) ||
-    pathname === `${basePath}/c/single-origin` ||
-    pathname.startsWith(`${basePath}/c/single-origin/`) ||
-    pathname === `${basePath}/c/washed` ||
-    pathname === `${basePath}/c/natural` ||
-    pathname === `${basePath}/c/roast-profiles` ||
-    pathname === `${basePath}/c/green-coffee` ||
-    pathname === `${basePath}/c/buna-ceremony` ||
-    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
-
-  const isHairActive =
-    pathname === `${basePath}/c/hair` ||
-    pathname.startsWith(`${basePath}/c/hair/`);
-
-  const isSnacksActive =
-    pathname === `${basePath}/c/snacks` ||
-    pathname.startsWith(`${basePath}/c/snacks/`);
-
-  const isShopActive =
-    (pathname === `${basePath}/products` ||
-      pathname.startsWith(`${basePath}/products/`)) &&
-    !isCoffeeActive &&
-    !isHairActive &&
-    !isSnacksActive;
 
   const linkBase =
     "px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150 whitespace-nowrap inline-flex items-center cursor-pointer";
@@ -43,32 +24,50 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
   const inactiveClass =
     "text-stone-700 hover:text-stone-950 hover:bg-stone-100/70";
 
+  const getCleanLabel = (name: string) => {
+    if (name.toLowerCase().includes("coffee")) return "Coffee";
+    if (name.toLowerCase().includes("snack")) return "Snacks";
+    if (name.toLowerCase().includes("hair")) return "Hair";
+    return name.replace(/^Organic\s+/i, "");
+  };
+
+  const isCategoryActive = (c: Category) => {
+    const permalink = c.permalink || "";
+    if (permalink === "coffee") {
+      return (
+        pathname === `${basePath}/c/coffee` ||
+        pathname.startsWith(`${basePath}/c/coffee/`) ||
+        pathname === `${basePath}/c/single-origin` ||
+        pathname.startsWith(`${basePath}/c/single-origin/`) ||
+        pathname === `${basePath}/c/washed` ||
+        pathname === `${basePath}/c/natural` ||
+        pathname === `${basePath}/c/roast-profiles` ||
+        pathname === `${basePath}/c/green-coffee` ||
+        pathname === `${basePath}/c/buna-ceremony` ||
+        pathname.startsWith(`${basePath}/c/buna-ceremony/`)
+      );
+    }
+    return (
+      pathname === `${basePath}/c/${permalink}` ||
+      pathname.startsWith(`${basePath}/c/${permalink}/`)
+    );
+  };
+
   return (
     <nav aria-label="Store navigation" className="flex items-center gap-1">
-      <Link
-        href={`${basePath}/c/coffee`}
-        className={`${linkBase} ${isCoffeeActive ? activeClass : inactiveClass}`}
-      >
-        <span>Coffee</span>
-      </Link>
-      <Link
-        href={`${basePath}/c/snacks`}
-        className={`${linkBase} ${isSnacksActive ? activeClass : inactiveClass}`}
-      >
-        <span>Snacks</span>
-      </Link>
-      <Link
-        href={`${basePath}/c/hair`}
-        className={`${linkBase} ${isHairActive ? activeClass : inactiveClass}`}
-      >
-        <span>Hair</span>
-      </Link>
-      <Link
-        href={`${basePath}/products`}
-        className={`${linkBase} ${isShopActive ? activeClass : inactiveClass}`}
-      >
-        <span>Shop</span>
-      </Link>
+      {categories.map((cat) => {
+        const isActive = isCategoryActive(cat);
+        const label = getCleanLabel(cat.name);
+        return (
+          <Link
+            key={cat.id || cat.permalink}
+            href={`${basePath}/c/${cat.permalink}`}
+            className={`${linkBase} ${isActive ? activeClass : inactiveClass}`}
+          >
+            <span>{label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }

@@ -8,7 +8,9 @@ import {
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("next/server", () => ({ connection: vi.fn() }));
-vi.mock("@/lib/data/categories", () => ({ getCategories: vi.fn() }));
+vi.mock("@/lib/data/categories", () => ({
+  getCategories: vi.fn().mockResolvedValue({ data: [] }),
+}));
 vi.mock("@/components/layout/Header", () => ({
   Header: () => null,
   HeaderMobileMenu: () => null,

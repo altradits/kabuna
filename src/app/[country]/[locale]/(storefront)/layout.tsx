@@ -131,12 +131,14 @@ export default async function StorefrontLayout({
 }: StorefrontLayoutProps) {
   const { country, locale } = await params;
   const basePath = `/${country}/${locale}`;
+  const rootCategories = await getRootCategories(country, locale);
 
   return (
     <>
       <Header
         basePath={basePath}
         locale={locale as Locale}
+        categories={rootCategories}
         mobileNavigation={
           <Suspense fallback={<MobileNavigationFallback />}>
             <StorefrontMobileNavigation
@@ -169,7 +171,7 @@ export default async function StorefrontLayout({
           </Suspense>
         }
       />
-      <MobileBottomNav basePath={basePath} />
+      <MobileBottomNav basePath={basePath} categories={rootCategories} />
     </>
   );
 }

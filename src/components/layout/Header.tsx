@@ -30,6 +30,7 @@ interface HeaderProps {
   basePath: string;
   locale: Locale;
   mobileNavigation: ReactNode;
+  categories?: Category[];
 }
 
 interface HeaderMobileMenuProps {
@@ -54,6 +55,7 @@ export async function Header({
   basePath,
   locale,
   mobileNavigation,
+  categories,
 }: HeaderProps) {
   const t = await getTranslations({ locale, namespace: "header" });
 
@@ -74,7 +76,7 @@ export async function Header({
           />
         </Link>
       }
-      navLinks={<HeaderNavLinks basePath={basePath} />}
+      navLinks={<HeaderNavLinks basePath={basePath} categories={categories} />}
       rightEnd={
         <>
           {/* Account - desktop only */}
