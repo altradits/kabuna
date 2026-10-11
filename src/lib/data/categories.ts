@@ -8,6 +8,7 @@ import type {
 import { cacheLife, cacheTag } from "next/cache";
 import { getAccessToken, getClient, getLocaleOptions } from "@/lib/spree";
 import {
+  CAT_CEREMONY,
   CAT_COFFEE,
   enrichProductWithImages,
   KABUNA_CATEGORIES,
@@ -37,12 +38,6 @@ async function cachedListCategories(
   cacheTag("categories");
   try {
     const res = await getClient().categories.list(params, options);
-    const hasCeremony = res.data?.some(
-      (c) =>
-        c.permalink?.includes("buna-ceremony") ||
-        c.permalink?.includes("ceremony") ||
-        c.id === "cat_ceremony",
-    );
     const hasCoffee = res.data?.some(
       (c) => c.permalink === "coffee" || c.id === "cat_coffee",
     );
@@ -58,14 +53,7 @@ async function cachedListCategories(
         c.id === "cat_snacks" ||
         c.name.toLowerCase().includes("snack"),
     );
-    if (
-      res.data &&
-      res.data.length > 0 &&
-      hasCeremony &&
-      hasCoffee &&
-      hasHair &&
-      hasSnacks
-    ) {
+    if (res.data && res.data.length > 0 && hasCoffee && hasHair && hasSnacks) {
       return res;
     }
     return { data: KABUNA_CATEGORIES } as unknown as Awaited<
@@ -140,21 +128,17 @@ export async function cachedGetCategory(
     }
   }
 
-  // Specifically resolve Buna Ceremony category to KABUNA_CATEGORIES
+  // Specifically resolve Ceremony category to CAT_CEREMONY
   if (
-    idOrPermaLower.includes("buna-ceremony") ||
     idOrPermaLower.includes("ceremony") ||
+    idOrPermaLower.includes("buna-ceremony") ||
+    idOrPermaLower === "coffee/ceremony" ||
     idOrPermaLower === "cat_ceremony" ||
     idOrPermaLower === "ctg_so8jagonyx"
   ) {
-    const ceremonyCat = KABUNA_CATEGORIES.find(
-      (c) => c.permalink === "buna-ceremony" || c.id === "cat_ceremony",
-    );
-    if (ceremonyCat) {
-      return ceremonyCat as unknown as Awaited<
-        ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
-      >;
-    }
+    return CAT_CEREMONY as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+    >;
   }
 
   const all = flattenCategories(KABUNA_CATEGORIES);
@@ -372,6 +356,7 @@ async function cachedListCategoryProducts(
       return p.categories?.some(
         (c) =>
           c.id === "cat_ceremony" ||
+          c.permalink === "coffee/ceremony" ||
           c.permalink === "buna-ceremony" ||
           c.name.toLowerCase().includes("ceremony"),
       );

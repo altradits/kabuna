@@ -1,4 +1,4 @@
-import { ArrowRight, Coffee, Flame, Sparkles, Wheat } from "lucide-react";
+import { ArrowRight, Coffee, Sparkles, Wheat } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,31 +9,17 @@ interface CategoryShowcaseSectionProps {
 const DEPARTMENTS = [
   {
     id: "coffee",
-    title: "Specialty Ethiopian Coffee",
-    subtitle: "10 Heirloom Micro-Lots",
+    title: "Coffee & Ceremony Wares",
+    subtitle: "17 Coffees & Ritual Artifacts",
     description:
-      "Direct-trade Arabica from Yirgacheffe, Sidama, Guji, Harrar Longberry & ancient Kaffa forest reserves.",
+      "Direct-trade single-origin Arabica from Yirgacheffe, Guji & Kaffa alongside authentic clay Jebena pots and ceremony heirlooms.",
     image: "/images/products/chelbesa.jpg",
-    alt: "Kabuna specialty Ethiopian coffee bag and whole roasted beans",
+    alt: "Kabuna specialty Ethiopian coffee and traditional Jebena pot",
     href: "/c/coffee",
     icon: Coffee,
-    badgeText: "10 Varieties",
+    badgeText: "17 Curated Heirlooms",
     accentBg: "bg-amber-950/60",
     accentBorder: "border-amber-700/40",
-  },
-  {
-    id: "hair",
-    title: "Organic Habesha Hair Care",
-    subtitle: "5 Native Highland Botanicals",
-    description:
-      "YeTsehur Kibe herbal butter, cold-pressed Nug scalp elixirs, wild Endod cleansers & carved Wanza combs.",
-    image: "/images/heroes/hair-hero.jpg",
-    alt: "Ethiopian woman with healthy textured hair and botanical hair products",
-    href: "/c/hair",
-    icon: Sparkles,
-    badgeText: "Native Botanicals",
-    accentBg: "bg-emerald-950/60",
-    accentBorder: "border-emerald-700/40",
   },
   {
     id: "snacks",
@@ -51,18 +37,18 @@ const DEPARTMENTS = [
     featuredBadge: "NEW COLLECTION",
   },
   {
-    id: "ceremony",
-    title: "Buna Ceremony Heirlooms",
-    subtitle: "7 Sacred Ritual Artifacts",
+    id: "hair",
+    title: "Organic Habesha Hair Care",
+    subtitle: "5 Native Highland Botanicals",
     description:
-      "Authentic burnished clay Jebenas, porcelain Cini cups, brass Rekebot tables & raw frankincense burners.",
-    image: "/images/ceremony/ceremony-kit.jpg",
-    alt: "Traditional Ethiopian Buna Tetu ceremony kit with clay Jebena and Cini cups",
-    href: "/c/buna-ceremony",
-    icon: Flame,
-    badgeText: "Artisan Crafted",
-    accentBg: "bg-stone-950/60",
-    accentBorder: "border-stone-700/40",
+      "YeTsehur Kibe herbal butter, cold-pressed Nug scalp elixirs, wild Endod cleansers & carved Wanza combs.",
+    image: "/images/heroes/hair-hero.jpg",
+    alt: "Ethiopian woman with healthy textured hair and botanical hair products",
+    href: "/c/hair",
+    icon: Sparkles,
+    badgeText: "Native Botanicals",
+    accentBg: "bg-emerald-950/60",
+    accentBorder: "border-emerald-700/40",
   },
 ];
 
@@ -82,12 +68,12 @@ export function CategoryShowcaseSection({
             </h2>
           </div>
           <p className="text-sm text-stone-600 max-w-md mt-2 md:mt-0">
-            From volcanic single-origin coffee to organic hair care, native
-            highland snacks, and sacred ceremony wares.
+            From volcanic single-origin coffee and sacred ceremony wares to
+            native highland snacks and ancestral organic hair care.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {DEPARTMENTS.map((dept) => {
             const Icon = dept.icon;
             return (

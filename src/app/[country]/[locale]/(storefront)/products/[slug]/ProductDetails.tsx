@@ -212,6 +212,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
     product.categories?.some(
       (c) =>
         c.id === "cat_ceremony" ||
+        c.permalink === "coffee/ceremony" ||
         c.permalink === "buna-ceremony" ||
         c.name?.toLowerCase().includes("ceremony"),
     ) ||

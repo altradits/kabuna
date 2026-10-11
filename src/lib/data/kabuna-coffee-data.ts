@@ -578,22 +578,29 @@ export const CAT_GREEN = createCategory(
   "Direct-trade Grade 1 raw green coffee beans for home roasting.",
 );
 
+export const CAT_CEREMONY = createCategory(
+  "cat_ceremony",
+  "Ceremony & Accessories",
+  "coffee/ceremony",
+  "Authentic clay Jebena pots, Cini cups, and traditional accessories for Ethiopian Buna Tetu.",
+  [],
+  "/images/ceremony/ceremony-kit.jpg",
+);
+
 export const CAT_COFFEE = createCategory(
   "cat_coffee",
   "Coffee",
   "coffee",
-  "Exceptional single-origin micro-lots, pristine washed and natural fermentations, heritage roast profiles, and unroasted green coffee from Ethiopia's legendary terroirs.",
-  [CAT_SINGLE_ORIGIN, CAT_WASHED, CAT_NATURAL, CAT_ROAST, CAT_GREEN],
+  "Exceptional single-origin micro-lots, pristine washed and natural fermentations, heritage roast profiles, unroasted green coffee, and sacred Ethiopian Buna ceremony wares.",
+  [
+    CAT_SINGLE_ORIGIN,
+    CAT_CEREMONY,
+    CAT_WASHED,
+    CAT_NATURAL,
+    CAT_ROAST,
+    CAT_GREEN,
+  ],
   "/images/products/chelbesa.jpg",
-);
-
-export const CAT_CEREMONY = createCategory(
-  "cat_ceremony",
-  "Ceremony & Accessories",
-  "buna-ceremony",
-  "Authentic clay Jebena pots, Cini cups, and traditional accessories for Ethiopian Buna Tetu.",
-  [],
-  "/images/ceremony/ceremony-kit.jpg",
 );
 
 export const CAT_HAIR_BUTTERS = createCategory(
@@ -696,12 +703,7 @@ export const CAT_SNACKS = createCategory(
   "/images/snacks/heritage-kolo.jpg",
 );
 
-export const KABUNA_CATEGORIES: Category[] = [
-  CAT_COFFEE,
-  CAT_SNACKS,
-  CAT_HAIR,
-  CAT_CEREMONY,
-];
+export const KABUNA_CATEGORIES: Category[] = [CAT_COFFEE, CAT_SNACKS, CAT_HAIR];
 
 interface CoffeeSpecProps {
   id: string;
@@ -994,7 +996,7 @@ function buildCeremonyProduct({
     default_variant: variant,
     option_types: [],
     option_values: [],
-    categories: [CAT_CEREMONY],
+    categories: [CAT_COFFEE, CAT_CEREMONY],
     custom_fields: customFields,
     prior_price: null,
   };

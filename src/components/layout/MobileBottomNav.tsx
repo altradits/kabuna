@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Coffee,
-  Flame,
-  Grid,
-  Home,
-  ShoppingBag,
-  Sparkles,
-  Wheat,
-} from "lucide-react";
+import { Coffee, Grid, Home, ShoppingBag, Sparkles, Wheat } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
@@ -29,7 +21,9 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
     pathname === `${basePath}/c/washed` ||
     pathname === `${basePath}/c/natural` ||
     pathname === `${basePath}/c/roast-profiles` ||
-    pathname === `${basePath}/c/green-coffee`;
+    pathname === `${basePath}/c/green-coffee` ||
+    pathname === `${basePath}/c/buna-ceremony` ||
+    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
 
   const isHairActive =
     pathname === `${basePath}/c/hair` ||
@@ -39,17 +33,12 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
     pathname === `${basePath}/c/snacks` ||
     pathname.startsWith(`${basePath}/c/snacks/`);
 
-  const isCeremonyActive =
-    pathname === `${basePath}/c/buna-ceremony` ||
-    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
-
   const isShopActive =
     (pathname === `${basePath}/products` ||
       pathname.startsWith(`${basePath}/products/`)) &&
     !isCoffeeActive &&
     !isHairActive &&
-    !isSnacksActive &&
-    !isCeremonyActive;
+    !isSnacksActive;
 
   const isHomeActive = pathname === basePath || pathname === `${basePath}/`;
 
@@ -67,22 +56,16 @@ export function MobileBottomNav({ basePath }: MobileBottomNavProps) {
       active: isCoffeeActive,
     },
     {
-      label: "Hair",
-      href: `${basePath}/c/hair`,
-      icon: Sparkles,
-      active: isHairActive,
-    },
-    {
       label: "Snacks",
       href: `${basePath}/c/snacks`,
       icon: Wheat,
       active: isSnacksActive,
     },
     {
-      label: "Ceremony",
-      href: `${basePath}/c/buna-ceremony`,
-      icon: Flame,
-      active: isCeremonyActive,
+      label: "Hair",
+      href: `${basePath}/c/hair`,
+      icon: Sparkles,
+      active: isHairActive,
     },
     {
       label: "Shop",

@@ -117,18 +117,18 @@ export async function CategoryBanner({
     heroProps = {
       badge: undefined,
       titleLine1: "Authentic Ethiopian",
-      titleLine2: "Specialty Coffees",
+      titleLine2: "Coffee & Ceremony",
       description:
-        "Explore Ethiopia's legendary coffee heritage. From high-altitude single-origin micro-lots to sun-dried natural beans and unroasted green lots, discover coffees grown where Arabica was born.",
+        "Explore Ethiopia's legendary coffee heritage. From high-altitude single-origin micro-lots to sun-dried natural beans, raw green coffee, and handcrafted Buna ceremony wares, discover the complete ritual where Arabica was born.",
       bgImageSrc: "/images/heroes/products-hero.jpg",
       bgImageAlt: "Ethiopian high-altitude coffee plantation at sunrise",
       focalImageSrc: "/images/products/chelbesa.jpg",
       focalImageAlt: "Ethiopian specialty coffee selection",
       focalImageIsCutout: false,
-      ctaText: "Shop All Coffees",
+      ctaText: "Shop Coffees & Heirlooms",
       ctaHref: "#category-products",
       secondaryCtaText: "Ceremony Wares",
-      secondaryCtaHref: `${basePath}/c/buna-ceremony`,
+      secondaryCtaHref: `${basePath}/c/coffee/ceremony`,
       pillarsTitle: "The Ethiopian Coffee Heritage",
       pillars: [
         {

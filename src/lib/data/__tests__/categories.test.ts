@@ -25,16 +25,16 @@ vi.mock("@/lib/spree", () => ({
 }));
 
 describe("Coffee Category & Scalable Taxonomy", () => {
-  it("returns Coffee, Snacks, Hair, and Ceremony as top-level root categories", async () => {
+  it("returns Coffee, Snacks, and Hair as top-level root categories", async () => {
     const res = await getCategories();
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(4);
+    expect(res.data.length).toBe(3);
 
     const names = res.data.map((c) => c.name);
     expect(names).toContain("Coffee");
     expect(names).toContain("Organic Snacks");
     expect(names).toContain("Organic Hair Care");
-    expect(names).toContain("Ceremony & Accessories");
+    expect(names).not.toContain("Ceremony & Accessories");
   });
 
   it("classifies subcategories under Coffee", async () => {
@@ -46,16 +46,17 @@ describe("Coffee Category & Scalable Taxonomy", () => {
 
     const childNames = coffeeCategory.children?.map((c) => c.name);
     expect(childNames).toContain("Single Origin Varieties");
+    expect(childNames).toContain("Ceremony & Accessories");
     expect(childNames).toContain("Washed Process");
     expect(childNames).toContain("Natural Process");
     expect(childNames).toContain("Roast Profiles");
     expect(childNames).toContain("Green Coffee (Unroasted)");
   });
 
-  it("lists all coffee products when Coffee category is selected", async () => {
+  it("lists all coffee and ceremony products when Coffee category is selected", async () => {
     const res = await getCategoryProducts("cat_coffee");
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(10);
+    expect(res.data.length).toBe(17);
 
     const productNames = res.data.map((p) => p.name);
     expect(productNames).toEqual(
@@ -70,12 +71,19 @@ describe("Coffee Category & Scalable Taxonomy", () => {
         "Kaffa Ancient Forest",
         "Djimmah Traditional Roast",
         "Yirgacheffe Raw Green Coffee",
+        "Jebena",
+        "Cini",
+        "Rekebot",
+        "Girgira",
+        "Menkeskesha",
+        "Mukecha & Zenezena",
+        "Jebena Ceremony Kit",
       ]),
     );
 
-    // Verifies neither hair nor ceremony items leak into Coffee
+    // Verifies neither hair nor snack items leak into Coffee
     expect(productNames).not.toContain("YeTsehur Kibe");
-    expect(productNames).not.toContain("Jebena");
+    expect(productNames).not.toContain("Highland Heritage Kolo");
   });
 
   it("classifies subcategories under Hair", async () => {
@@ -137,10 +145,14 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(toolsRes.data[0].name).toBe("Wanza Carved Hair Comb");
   });
 
-  it("lists ceremony items under Ceremony category", async () => {
+  it("lists ceremony items under Ceremony category via both buna-ceremony and coffee/ceremony", async () => {
     const res = await getCategoryProducts("buna-ceremony");
     expect(res.data).toBeDefined();
     expect(res.data.length).toBe(7);
+
+    const resSub = await getCategoryProducts("coffee/ceremony");
+    expect(resSub.data).toBeDefined();
+    expect(resSub.data.length).toBe(7);
 
     const productNames = res.data.map((p) => p.name);
     expect(productNames).toContain("Jebena");

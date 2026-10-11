@@ -116,8 +116,8 @@ export default function CartPage() {
           description="Explore our direct-trade single-origin Ethiopian micro-lots or authentic handcrafted buna ceremony pottery to begin your order."
           ctaText="Browse Coffees"
           ctaHref={`${basePath}/products`}
-          secondaryCtaText="Buna Ceremony"
-          secondaryCtaHref={`${basePath}/c/buna-ceremony`}
+          secondaryCtaText="Ceremony Wares"
+          secondaryCtaHref={`${basePath}/c/coffee/ceremony`}
           bgImageSrc="/images/hero-mountain.jpg"
           bgImageAlt="Ethiopian mountain highlands at dusk"
           focalImageSrc="/images/hero-cup.png"
@@ -152,7 +152,9 @@ export default function CartPage() {
                 className="rounded-full"
                 asChild
               >
-                <Link href={`${basePath}/c/buna-ceremony`}>Buna Ceremony</Link>
+                <Link href={`${basePath}/c/coffee/ceremony`}>
+                  Ceremony Wares
+                </Link>
               </Button>
             </div>
           </div>

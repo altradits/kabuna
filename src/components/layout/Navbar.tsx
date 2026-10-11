@@ -18,7 +18,9 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
     pathname === `${basePath}/c/washed` ||
     pathname === `${basePath}/c/natural` ||
     pathname === `${basePath}/c/roast-profiles` ||
-    pathname === `${basePath}/c/green-coffee`;
+    pathname === `${basePath}/c/green-coffee` ||
+    pathname === `${basePath}/c/buna-ceremony` ||
+    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
 
   const isHairActive =
     pathname === `${basePath}/c/hair` ||
@@ -28,17 +30,12 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
     pathname === `${basePath}/c/snacks` ||
     pathname.startsWith(`${basePath}/c/snacks/`);
 
-  const isCeremonyActive =
-    pathname === `${basePath}/c/buna-ceremony` ||
-    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
-
   const isShopActive =
     (pathname === `${basePath}/products` ||
       pathname.startsWith(`${basePath}/products/`)) &&
     !isCoffeeActive &&
     !isHairActive &&
-    !isSnacksActive &&
-    !isCeremonyActive;
+    !isSnacksActive;
 
   const linkBase =
     "px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150 whitespace-nowrap inline-flex items-center cursor-pointer";
@@ -55,22 +52,16 @@ export function HeaderNavLinks({ basePath }: { basePath: string }) {
         <span>Coffee</span>
       </Link>
       <Link
-        href={`${basePath}/c/hair`}
-        className={`${linkBase} ${isHairActive ? activeClass : inactiveClass}`}
-      >
-        <span>Hair</span>
-      </Link>
-      <Link
         href={`${basePath}/c/snacks`}
         className={`${linkBase} ${isSnacksActive ? activeClass : inactiveClass}`}
       >
         <span>Snacks</span>
       </Link>
       <Link
-        href={`${basePath}/c/buna-ceremony`}
-        className={`${linkBase} ${isCeremonyActive ? activeClass : inactiveClass}`}
+        href={`${basePath}/c/hair`}
+        className={`${linkBase} ${isHairActive ? activeClass : inactiveClass}`}
       >
-        <span>Ceremony Wares</span>
+        <span>Hair</span>
       </Link>
       <Link
         href={`${basePath}/products`}

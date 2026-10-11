@@ -1,6 +1,6 @@
 "use client";
 
-import { Coffee, Flame, Grid, Sparkles, Wheat } from "lucide-react";
+import { Coffee, Grid, Sparkles, Wheat } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,7 +19,9 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
     pathname === `${basePath}/c/washed` ||
     pathname === `${basePath}/c/natural` ||
     pathname === `${basePath}/c/roast-profiles` ||
-    pathname === `${basePath}/c/green-coffee`;
+    pathname === `${basePath}/c/green-coffee` ||
+    pathname === `${basePath}/c/buna-ceremony` ||
+    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
 
   const isHair =
     pathname === `${basePath}/c/hair` ||
@@ -29,17 +31,12 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
     pathname === `${basePath}/c/snacks` ||
     pathname.startsWith(`${basePath}/c/snacks/`);
 
-  const isCeremony =
-    pathname === `${basePath}/c/buna-ceremony` ||
-    pathname.startsWith(`${basePath}/c/buna-ceremony/`);
-
   const isAll =
     (pathname === `${basePath}/products` ||
       pathname.startsWith(`${basePath}/products/`)) &&
     !isCoffee &&
     !isHair &&
-    !isSnacks &&
-    !isCeremony;
+    !isSnacks;
 
   const categories = [
     {
@@ -52,19 +49,11 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
     },
     {
       id: "coffee",
-      label: "Coffee",
-      count: "10",
+      label: "Coffee & Ceremony",
+      count: "17",
       icon: Coffee,
       href: `${basePath}/c/coffee`,
       active: isCoffee,
-    },
-    {
-      id: "hair",
-      label: "Organic Hair Care",
-      count: "5",
-      icon: Sparkles,
-      href: `${basePath}/c/hair`,
-      active: isHair,
     },
     {
       id: "snacks",
@@ -75,12 +64,12 @@ export function CategoryQuickPills({ basePath }: CategoryQuickPillsProps) {
       active: isSnacks,
     },
     {
-      id: "ceremony",
-      label: "Buna Ceremony",
-      count: "7",
-      icon: Flame,
-      href: `${basePath}/c/buna-ceremony`,
-      active: isCeremony,
+      id: "hair",
+      label: "Organic Hair Care",
+      count: "5",
+      icon: Sparkles,
+      href: `${basePath}/c/hair`,
+      active: isHair,
     },
   ];
 
