@@ -33,6 +33,7 @@ export function HeaderNavLinks({
       name.toLowerCase().includes("scent")
     )
       return "Body";
+    if (name.toLowerCase().includes("gift")) return "Gifts";
     return name.replace(/^Organic\s+/i, "");
   };
 

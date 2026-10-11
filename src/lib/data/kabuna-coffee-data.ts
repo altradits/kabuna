@@ -169,6 +169,20 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   "ogaden-myrrh": ["/images/body/ogaden-myrrh.jpg"],
   "borena-black-incense": ["/images/body/borena-black-incense.jpg"],
   "ceremony-itan-blend": ["/images/body/ceremony-itan-blend.jpg"],
+
+  // Authentic Ethiopian Artisan Gifts & Heirlooms
+  "gondar-parchment": ["/images/gifts/gondar-parchment-art.jpg"],
+  "lalibela-cross": ["/images/gifts/lalibela-processional-cross.jpg"],
+  "axum-cuff": ["/images/gifts/axum-silver-filigree-cuff.jpg"],
+  "lalibela-ring": ["/images/gifts/lalibela-cross-signet-ring.jpg"],
+  "habesha-hair-jewelry": ["/images/gifts/habesha-hair-jewelry-set.jpg"],
+  "harari-bangle": ["/images/gifts/harari-amber-coral-bangle.jpg"],
+  "shemma-towel": ["/images/gifts/shemma-cotton-towel.jpg"],
+  "tibeb-handkerchief": ["/images/gifts/tibeb-handkerchief-set.jpg"],
+  "ethiopian-gabi": ["/images/gifts/ethiopian-gabi-throw.jpg"],
+  "wanza-mirror": ["/images/gifts/wanza-vanity-mirror.jpg"],
+  "brass-kohl": ["/images/gifts/brass-kohl-flask.jpg"],
+  "harari-trinket-box": ["/images/gifts/harari-woven-trinket-box.jpg"],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
@@ -259,6 +273,41 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("beso")) return "beso-clusters";
   if (s.includes("telba") || s.includes("crisps")) return "telba-crisps";
   if (s.includes("shimbra")) return "smoked-shimbra";
+
+  // Authentic Ethiopian Artisan Gifts & Heirlooms
+  if (s.includes("gondar") || s.includes("parchment"))
+    return "gondar-parchment";
+  if (
+    s.includes("lalibela-cross") ||
+    (s.includes("lalibela") && s.includes("cross"))
+  )
+    return "lalibela-cross";
+  if (s.includes("axum") || s.includes("filigree-cuff")) return "axum-cuff";
+  if (s.includes("signet") || (s.includes("lalibela") && s.includes("ring")))
+    return "lalibela-ring";
+  if (
+    s.includes("hair-jewelry") ||
+    (s.includes("shuruba") && s.includes("jewelry"))
+  )
+    return "habesha-hair-jewelry";
+  if (
+    s.includes("harari-bangle") ||
+    (s.includes("amber") && s.includes("coral"))
+  )
+    return "harari-bangle";
+  if (s.includes("shemma") || s.includes("towel")) return "shemma-towel";
+  if (s.includes("handkerchief") || s.includes("tibeb-handkerchief"))
+    return "tibeb-handkerchief";
+  if (s.includes("gabi") || s.includes("throw")) return "ethiopian-gabi";
+  if (s.includes("mirror") || s.includes("vanity-mirror"))
+    return "wanza-mirror";
+  if (s.includes("kohl") || s.includes("flask") || s.includes("mekula"))
+    return "brass-kohl";
+  if (
+    s.includes("trinket") ||
+    (s.includes("harari") && (s.includes("box") || s.includes("mesob")))
+  )
+    return "harari-trinket-box";
 
   if (s.includes("yirgacheffe")) return "chelbesa";
   if (s.includes("sidama") || s.includes("sidamo")) return "hamasho";
@@ -824,11 +873,21 @@ export const CAT_BODY = createCategory(
   "/images/body/itan-perfume.jpg",
 );
 
+export const CAT_GIFTS = createCategory(
+  "cat_gifts",
+  "Gifts",
+  "gifts",
+  "Artisanal heirloom gifts and handcrafted treasures native to Ethiopia — illuminated Gondar parchment art, Axum silver filigree bracelets and hair jewelry, Lalibela brass crosses and signet rings, handwoven Shemma cotton towels and Tibeb linens, hand-carved Wanza vanity mirrors, and Harari sweetgrass craft.",
+  [],
+  "/images/heroes/gifts-hero.jpg",
+);
+
 export const KABUNA_CATEGORIES: Category[] = [
   CAT_COFFEE,
   CAT_SNACKS,
   CAT_HAIR,
   CAT_BODY,
+  CAT_GIFTS,
 ];
 
 interface CoffeeSpecProps {
@@ -1494,6 +1553,138 @@ function buildBodyProduct({
     seller_id: null,
     primary_media: primaryMedia,
     media: gallery,
+    variants: [variant],
+    default_variant: variant,
+    option_types: [],
+    option_values: [],
+    categories: productCategories,
+    custom_fields: customFields,
+    prior_price: null,
+  };
+}
+
+interface GiftProductProps {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  compareAtCents?: number;
+  imageUrl: string;
+  sku: string;
+  weight: number;
+  tags: string[];
+  categories?: Category[];
+  specs: {
+    artisanOrigin: string;
+    materials: string;
+    dimensionsOrSize: string;
+    craftsmanship: string;
+    careOrUse: string;
+  };
+}
+
+function buildGiftProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  compareAtCents,
+  imageUrl,
+  sku,
+  weight,
+  tags,
+  categories = [CAT_GIFTS],
+  specs,
+}: GiftProductProps): Product {
+  const price = createPrice(baseCents, compareAtCents);
+  const gallery = getCoffeeGallery(
+    slug,
+    `${name} - Ethiopian Heirloom Gift`,
+    id,
+  );
+  const primaryMedia =
+    gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
+  const variant = createVariant(
+    `var_${id}_default`,
+    sku,
+    baseCents,
+    [],
+    "Standard",
+    weight,
+  );
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_origin`,
+      "Artisan Provenance",
+      "origin",
+      specs.artisanOrigin,
+    ),
+    createCustomField(
+      `cf_${id}_materials`,
+      "Materials & Craft",
+      "materials",
+      specs.materials,
+    ),
+    createCustomField(
+      `cf_${id}_dimensions`,
+      "Dimensions & Specifications",
+      "dimensions",
+      specs.dimensionsOrSize,
+    ),
+    createCustomField(
+      `cf_${id}_craftsmanship`,
+      "Artisan Tradition",
+      "craftsmanship",
+      specs.craftsmanship,
+    ),
+    createCustomField(
+      `cf_${id}_care`,
+      "Care & Maintenance",
+      "care",
+      specs.careOrUse,
+    ),
+  ];
+
+  const productCategories = categories.some((c) => c.id === "cat_gifts")
+    ? categories
+    : [CAT_GIFTS, ...categories];
+
+  return {
+    id,
+    name,
+    slug,
+    meta_title: `${name} | Ethiopian Heirloom Gifts | Kabuna`,
+    meta_description: subtitle,
+    meta_keywords: `Ethiopian gifts, ${name}, ${tags.join(", ")}, Habesha handmade crafts`,
+    variant_count: 1,
+    available_on: "2024-01-01T00:00:00.000Z",
+    preorder_ships_at: null,
+    purchasable: true,
+    preorder: false,
+    in_stock: true,
+    backorderable: false,
+    available: true,
+    description: `${subtitle}\n\n${description}`,
+    description_html: `<p><strong>${subtitle}</strong></p><p>${description}</p>`,
+    default_variant_id: variant.id,
+    buy_box_variant_id: variant.id,
+    thumbnail_url: imageUrl,
+    tags: [
+      "Ethiopian Gifts",
+      "Artisan Heirloom",
+      "Handmade in Ethiopia",
+      ...tags,
+    ],
+    price,
+    original_price: compareAtCents ? createPrice(compareAtCents) : price,
+    seller_id: null,
+    primary_media: primaryMedia,
+    media: gallery.length > 0 ? gallery : [primaryMedia],
     variants: [variant],
     default_variant: variant,
     option_types: [],
@@ -2647,6 +2838,421 @@ export const KABUNA_PRODUCTS: Product[] = [
         "Warm ceremonial frankincense, sweet myrrh, spicy cardamom, uplifting wild mountain herbs",
       use: "Sprinkle a pinch onto the hot charcoal of the terracotta Girgira right before brewing each round of Buna.",
       format: "150g Embroidered Habesha Linen Bag with Inner Protective Pouch",
+    },
+  }),
+
+  // 37. Gondar Hand-Painted Parchment Icon Art
+  buildGiftProduct({
+    id: "prod_gondar_parchment",
+    name: "Gondar Hand-Painted Parchment Icon Art",
+    slug: "gondar-parchment-art",
+    subtitle:
+      "Handmade Sacred Icon Painting on Cured Goat Vellum Framed in Weathered Ethiopian Olivewood",
+    description:
+      "A sacred piece of ancient Ethiopian spiritual art created by generational icon scribes in the historic imperial city of Gondar. Painted on traditional sun-cured goat skin parchment (Biranna) using hand-ground mineral pigments—lapis lazuli blue, warm cinnabar red, and volcanic iron ochre. Features large, expressive almond-eyed celestial figures and archaic Ge'ez blessings. Mounted in a rustic handcrafted frame fashioned from native Ethiopian olivewood (Woyra).",
+    baseCents: 6500,
+    compareAtCents: 8000,
+    imageUrl: "/images/gifts/gondar-parchment-art.jpg",
+    sku: "KBN-GIFT-GONDAR-ART",
+    weight: 0.85,
+    tags: [
+      "Gondar Art",
+      "Parchment Art",
+      "Biranna Vellum",
+      "Ethiopian Icon",
+      "Olivewood Frame",
+      "Spiritual Keepsake",
+    ],
+    specs: {
+      artisanOrigin: "Gondar Artisan & Icon Guilds, Northern Ethiopia",
+      materials:
+        "Hand-cured Goat Vellum Parchment, Natural Earth & Mineral Pigments, Hand-Carved Woyra Olivewood Frame",
+      dimensionsOrSize: "32cm × 24cm × 2.5cm Framed Artwork",
+      craftsmanship:
+        "100% hand-painted by master scribes following 17th-century Solomonic manuscript traditions",
+      careOrUse:
+        "Display indoors away from direct high humidity or intense direct sunlight; dust with a dry soft cloth.",
+    },
+  }),
+
+  // 38. Lalibela Lost-Wax Cast Handheld Brass Cross
+  buildGiftProduct({
+    id: "prod_lalibela_cross",
+    name: "Lalibela Lost-Wax Cast Handheld Brass Cross",
+    slug: "lalibela-processional-cross",
+    subtitle:
+      "Traditional Hand-Forged Handheld Meskel Blessing Cross in Antiqued Golden Brass",
+    description:
+      "An authentic handheld blessing cross (Meskel) individually created by highland metalsmiths in the rock-hewn sanctuary town of Lalibela. Cast using the time-honored lost-wax method, each cross features openwork interlaced knotwork symbolizing eternity and divine protection, finished with a smooth flared handle. Warm golden brass with an antique hand-burnished patina, presented in an artisanal linen gift pouch.",
+    baseCents: 4800,
+    compareAtCents: 6000,
+    imageUrl: "/images/gifts/lalibela-processional-cross.jpg",
+    sku: "KBN-GIFT-LALIBELA-CROSS",
+    weight: 0.38,
+    tags: [
+      "Lalibela Cross",
+      "Meskel",
+      "Handheld Blessing Cross",
+      "Lost-Wax Brass",
+      "Antiqued Brass",
+      "Sacred Heritage",
+    ],
+    specs: {
+      artisanOrigin: "Lalibela Sanctuary Metalsmiths, Wollo, Ethiopia",
+      materials:
+        "100% Solid Cast Golden Brass with Hand-Burnished Antiqued Patina",
+      dimensionsOrSize: "21cm Height × 9.5cm Width × 1.2cm Thickness",
+      craftsmanship:
+        "Individually hand-molded and lost-wax cast; no two crosses are exactly identical",
+      careOrUse:
+        "Wipe clean with a soft dry cloth; brass develops a deeper warm heirloom patina over time.",
+    },
+  }),
+
+  // 39. Axum Hand-Hammered Silver Filigree Cuff
+  buildGiftProduct({
+    id: "prod_axum_cuff",
+    name: "Axum Hand-Hammered Silver Filigree Cuff",
+    slug: "axum-silver-filigree-cuff",
+    subtitle:
+      "Master Handcrafted Sterling Silver Wire Filigree & Granulation Open Cuff Bracelet",
+    description:
+      "Exquisite Ethiopian royal wrist adornment handcrafted by master silversmiths in Axum, home of ancient metallurgy. Features microscopic twisted sterling silver wires woven into delicate concentric rosettes and concentric spiral filigree, bordered with hand-beaded granulation. Gently adjustable to fit all wrists comfortably while imparting timeless regal elegance.",
+    baseCents: 7800,
+    compareAtCents: 9500,
+    imageUrl: "/images/gifts/axum-silver-filigree-cuff.jpg",
+    sku: "KBN-GIFT-AXUM-CUFF",
+    weight: 0.08,
+    tags: [
+      "Axum Silver",
+      "Filigree Cuff",
+      "Ethiopian Silver",
+      "Royal Adornment",
+      "Handcrafted Bracelet",
+      "Heirloom Jewelry",
+    ],
+    specs: {
+      artisanOrigin: "Axumite Silversmith Guilds, Tigray, Ethiopia",
+      materials:
+        "925 Fine Sterling Coin Silver, Twisted Filigree Wire, Granulated Silver Beads",
+      dimensionsOrSize:
+        "6.5cm Inner Diameter (Adjustable Open Cuff), 3.2cm Band Width",
+      craftsmanship:
+        "Over 18 hours of meticulous hand-assembly using ancient Habesha wire-drawing tools",
+      careOrUse:
+        "Store in the included anti-tarnish cotton pouch; polish gently with a silver jewelry cloth.",
+    },
+  }),
+
+  // 40. Lalibela Solomonic Cross Signet Ring
+  buildGiftProduct({
+    id: "prod_lalibela_ring",
+    name: "Lalibela Solomonic Cross Signet Ring",
+    slug: "lalibela-cross-signet-ring",
+    subtitle:
+      "Hand-Cast Golden Brass & Coin Silver Solomonic Cross Statement Signet Ring",
+    description:
+      "A bold, unisex statement signet ring bearing the deeply etched Solomonic cross of the Ethiopian highlands. Individually hand-cast by artisan jewelers combining radiant golden highland brass with coin silver inlays. Substantial in hand yet contoured for everyday comfort, evoking the enduring strength and architectural mystery of Lalibela.",
+    baseCents: 3800,
+    compareAtCents: 4800,
+    imageUrl: "/images/gifts/lalibela-cross-signet-ring.jpg",
+    sku: "KBN-GIFT-LALIBELA-RING",
+    weight: 0.03,
+    tags: [
+      "Signet Ring",
+      "Solomonic Cross",
+      "Lalibela Ring",
+      "Brass & Silver",
+      "Unisex Statement Ring",
+      "Highland Jewelry",
+    ],
+    specs: {
+      artisanOrigin: "Addis Ababa & Lalibela Metalsmith Collectives, Ethiopia",
+      materials:
+        "Solid Highland Golden Brass with Recycled Ethiopian Coin Silver Inlay",
+      dimensionsOrSize:
+        "Standard US Size 8 (Gently Sizable open-split back), 16mm × 14mm Oval Signet Face",
+      craftsmanship:
+        "Individually hand-chiseled and flame-forged with authentic raw texture",
+      careOrUse:
+        "Buff with a soft cloth; avoid prolonged exposure to harsh detergents or chlorine.",
+    },
+  }),
+
+  // 41. Habesha Silver Shuruba Hair Jewelry Set
+  buildGiftProduct({
+    id: "prod_habesha_hair_jewelry",
+    name: "Habesha Silver Shuruba Hair Jewelry Set",
+    slug: "habesha-hair-jewelry-set",
+    subtitle:
+      "Handcrafted Silver Filigree Braid Cuffs, Spiral Beads & Cross Bell Charms (Set of 12)",
+    description:
+      "Traditional hair adornment honoring the celebrated Ethiopian Shuruba braiding art. This 12-piece heirloom gift set includes hand-carved silver filigree cuffs that slide seamlessly onto braids, twisted coil beads for dreadlocks and twists, and delicate jingling bell charms engraved with protective crosses. Adds radiant cultural splendor to braids, locs, crowns, and protective styles.",
+    baseCents: 3200,
+    compareAtCents: 4200,
+    imageUrl: "/images/gifts/habesha-hair-jewelry-set.jpg",
+    sku: "KBN-GIFT-SHURUBA-JEWELRY",
+    weight: 0.06,
+    tags: [
+      "Hair Jewelry",
+      "Shuruba Accessories",
+      "Habesha Hair Adornment",
+      "Braid Cuffs",
+      "Silver Hair Beads",
+      "Ethiopian Beauty",
+    ],
+    specs: {
+      artisanOrigin: "Gondar & Addis Ababa Filigree Workshops, Ethiopia",
+      materials:
+        "Fine Ethiopian Silver-Plated Brass Alloy, Beaded Filigree Wire",
+      dimensionsOrSize:
+        "Set of 12 Pieces (4 Cuffs 10mm, 4 Spiral Beads 15mm, 4 Cross Bell Charms 20mm)",
+      craftsmanship:
+        "Flexible lightweight design crafted to bend gently without snagging delicate hair fibers",
+      careOrUse:
+        "Gently open and squeeze onto braids or twists; wipe clean after styling with oils.",
+    },
+  }),
+
+  // 42. Harari Trade Amber & Coral Bangle
+  buildGiftProduct({
+    id: "prod_harari_bangle",
+    name: "Harari Trade Amber & Coral Bangle",
+    slug: "harari-amber-coral-bangle",
+    subtitle:
+      "Walled-City Harar Copal Amber, Mediterranean Coral & Vintage Brass Bead Bracelet",
+    description:
+      "Rooted in the historic walled city of Harar—famed crossroad of ancient Red Sea trade caravans. Hand-strung with warm honey-golden copal amber beads, deep red coral rondelles, and antique lost-wax cast Ethiopian brass spacer beads. Elasticized and resilient, this vibrant bracelet brings rich warmth, cultural color, and joyous energy to any outfit.",
+    baseCents: 4400,
+    compareAtCents: 5500,
+    imageUrl: "/images/gifts/harari-amber-coral-bangle.jpg",
+    sku: "KBN-GIFT-HARARI-BANGLE",
+    weight: 0.05,
+    tags: [
+      "Harari Jewelry",
+      "Amber Bangle",
+      "Coral Beads",
+      "Trade Beads",
+      "Red Sea Trade",
+      "Bohemian Bracelet",
+    ],
+    specs: {
+      artisanOrigin: "Harar Jugol Walled City Crafts Guild, Eastern Ethiopia",
+      materials:
+        "Natural Copal Amber Resin, Dyed Mediterranean Bamboo Coral, Vintage Ethiopian Brass Rondelles",
+      dimensionsOrSize:
+        "18cm Stretch Circumference (Fits wrists 15cm–20cm comfortably)",
+      craftsmanship:
+        "Hand-knotted on high-tensile triple-ply silicone elastic cord",
+      careOrUse:
+        "Roll gently over hand onto wrist; keep dry and away from heavy direct alcohol perfumes.",
+    },
+  }),
+
+  // 43. Shemma Handwoven Cotton Bath Towel
+  buildGiftProduct({
+    id: "prod_shemma_towel",
+    name: "Shemma Handwoven Cotton Bath Towel",
+    slug: "shemma-cotton-towel",
+    subtitle:
+      "100% Organic Highland Cotton Hand-Spun Waffle Weave Towel with Hand-Twisted Fringe",
+    description:
+      "Handcrafted by generational Shemma weavers on wooden pit looms in the Ethiopian highlands. Spun entirely from 100% raw, unbleached, chemical-free organic cotton. Its breathable textured waffle weave absorbs moisture instantly while drying in half the time of conventional terry towels. Finished with artisanal hand-twisted fringe tassels.",
+    baseCents: 3600,
+    compareAtCents: 4600,
+    imageUrl: "/images/gifts/shemma-cotton-towel.jpg",
+    sku: "KBN-GIFT-SHEMMA-TOWEL",
+    weight: 0.42,
+    tags: [
+      "Shemma Towel",
+      "Ethiopian Cotton",
+      "Handwoven Linen",
+      "Waffle Towel",
+      "Fringe Tassels",
+      "Highland Spa Linen",
+    ],
+    specs: {
+      artisanOrigin:
+        "Chencha & Dorze Weaving Villages, Southern Highlands, Ethiopia",
+      materials:
+        "100% Raw Unbleached Ethiopian Highland Cotton (Organic, Non-GMO)",
+      dimensionsOrSize: "160cm × 85cm Generous Bath Sheet Size",
+      craftsmanship:
+        "Spun by hand on traditional drop spindles and loomed on wooden pedal foot-looms",
+      careOrUse:
+        "Machine wash cool on gentle cycle; line dry or tumble dry low. Becomes softer with each wash.",
+    },
+  }),
+
+  // 44. Artisanal Tibeb Embroidered Handkerchief Set
+  buildGiftProduct({
+    id: "prod_tibeb_handkerchief",
+    name: "Artisanal Tibeb Embroidered Handkerchief Set",
+    slug: "tibeb-handkerchief-set",
+    subtitle:
+      "Trio of Fine Hand-Spun Cotton Pocket Squares with Colorful Geometric Tibeb Borders",
+    description:
+      "A set of three heirloom pocket handkerchiefs woven from featherweight Ethiopian highland cotton. Each handkerchief features a unique, dazzling geometric Tibeb jacquard border in vibrant tones of burgundy, imperial gold, and emerald green—the ceremonial textile art traditionally reserved for Ethiopian royalty and festive holidays. Packaged in a hand-tied kraft box.",
+    baseCents: 2400,
+    compareAtCents: 3200,
+    imageUrl: "/images/gifts/tibeb-handkerchief-set.jpg",
+    sku: "KBN-GIFT-TIBEB-HANKIE",
+    weight: 0.12,
+    tags: [
+      "Tibeb Handkerchief",
+      "Pocket Square",
+      "Embroidered Linen",
+      "Habesha Textile",
+      "Gift Set",
+      "Heirloom Cotton",
+    ],
+    specs: {
+      artisanOrigin: "Shiro Meda Master Weavers Guild, Addis Ababa, Ethiopia",
+      materials:
+        "100% Fine Hand-Spun Cotton with Colorfast Mercerized Embroidery Thread",
+      dimensionsOrSize: "Set of 3 (Each 32cm × 32cm Square)",
+      craftsmanship:
+        "Hand-guided jacquard borders woven directly on traditional shuttle looms",
+      careOrUse:
+        "Gentle hand wash or delicate machine wash; press with warm iron while slightly damp.",
+    },
+  }),
+
+  // 45. Four-Layer Ethiopian Gabi Cloud Cotton Throw
+  buildGiftProduct({
+    id: "prod_ethiopian_gabi",
+    name: "Four-Layer Ethiopian Gabi Cloud Cotton Throw",
+    slug: "ethiopian-gabi-throw",
+    subtitle:
+      "Heirloom Quadruple-Weave Gauze Highland Cotton Blanket with Royal Tibeb Borders",
+    description:
+      "The legendary Ethiopian Gabi—renowned as the softest, most breathable natural blanket in the world. Constructed from four gossamer-thin layers of hand-spun Ethiopian cotton that trap insulating warmth in chilly mountain evenings while allowing supreme airflow on warm days. Embellished on both ends with a magnificent 12cm ceremonial Tibeb woven border in radiant gold and crimson.",
+    baseCents: 8400,
+    compareAtCents: 11000,
+    imageUrl: "/images/gifts/ethiopian-gabi-throw.jpg",
+    sku: "KBN-GIFT-GABI-THROW",
+    weight: 0.95,
+    tags: [
+      "Ethiopian Gabi",
+      "Cloud Cotton Throw",
+      "Four Layer Blanket",
+      "Tibeb Border",
+      "Highland Bedding",
+      "Luxury Handwoven Gift",
+    ],
+    specs: {
+      artisanOrigin: "Gonder & Dorze Artisan Cooperatives, Ethiopia",
+      materials:
+        "100% Pure Highland Organic Raw Cotton (Quadruple Gauze Weave), Silk-Cotton Blend Tibeb Yarn",
+      dimensionsOrSize: "220cm × 130cm All-Season Throw Size",
+      craftsmanship:
+        "Hand-carded, hand-spun, and loomed over 3 weeks by master weaver collectives",
+      careOrUse:
+        "Machine wash cold delicate in a wash bag; line dry in shade. Air fluff for maximum cloud softness.",
+    },
+  }),
+
+  // 46. Wanza Carved Handheld Vanity Mirror
+  buildGiftProduct({
+    id: "prod_wanza_mirror",
+    name: "Wanza Carved Handheld Vanity Mirror",
+    slug: "wanza-vanity-mirror",
+    subtitle:
+      "Hand-Turned Dark Wanza Hardwood Vanity Mirror with Engraved Habesha Cross Medallion",
+    description:
+      "A striking artisanal beauty essential hand-turned from Ethiopian Wanza (Cordia africana)—the celebrated dark indigenous hardwood cherished for its swirling grain and lustrous natural oils. The reverse face features a masterfully hand-chiseled Habesha geometric cross medallion. Fitted with high-clarity optical glass mirror and a balanced ergonomic handle.",
+    baseCents: 4200,
+    compareAtCents: 5200,
+    imageUrl: "/images/gifts/wanza-vanity-mirror.jpg",
+    sku: "KBN-GIFT-WANZA-MIRROR",
+    weight: 0.35,
+    tags: [
+      "Vanity Mirror",
+      "Wanza Wood",
+      "Handheld Mirror",
+      "Cordia Africana",
+      "Hand-Carved Mirror",
+      "Beauty Accessory",
+    ],
+    specs: {
+      artisanOrigin: "Entoto Mountain Woodcarvers Guild, Shewa, Ethiopia",
+      materials:
+        "Sustainably Foraged Ethiopian Wanza (Cordia africana) Hardwood, High-Clarity Optical Glass Mirror",
+      dimensionsOrSize:
+        "26cm Length × 13.5cm Mirror Diameter × 2cm Handle Thickness",
+      craftsmanship:
+        "Turned on artisanal foot-lathes and hand-polished with organic beeswax and koseret oil",
+      careOrUse:
+        "Clean glass with microfiber cloth; nourish the hardwood handle once a year with a drop of hair or olive oil.",
+    },
+  }),
+
+  // 47. Antique Ethiopian Brass Kohl & Scent Flask
+  buildGiftProduct({
+    id: "prod_brass_kohl",
+    name: "Antique Ethiopian Brass Kohl & Scent Flask",
+    slug: "brass-kohl-flask",
+    subtitle:
+      "Hand-Chiseled Brass Cosmetic Mekula Flask with Dip Wand & Pocket Suspension Chain",
+    description:
+      "An authentic traditional Ethiopian cosmetic vessel (Mekula) used for generations across highland and Harari households. Hand-hammered from solid brass with intricate hand-chiseled floral and sunburst etchings. The threaded finial unscrews to reveal a slender brass applicator wand designed for traditional botanical kohl eyeliner or precious concentrated perfume oils.",
+    baseCents: 2800,
+    compareAtCents: 3600,
+    imageUrl: "/images/gifts/brass-kohl-flask.jpg",
+    sku: "KBN-GIFT-BRASS-KOHL",
+    weight: 0.12,
+    tags: [
+      "Kohl Flask",
+      "Mekula",
+      "Antique Brass Flask",
+      "Beauty Keepsake",
+      "Perfume Flacon",
+      "Habesha Cosmetic Ware",
+    ],
+    specs: {
+      artisanOrigin: "Historic Harar Jugol & Wollo Coppersmiths, Ethiopia",
+      materials:
+        "100% Solid Brass with Hand-Etched Engravings, Integrated Brass Applicator Wand, Brass Hanging Chain",
+      dimensionsOrSize: "8.5cm Flask Height × 3.5cm Width × 10cm Chain Drop",
+      craftsmanship:
+        "Crafted using ancient cold-chisel repoussé metal techniques",
+      careOrUse:
+        "Fill with mineral kohl powder or botanical perfume oil; tighten screw wand after each application.",
+    },
+  }),
+
+  // 48. Harari Handwoven Mesob Trinket Box
+  buildGiftProduct({
+    id: "prod_harari_trinket_box",
+    name: "Harari Handwoven Mesob Trinket Box",
+    slug: "harari-woven-trinket-box",
+    subtitle:
+      "Miniature Conical Sweetgrass Keepsake Basket Box with Geometric Natural Dyed Reed Motif",
+    description:
+      "A miniature authentic Mesob jewelry and keepsake box handwoven by Harari women artisans. Made from sun-dried highland sweetgrass and natural dyed wild palm reeds in radiant motifs of cobalt, saffron, and magenta. The tightly fitted conical lid protects rings, earrings, hair charms, or sacred frankincense tears while serving as a vibrant cultural centerpiece.",
+    baseCents: 2600,
+    compareAtCents: 3400,
+    imageUrl: "/images/gifts/harari-woven-trinket-box.jpg",
+    sku: "KBN-GIFT-HARARI-MESOB",
+    weight: 0.14,
+    tags: [
+      "Mesob Trinket Box",
+      "Harari Basketry",
+      "Sweetgrass Box",
+      "Jewelry Keepsake",
+      "Miniature Mesob",
+      "Handwoven Craft",
+    ],
+    specs: {
+      artisanOrigin: "Harari Women Weavers Guild, Harar, Eastern Ethiopia",
+      materials:
+        "Wild Highland Sweetgrass, Natural Sun-Dried Palm Leaf Reeds, Plant-Based Mineral Dyes",
+      dimensionsOrSize:
+        "12cm Total Height (with Conical Lid) × 11cm Base Diameter",
+      craftsmanship:
+        "Coiled sweetgrass technique requiring over 10 days of precision needle-weaving",
+      careOrUse:
+        "Keep in a dry environment; dust lightly with a dry soft brush. Ideal for storing jewelry and keepsakes.",
     },
   }),
 ];

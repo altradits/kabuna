@@ -4,6 +4,7 @@ import type { Category } from "@spree/sdk";
 import {
   Coffee,
   Flower2,
+  Gift,
   Home,
   Package,
   ShoppingBag,
@@ -35,6 +36,7 @@ export function MobileBottomNav({
     if (p.includes("snack")) return Wheat;
     if (p.includes("hair")) return Sparkles;
     if (p.includes("body") || p.includes("scent")) return Flower2;
+    if (p.includes("gift")) return Gift;
     return Package;
   };
 
@@ -47,6 +49,7 @@ export function MobileBottomNav({
       name.toLowerCase().includes("scent")
     )
       return "Body";
+    if (name.toLowerCase().includes("gift")) return "Gifts";
     return name.replace(/^Organic\s+/i, "");
   };
 

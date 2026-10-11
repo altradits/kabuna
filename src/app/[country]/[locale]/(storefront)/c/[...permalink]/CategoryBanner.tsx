@@ -953,6 +953,53 @@ export async function CategoryBanner({
         ],
       };
     }
+  } else if (
+    permalink === "gifts" ||
+    permalink.startsWith("gifts/") ||
+    permalink.includes("/gifts") ||
+    permalink.includes("gift")
+  ) {
+    heroProps = {
+      badge: "ETHIOPIAN ARTISAN HEIRLOOMS",
+      titleLine1: "Authentic Ethiopian",
+      titleLine2: "Gifts & Heirlooms",
+      description:
+        "Handcrafted treasures native to Ethiopia — illuminated Gondar parchment art, Axum silver filigree jewelry, Lalibela signet rings, handwoven Shemma cotton towels and Tibeb linens, hand-carved Wanza vanity mirrors, and vibrant Harari keepsake craft.",
+      bgImageSrc: "/images/heroes/gifts-hero.jpg",
+      bgImageAlt:
+        "Ethiopian artisan gifts, textiles, jewelry and heirloom crafts",
+      focalImageSrc: "/images/gifts/gondar-parchment-art.jpg",
+      focalImageAlt: "Hand-painted Gondar Parchment Art",
+      focalImageIsCutout: false,
+      ctaText: "Explore All Gifts",
+      ctaHref: "#category-products",
+      secondaryCtaText: "Specialty Coffees",
+      secondaryCtaHref: `${basePath}/c/coffee`,
+      pillarsTitle: "The Ethiopian Artisan Gift Heritage",
+      pillars: [
+        {
+          icon: <Sparkles className="w-6 h-6" />,
+          titleLine1: "Centuries-Old",
+          titleLine2: "Guild Traditions",
+          description:
+            "Handcrafted by generational silversmiths, weavers, woodcarvers, and icon scribes across Ethiopia.",
+        },
+        {
+          icon: <HeartHandshake className="w-6 h-6" />,
+          titleLine1: "100% Native",
+          titleLine2: "Authentic Materials",
+          description:
+            "Organic highland cotton, pure silver filigree, hand-cast brass, goat vellum, and indigenous Wanza wood.",
+        },
+        {
+          icon: <Flame className="w-6 h-6" />,
+          titleLine1: "Meaningful Gifts",
+          titleLine2: "For Everyone",
+          description:
+            "From wearable silver and fine linens to home sanctuary art and beauty keepsakes.",
+        },
+      ],
+    };
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {

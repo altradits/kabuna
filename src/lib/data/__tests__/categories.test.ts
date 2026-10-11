@@ -25,16 +25,17 @@ vi.mock("@/lib/spree", () => ({
 }));
 
 describe("Coffee Category & Scalable Taxonomy", () => {
-  it("returns Coffee, Snacks, Hair, and Body as top-level root categories", async () => {
+  it("returns Coffee, Snacks, Hair, Body, and Gifts as top-level root categories", async () => {
     const res = await getCategories();
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(4);
+    expect(res.data.length).toBe(5);
 
     const names = res.data.map((c) => c.name);
     expect(names).toContain("Coffee");
     expect(names).toContain("Organic Snacks");
     expect(names).toContain("Organic Hair Care");
     expect(names).toContain("Organic Body");
+    expect(names).toContain("Gifts");
     expect(names).not.toContain("Ceremony & Accessories");
   });
 
@@ -316,5 +317,44 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(incenseNames).toContain("Ogaden Wild Commiphora Myrrha Resin");
     expect(incenseNames).toContain("Borena Black Frankincense (Tikur Itan)");
     expect(incenseNames).toContain("Sacred Buna Ceremony Itan Blend");
+  });
+
+  it("classifies Gifts category with zero subcategories (unified gift department)", async () => {
+    const giftsCategory = await getCategory("gifts");
+    expect(giftsCategory).toBeDefined();
+    expect(giftsCategory.id).toBe("cat_gifts");
+    expect(giftsCategory.name).toBe("Gifts");
+    expect(giftsCategory.children).toBeDefined();
+    expect(giftsCategory.children?.length).toBe(0);
+  });
+
+  it("lists all authentic Ethiopian gifts when Gifts category is selected", async () => {
+    const res = await getCategoryProducts("cat_gifts");
+    expect(res.data).toBeDefined();
+    expect(res.data.length).toBe(12);
+
+    const productNames = res.data.map((p) => p.name);
+    expect(productNames).toEqual(
+      expect.arrayContaining([
+        "Gondar Hand-Painted Parchment Icon Art",
+        "Lalibela Lost-Wax Cast Handheld Brass Cross",
+        "Axum Hand-Hammered Silver Filigree Cuff",
+        "Lalibela Solomonic Cross Signet Ring",
+        "Habesha Silver Shuruba Hair Jewelry Set",
+        "Harari Trade Amber & Coral Bangle",
+        "Shemma Handwoven Cotton Bath Towel",
+        "Artisanal Tibeb Embroidered Handkerchief Set",
+        "Four-Layer Ethiopian Gabi Cloud Cotton Throw",
+        "Wanza Carved Handheld Vanity Mirror",
+        "Antique Ethiopian Brass Kohl & Scent Flask",
+        "Harari Handwoven Mesob Trinket Box",
+      ]),
+    );
+
+    // Verifies neither coffee, snacks, hair, nor body products leak into gifts
+    expect(productNames).not.toContain("Chelbesa");
+    expect(productNames).not.toContain("Highland Heritage Kolo");
+    expect(productNames).not.toContain("YeTsehur Kibe");
+    expect(productNames).not.toContain("Itan Boswellia Highland Perfume Oil");
   });
 });

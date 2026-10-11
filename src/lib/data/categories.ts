@@ -11,6 +11,7 @@ import {
   CAT_BODY,
   CAT_CEREMONY,
   CAT_COFFEE,
+  CAT_GIFTS,
   enrichProductWithImages,
   KABUNA_CATEGORIES,
   KABUNA_PRODUCTS,
@@ -61,13 +62,20 @@ async function cachedListCategories(
         c.name.toLowerCase().includes("body") ||
         c.name.toLowerCase().includes("scent"),
     );
+    const hasGifts = res.data?.some(
+      (c) =>
+        c.permalink === "gifts" ||
+        c.id === "cat_gifts" ||
+        c.name.toLowerCase().includes("gift"),
+    );
     if (
       res.data &&
       res.data.length > 0 &&
       hasCoffee &&
       hasHair &&
       hasSnacks &&
-      hasBody
+      hasBody &&
+      hasGifts
     ) {
       return res;
     }
@@ -166,6 +174,18 @@ export async function cachedGetCategory(
     idOrPermaLower.endsWith("/scents")
   ) {
     return CAT_BODY as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+    >;
+  }
+
+  // Specifically resolve Gifts category to CAT_GIFTS
+  if (
+    idOrPermaLower === "gifts" ||
+    idOrPermaLower === "gift" ||
+    idOrPermaLower === "cat_gifts" ||
+    idOrPermaLower.endsWith("/gifts")
+  ) {
+    return CAT_GIFTS as unknown as Awaited<
       ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
     >;
   }
@@ -307,6 +327,12 @@ async function cachedListCategoryProducts(
     catLower.includes("itan") ||
     catLower === "cat_body_incense";
 
+  const isGifts =
+    catLower === "gifts" ||
+    catLower === "gift" ||
+    catLower === "cat_gifts" ||
+    catLower.endsWith("/gifts");
+
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
     catLower.includes("buna") ||
@@ -441,6 +467,14 @@ async function cachedListCategoryProducts(
     }
     if (isBodyIncense) {
       return p.categories?.some((c) => c.id === "cat_body_incense");
+    }
+    if (isGifts) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_gifts" ||
+          c.permalink === "gifts" ||
+          c.name.toLowerCase().includes("gift"),
+      );
     }
     if (isCeremonyCategory) {
       return p.categories?.some(

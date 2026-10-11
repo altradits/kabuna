@@ -228,6 +228,26 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_ceremony_itan"),
   );
 
+  const isGiftProduct = Boolean(
+    product.categories?.some(
+      (c) =>
+        c.id === "cat_gifts" ||
+        c.permalink === "gifts" ||
+        c.permalink?.startsWith("gifts/") ||
+        c.name?.toLowerCase().includes("gift"),
+    ) ||
+      product.id?.startsWith("prod_gondar") ||
+      product.id?.startsWith("prod_lalibela") ||
+      product.id?.startsWith("prod_axum") ||
+      product.id?.startsWith("prod_habesha_hair_jewelry") ||
+      product.id?.startsWith("prod_harari") ||
+      product.id?.startsWith("prod_shemma") ||
+      product.id?.startsWith("prod_tibeb") ||
+      product.id?.startsWith("prod_ethiopian_gabi") ||
+      product.id?.startsWith("prod_wanza_mirror") ||
+      product.id?.startsWith("prod_brass_kohl"),
+  );
+
   const isCeremonyProduct = Boolean(
     product.categories?.some(
       (c) =>
@@ -246,7 +266,11 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   );
 
   const isCoffeeProduct =
-    !isHairProduct && !isCeremonyProduct && !isSnackProduct && !isBodyProduct;
+    !isHairProduct &&
+    !isCeremonyProduct &&
+    !isSnackProduct &&
+    !isBodyProduct &&
+    !isGiftProduct;
 
   // Coffee fields
   const tastingNotes = getField("notes");
@@ -255,7 +279,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const elevation = getField("altitude");
   const region =
     getField("region") ||
-    (isHairProduct || isSnackProduct || isBodyProduct
+    (isHairProduct || isSnackProduct || isBodyProduct || isGiftProduct
       ? getField("origin")
       : undefined);
   const _washingStation = getField("station");
@@ -283,6 +307,13 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const bodyScent = getField("scent");
   const bodyUse = getField("use");
   const bodyFormat = getField("format");
+
+  // Gift fields
+  const giftOrigin = getField("origin");
+  const giftMaterials = getField("materials");
+  const giftDimensions = getField("dimensions");
+  const giftCraftsmanship = getField("craftsmanship");
+  const giftCare = getField("care");
 
   // Ceremony fields
   const ceremonyMaterial = getField("material");
@@ -547,15 +578,17 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
                 <span>
-                  {isBodyProduct
-                    ? "Ritual Application & Bathing"
-                    : isHairProduct
-                      ? "Habesha Ritual & Application"
-                      : isCeremonyProduct
-                        ? "Ritual Role & Ceremony Use"
-                        : isSnackProduct
-                          ? "Buna Tetu Pairing & Serving"
-                          : "Brewing"}
+                  {isGiftProduct
+                    ? "Cultural Heritage & Craft"
+                    : isBodyProduct
+                      ? "Ritual Application & Bathing"
+                      : isHairProduct
+                        ? "Habesha Ritual & Application"
+                        : isCeremonyProduct
+                          ? "Ritual Role & Ceremony Use"
+                          : isSnackProduct
+                            ? "Buna Tetu Pairing & Serving"
+                            : "Brewing"}
                 </span>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -566,7 +599,29 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.brewing && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
-                  {isBodyProduct ? (
+                  {isGiftProduct ? (
+                    <div className="space-y-3">
+                      <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-100">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Cultural Heritage & Craftsmanship
+                        </h4>
+                        <p className="text-xs text-stone-700 leading-relaxed">
+                          {giftCraftsmanship ||
+                            "Masterfully handcrafted in Ethiopia by generational artisans keeping ancient cultural heirlooms and traditions alive."}
+                        </p>
+                      </div>
+                      {giftCare && (
+                        <div className="p-3 rounded-lg bg-stone-50 border border-stone-200/80">
+                          <span className="text-xs font-semibold text-stone-900">
+                            Care & Maintenance:{" "}
+                          </span>
+                          <span className="text-xs text-stone-600">
+                            {giftCare}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : isBodyProduct ? (
                     <div className="space-y-3">
                       <div className="p-3.5 rounded-lg bg-rose-50/60 border border-rose-100">
                         <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
@@ -696,15 +751,17 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
                 <span>
-                  {isBodyProduct
-                    ? "Botanical Provenance & Notes"
-                    : isHairProduct
-                      ? "Botanical Origin"
-                      : isCeremonyProduct
-                        ? "Materials & Craft"
-                        : isSnackProduct
-                          ? "Grain Provenance & Dietary"
-                          : "Origin"}
+                  {isGiftProduct
+                    ? "Materials & Artisan Origin"
+                    : isBodyProduct
+                      ? "Botanical Provenance & Notes"
+                      : isHairProduct
+                        ? "Botanical Origin"
+                        : isCeremonyProduct
+                          ? "Materials & Craft"
+                          : isSnackProduct
+                            ? "Grain Provenance & Dietary"
+                            : "Origin"}
                 </span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -715,7 +772,36 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.terroir && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm">
-                  {isBodyProduct ? (
+                  {isGiftProduct ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Artisan Provenance
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {giftOrigin || "Ethiopian Highlands"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Materials & Medium
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {giftMaterials || "100% Authentic Natural Materials"}
+                        </dd>
+                      </div>
+                      {giftDimensions && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Dimensions & Sizing
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {giftDimensions}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  ) : isBodyProduct ? (
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
                       <div>
                         <dt className="text-xs font-medium text-stone-500">
