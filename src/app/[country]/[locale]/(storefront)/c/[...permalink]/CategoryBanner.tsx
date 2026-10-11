@@ -679,7 +679,7 @@ export async function CategoryBanner({
         focalImageIsCutout: false,
         ctaText: "Shop Fragrances",
         ctaHref: "#category-products",
-        secondaryCtaText: "All Body & Scents",
+        secondaryCtaText: "All Body",
         secondaryCtaHref: `${basePath}/c/body`,
         pillarsTitle: "Sacred Highland Resin Alchemy",
         pillars: [
@@ -720,7 +720,7 @@ export async function CategoryBanner({
         focalImageIsCutout: false,
         ctaText: "Shop Ointments",
         ctaHref: "#category-products",
-        secondaryCtaText: "All Body & Scents",
+        secondaryCtaText: "All Body",
         secondaryCtaHref: `${basePath}/c/body`,
         pillarsTitle: "Ancestral Ethiopian Balm Craft",
         pillars: [
@@ -761,7 +761,7 @@ export async function CategoryBanner({
         focalImageIsCutout: false,
         ctaText: "Shop Body Wash",
         ctaHref: "#category-products",
-        secondaryCtaText: "All Body & Scents",
+        secondaryCtaText: "All Body",
         secondaryCtaHref: `${basePath}/c/body`,
         pillarsTitle: "Wild Botanical Cleansing Science",
         pillars: [
@@ -802,7 +802,7 @@ export async function CategoryBanner({
         focalImageIsCutout: false,
         ctaText: "Shop Mists",
         ctaHref: "#category-products",
-        secondaryCtaText: "All Body & Scents",
+        secondaryCtaText: "All Body",
         secondaryCtaHref: `${basePath}/c/body`,
         pillarsTitle: "Highland Aromatherapeutic Ritual",
         pillars: [
@@ -843,7 +843,7 @@ export async function CategoryBanner({
         focalImageIsCutout: false,
         ctaText: "Shop Body Polish",
         ctaHref: "#category-products",
-        secondaryCtaText: "All Body & Scents",
+        secondaryCtaText: "All Body",
         secondaryCtaHref: `${basePath}/c/body`,
         pillarsTitle: "Geothermal Earth Exfoliation",
         pillars: [
@@ -874,7 +874,7 @@ export async function CategoryBanner({
       heroProps = {
         badge: undefined,
         titleLine1: "Authentic Ethiopian",
-        titleLine2: "Organic Body & Scents",
+        titleLine2: "Organic Body",
         description:
           "Highland scents, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) perfume oils, warming Korarima salves, fresh Koseret cleansers, Tenadam mists, and volcanic clay polishes.",
         bgImageSrc: "/images/heroes/body-hero.jpg",
@@ -882,7 +882,7 @@ export async function CategoryBanner({
         focalImageSrc: "/images/body/itan-perfume.jpg",
         focalImageAlt: "Itan Boswellia Highland Perfume Oil",
         focalImageIsCutout: false,
-        ctaText: "Shop Body & Scents",
+        ctaText: "Shop Body",
         ctaHref: "#category-products",
         secondaryCtaText: "Specialty Coffees",
         secondaryCtaHref: `${basePath}/c/coffee`,

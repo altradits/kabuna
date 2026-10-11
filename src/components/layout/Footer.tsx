@@ -36,6 +36,7 @@ const EXCLUDED_FOOTER_NAMES = new Set([
   "hair",
   "organic snacks",
   "snacks",
+  "organic body",
   "organic body & scents",
   "body & scents",
   "body",
@@ -234,7 +235,7 @@ export async function Footer({ basePath, locale, categoryLinks }: FooterProps) {
                   href={`${basePath}/c/body`}
                   className="text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
                 >
-                  Organic Body & Scents
+                  Organic Body
                 </Link>
               </li>
               {categoryLinks}

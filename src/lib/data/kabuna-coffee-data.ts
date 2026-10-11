@@ -771,7 +771,7 @@ export const CAT_BODY_SCRUBS = createCategory(
 
 export const CAT_BODY = createCategory(
   "cat_body",
-  "Organic Body & Scents",
+  "Organic Body",
   "body",
   "Highland scents, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) perfume oils, warming Korarima salves, Koseret enset cleansers, and Tenadam mists.",
   [
@@ -1427,9 +1427,9 @@ function buildBodyProduct({
     id,
     name,
     slug,
-    meta_title: `${name} | Ethiopian Organic Body & Scents | Kabuna`,
+    meta_title: `${name} | Ethiopian Organic Body | Kabuna`,
     meta_description: subtitle,
-    meta_keywords: `Ethiopian organic body scents, native fragrances, ${name}, ${tags.join(", ")}`,
+    meta_keywords: `Ethiopian organic body, native fragrances, ${name}, ${tags.join(", ")}`,
     variant_count: 1,
     available_on: "2024-01-01T00:00:00.000Z",
     preorder_ships_at: null,
@@ -1444,7 +1444,7 @@ function buildBodyProduct({
     buy_box_variant_id: variant.id,
     thumbnail_url: imageUrl,
     tags: [
-      "Organic Body & Scents",
+      "Organic Body",
       "Native Ethiopian Botanicals",
       "Highland Fragrance",
       ...tags,

@@ -46,7 +46,7 @@ export function MobileBottomNav({
       name.toLowerCase().includes("body") ||
       name.toLowerCase().includes("scent")
     )
-      return "Body & Scents";
+      return "Body";
     return name.replace(/^Organic\s+/i, "");
   };
 

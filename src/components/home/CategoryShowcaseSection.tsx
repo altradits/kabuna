@@ -51,7 +51,7 @@ const DEPARTMENTS = [
   },
   {
     id: "body",
-    title: "Organic Body & Scents",
+    title: "Organic Body",
     subtitle: "5 Native Scents, Washes & Balms",
     description:
       "Wild Tigray Boswellia perfume oils, warming Korarima ointments, fresh Koseret body washes & Tenadam mists.",
