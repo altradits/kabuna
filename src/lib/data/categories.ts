@@ -12,6 +12,7 @@ import {
   CAT_CEREMONY,
   CAT_COFFEE,
   CAT_GIFTS,
+  CAT_OFFICE,
   enrichProductWithImages,
   KABUNA_CATEGORIES,
   KABUNA_PRODUCTS,
@@ -68,6 +69,12 @@ async function cachedListCategories(
         c.id === "cat_gifts" ||
         c.name.toLowerCase().includes("gift"),
     );
+    const hasOffice = res.data?.some(
+      (c) =>
+        c.permalink === "office" ||
+        c.id === "cat_office" ||
+        c.name.toLowerCase().includes("office"),
+    );
     if (
       res.data &&
       res.data.length > 0 &&
@@ -75,7 +82,8 @@ async function cachedListCategories(
       hasHair &&
       hasSnacks &&
       hasBody &&
-      hasGifts
+      hasGifts &&
+      hasOffice
     ) {
       return res;
     }
@@ -186,6 +194,17 @@ export async function cachedGetCategory(
     idOrPermaLower.endsWith("/gifts")
   ) {
     return CAT_GIFTS as unknown as Awaited<
+      ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
+    >;
+  }
+
+  // Specifically resolve Office category to CAT_OFFICE
+  if (
+    idOrPermaLower === "office" ||
+    idOrPermaLower === "cat_office" ||
+    idOrPermaLower.endsWith("/office")
+  ) {
+    return CAT_OFFICE as unknown as Awaited<
       ReturnType<ReturnType<typeof getClient>["categories"]["get"]>
     >;
   }
@@ -333,6 +352,35 @@ async function cachedListCategoryProducts(
     catLower === "cat_gifts" ||
     catLower.endsWith("/gifts");
 
+  const isOffice =
+    catLower === "office" ||
+    catLower === "cat_office" ||
+    catLower.endsWith("/office");
+
+  const isOfficeDevices =
+    catLower.includes("device") ||
+    catLower.includes("iphone") ||
+    catLower.includes("macbook") ||
+    catLower === "cat_office_devices";
+
+  const isOfficeStationery =
+    catLower.includes("stationery") ||
+    catLower.includes("notebook") ||
+    catLower.includes("pen") ||
+    catLower.includes("file") ||
+    catLower === "cat_office_stationery";
+
+  const isOfficeBags =
+    catLower.includes("bag") ||
+    catLower.includes("briefcase") ||
+    catLower === "cat_office_bags";
+
+  const isOfficeFurniture =
+    catLower.includes("furniture") ||
+    catLower.includes("chair") ||
+    catLower.includes("desk") ||
+    catLower === "cat_office_furniture";
+
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
     catLower.includes("buna") ||
@@ -400,7 +448,10 @@ async function cachedListCategoryProducts(
         (c) =>
           c.id === "cat_hair" ||
           c.permalink === "hair" ||
-          c.name.toLowerCase().includes("hair"),
+          c.permalink?.startsWith("hair/") ||
+          c.id?.startsWith("cat_hair_") ||
+          (c.name.toLowerCase().includes("hair") &&
+            !c.name.toLowerCase().includes("chair")),
       );
     }
     if (isHairButters) {
@@ -475,6 +526,26 @@ async function cachedListCategoryProducts(
           c.permalink === "gifts" ||
           c.name.toLowerCase().includes("gift"),
       );
+    }
+    if (isOffice) {
+      return p.categories?.some(
+        (c) =>
+          c.id === "cat_office" ||
+          c.permalink === "office" ||
+          c.name.toLowerCase().includes("office"),
+      );
+    }
+    if (isOfficeDevices) {
+      return p.categories?.some((c) => c.id === "cat_office_devices");
+    }
+    if (isOfficeStationery) {
+      return p.categories?.some((c) => c.id === "cat_office_stationery");
+    }
+    if (isOfficeBags) {
+      return p.categories?.some((c) => c.id === "cat_office_bags");
+    }
+    if (isOfficeFurniture) {
+      return p.categories?.some((c) => c.id === "cat_office_furniture");
     }
     if (isCeremonyCategory) {
       return p.categories?.some(

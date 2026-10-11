@@ -34,10 +34,10 @@ vi.mock("@/lib/spree", () => ({
 }));
 
 describe("Coffee Category & Scalable Taxonomy", () => {
-  it("returns Coffee, Snacks, Hair, Body, and Gifts as top-level root categories", async () => {
+  it("returns Coffee, Snacks, Hair, Body, Gifts, and Office as top-level root categories", async () => {
     const res = await getCategories();
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(5);
+    expect(res.data.length).toBe(6);
 
     const names = res.data.map((c) => c.name);
     expect(names).toContain("Coffee");
@@ -45,6 +45,7 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(names).toContain("Organic Hair Care");
     expect(names).toContain("Organic Body");
     expect(names).toContain("Gifts");
+    expect(names).toContain("Office");
     expect(names).not.toContain("Ceremony & Accessories");
   });
 
@@ -479,6 +480,206 @@ describe("Coffee Category & Scalable Taxonomy", () => {
 
       // Verify categories
       expect(product.categories?.some((c) => c.id === "cat_gifts")).toBe(true);
+    }
+  });
+
+  it("classifies subcategories under Office", async () => {
+    const officeCategory = await getCategory("office");
+    expect(officeCategory).toBeDefined();
+    expect(officeCategory.id).toBe("cat_office");
+    expect(officeCategory.name).toBe("Office");
+    expect(officeCategory.children).toBeDefined();
+
+    const childNames = officeCategory.children?.map((c) => c.name);
+    expect(childNames).toContain("iPhones & MacBooks");
+    expect(childNames).toContain("Notebooks, Pens & Folios");
+    expect(childNames).toContain("Laptop Bags & Briefcases");
+    expect(childNames).toContain("Office Chairs & Desks");
+  });
+
+  it("lists all 16 office products when Office category is selected", async () => {
+    const res = await getCategoryProducts("cat_office");
+    expect(res.data).toBeDefined();
+    expect(res.data.length).toBe(16);
+
+    const productNames = res.data.map((p) => p.name);
+    expect(productNames).toEqual(
+      expect.arrayContaining([
+        // 1. iPhones
+        "Apple iPhone 16 Pro Max",
+        "Apple iPhone 16 Pro",
+        // 2. MacBook M-series
+        'Apple MacBook Pro 16" M-Series Workstation',
+        'Apple MacBook Air 15" M-Series Ultra-Thin',
+        // 3. Notebooks
+        "Highland Full-Grain Leather Executive Notebook",
+        "Embroidered Tibeb Hardcover Archival Notebook",
+        // 4. Pens
+        "Axum Hand-Turned Solid Brass Rollerball Pen",
+        "Heritage Lalibela Engraved Golden Fountain Pen",
+        // 5. Files
+        "Executive Full-Grain Leather Document File Folder",
+        "Highland Multi-Pocket Archival Expanding Folio File",
+        // 6. Laptop Bags
+        "Handcrafted Ethiopian Leather Executive Laptop Bag",
+        "Highland Commuter Canvas & Leather Laptop Bag",
+        // 7. Office Chairs
+        "Ergonomic Executive Mesh & Leather Office Desk Chair",
+        "Highland Top-Grain Leather High-Back Executive Chair",
+        // 8. Office Desks
+        "Handcrafted Ethiopian Wanza Hardwood Executive Office Desk",
+        "Ergonomic Dual-Motor Wanza Wood Executive Standing Desk",
+      ]),
+    );
+
+    // Verify coffee, hair, snack, body, and gifts items do not leak into Office
+    expect(productNames).not.toContain("Chelbesa");
+    expect(productNames).not.toContain("YeTsehur Kibe");
+    expect(productNames).not.toContain("Highland Heritage Kolo");
+    expect(productNames).not.toContain("Itan Boswellia Highland Perfume Oil");
+    expect(productNames).not.toContain("Hand-Painted Gondar Parchment Art");
+  });
+
+  it("resolves each individual office product with exact specifications and images", async () => {
+    const officeSlugs = [
+      {
+        slug: "iphone-16-pro-max",
+        name: "Apple iPhone 16 Pro Max",
+        img: "/images/office/iphone-16-pro-max.jpg",
+        type: "Flagship Executive Smartphone",
+      },
+      {
+        slug: "iphone-16-pro",
+        name: "Apple iPhone 16 Pro",
+        img: "/images/office/iphone-16-pro.jpg",
+        type: "Compact Pro Smartphone",
+      },
+      {
+        slug: "macbook-pro-m-series",
+        name: 'Apple MacBook Pro 16" M-Series Workstation',
+        img: "/images/office/macbook-pro-m-series.jpg",
+        type: "Pro Studio Laptop Workstation",
+      },
+      {
+        slug: "macbook-air-m-series",
+        name: 'Apple MacBook Air 15" M-Series Ultra-Thin',
+        img: "/images/office/macbook-air-m-series.jpg",
+        type: "Ultra-Portable Executive Laptop",
+      },
+      {
+        slug: "highland-leather-notebook",
+        name: "Highland Full-Grain Leather Executive Notebook",
+        img: "/images/office/highland-leather-notebook.jpg",
+        type: "Refillable Leather Executive Notebook",
+      },
+      {
+        slug: "tibeb-hardcover-notebook",
+        name: "Embroidered Tibeb Hardcover Archival Notebook",
+        img: "/images/office/tibeb-hardcover-notebook.jpg",
+        type: "Hardcover Archival Fabric Notebook",
+      },
+      {
+        slug: "axum-brass-rollerball-pen",
+        name: "Axum Hand-Turned Solid Brass Rollerball Pen",
+        img: "/images/office/axum-brass-rollerball-pen.jpg",
+        type: "Handcrafted Luxury Rollerball Pen",
+      },
+      {
+        slug: "lalibela-golden-fountain-pen",
+        name: "Heritage Lalibela Engraved Golden Fountain Pen",
+        img: "/images/office/lalibela-golden-fountain-pen.jpg",
+        type: "Executive Collector Fountain Pen",
+      },
+      {
+        slug: "executive-leather-document-file",
+        name: "Executive Full-Grain Leather Document File Folder",
+        img: "/images/office/executive-leather-document-file.jpg",
+        type: "Executive Leather Document Portfolio",
+      },
+      {
+        slug: "highland-archival-expanding-file",
+        name: "Highland Multi-Pocket Archival Expanding Folio File",
+        img: "/images/office/highland-archival-expanding-file.jpg",
+        type: "Archival Expanding Document File",
+      },
+      {
+        slug: "ethiopian-leather-laptop-bag",
+        name: "Handcrafted Ethiopian Leather Executive Laptop Bag",
+        img: "/images/office/ethiopian-leather-laptop-bag.jpg",
+        type: "Executive Leather Laptop Briefcase",
+      },
+      {
+        slug: "highland-commuter-laptop-bag",
+        name: "Highland Commuter Canvas & Leather Laptop Bag",
+        img: "/images/office/highland-commuter-laptop-bag.jpg",
+        type: "Everyday Executive Commuter Laptop Bag",
+      },
+      {
+        slug: "ergonomic-executive-office-chair",
+        name: "Ergonomic Executive Mesh & Leather Office Desk Chair",
+        img: "/images/office/ergonomic-executive-office-chair.jpg",
+        type: "High-Performance Ergonomic Office Chair",
+      },
+      {
+        slug: "highland-leather-executive-chair",
+        name: "Highland Top-Grain Leather High-Back Executive Chair",
+        img: "/images/office/highland-leather-executive-chair.jpg",
+        type: "Luxury High-Back Executive Boardroom Chair",
+      },
+      {
+        slug: "wanza-hardwood-executive-desk",
+        name: "Handcrafted Ethiopian Wanza Hardwood Executive Office Desk",
+        img: "/images/office/wanza-hardwood-executive-desk.jpg",
+        type: "Executive Solid Hardwood Office Desk",
+      },
+      {
+        slug: "ergonomic-wanza-standing-desk",
+        name: "Ergonomic Dual-Motor Wanza Wood Executive Standing Desk",
+        img: "/images/office/ergonomic-wanza-standing-desk.jpg",
+        type: "Electric Height-Adjustable Standing Desk",
+      },
+    ];
+
+    for (const item of officeSlugs) {
+      const product = await getProduct(item.slug);
+      expect(product).toBeDefined();
+      expect(product.name).toBe(item.name);
+      expect(product.slug).toBe(item.slug);
+      expect(product.thumbnail_url).toBe(item.img);
+      expect(product.primary_media?.original_url).toBe(item.img);
+      expect(product.media?.[0]?.original_url).toBe(item.img);
+
+      // Verify custom fields
+      const typeField = product.custom_fields?.find((cf) => cf.key === "type");
+      expect(typeField?.value).toBe(item.type);
+
+      const specsField = product.custom_fields?.find(
+        (cf) => cf.key === "specs",
+      );
+      expect(specsField?.value).toBeTruthy();
+
+      const materialsField = product.custom_fields?.find(
+        (cf) => cf.key === "materials",
+      );
+      expect(materialsField?.value).toBeTruthy();
+
+      const dimensionsField = product.custom_fields?.find(
+        (cf) => cf.key === "dimensions",
+      );
+      expect(dimensionsField?.value).toBeTruthy();
+
+      const originField = product.custom_fields?.find(
+        (cf) => cf.key === "origin",
+      );
+      expect(originField?.value).toBeTruthy();
+
+      const warrantyField = product.custom_fields?.find(
+        (cf) => cf.key === "warranty",
+      );
+      expect(warrantyField?.value).toBeTruthy();
+
+      // Verify categories
+      expect(product.categories?.some((c) => c.id === "cat_office")).toBe(true);
     }
   });
 });

@@ -34,6 +34,7 @@ export function HeaderNavLinks({
     )
       return "Body";
     if (name.toLowerCase().includes("gift")) return "Gifts";
+    if (name.toLowerCase().includes("office")) return "Office";
     return name.replace(/^Organic\s+/i, "");
   };
 

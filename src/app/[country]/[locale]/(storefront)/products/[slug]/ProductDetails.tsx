@@ -265,12 +265,23 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_buna_ceremony"),
   );
 
+  const isOfficeProduct = Boolean(
+    product.categories?.some(
+      (c) =>
+        c.id === "cat_office" ||
+        c.permalink === "office" ||
+        c.permalink?.startsWith("office/") ||
+        c.name?.toLowerCase().includes("office"),
+    ) || product.id?.startsWith("prod_office"),
+  );
+
   const isCoffeeProduct =
     !isHairProduct &&
     !isCeremonyProduct &&
     !isSnackProduct &&
     !isBodyProduct &&
-    !isGiftProduct;
+    !isGiftProduct &&
+    !isOfficeProduct;
 
   // Coffee fields
   const tastingNotes = getField("notes");
@@ -279,13 +290,25 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
   const elevation = getField("altitude");
   const region =
     getField("region") ||
-    (isHairProduct || isSnackProduct || isBodyProduct || isGiftProduct
+    (isHairProduct ||
+    isSnackProduct ||
+    isBodyProduct ||
+    isGiftProduct ||
+    isOfficeProduct
       ? getField("origin")
       : undefined);
   const _washingStation = getField("station");
   const variety = getField("variety");
   const cuppingScore = getField("score");
   const qualityGrade = getField("grade");
+
+  // Office fields
+  const officeType = getField("type");
+  const officeSpecs = getField("specs") || getField("specifications");
+  const officeMaterials = getField("materials");
+  const officeDimensions = getField("dimensions");
+  const officeOrigin = getField("origin");
+  const officeWarranty = getField("warranty");
 
   // Hair fields
   const hairIngredients = getField("ingredients");
@@ -557,6 +580,42 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
             </div>
           )}
 
+          {/* Office & Workstation Box */}
+          {isOfficeProduct && (
+            <div className="mt-4 p-4 rounded-xl bg-slate-900 text-slate-100 border border-slate-800 shadow-md">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
+                Executive Workstation & Office
+              </div>
+              {officeSpecs && (
+                <div className="text-sm font-semibold text-white mt-1">
+                  {officeSpecs}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {officeType && (
+                  <span className="text-xs bg-slate-800 text-slate-200 px-3 py-1 rounded-full border border-slate-700 font-medium">
+                    {officeType}
+                  </span>
+                )}
+                {officeMaterials && (
+                  <span className="text-xs bg-slate-800 text-slate-200 px-3 py-1 rounded-full border border-slate-700 font-medium">
+                    {officeMaterials}
+                  </span>
+                )}
+                {officeWarranty && (
+                  <span className="text-xs bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full border border-amber-500/30 font-medium">
+                    {officeWarranty}
+                  </span>
+                )}
+                {officeDimensions && (
+                  <span className="text-xs bg-slate-800 text-slate-200 px-3 py-1 rounded-full border border-slate-700 font-medium">
+                    {officeDimensions}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Variant Picker */}
           {hasVariants && optionTypes.length > 0 && (
             <div className="mt-6 border-t border-stone-100 pt-5">
@@ -640,17 +699,19 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
                 <span>
-                  {isGiftProduct
-                    ? "Cultural Heritage & Craft"
-                    : isBodyProduct
-                      ? "Ritual Application & Bathing"
-                      : isHairProduct
-                        ? "Habesha Ritual & Application"
-                        : isCeremonyProduct
-                          ? "Ritual Role & Ceremony Use"
-                          : isSnackProduct
-                            ? "Buna Tetu Pairing & Serving"
-                            : "Brewing"}
+                  {isOfficeProduct
+                    ? "Executive Architecture & Craft"
+                    : isGiftProduct
+                      ? "Cultural Heritage & Craft"
+                      : isBodyProduct
+                        ? "Ritual Application & Bathing"
+                        : isHairProduct
+                          ? "Habesha Ritual & Application"
+                          : isCeremonyProduct
+                            ? "Ritual Role & Ceremony Use"
+                            : isSnackProduct
+                              ? "Buna Tetu Pairing & Serving"
+                              : "Brewing"}
                 </span>
                 {expandedSections.brewing ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -661,7 +722,29 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.brewing && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm space-y-3">
-                  {isGiftProduct ? (
+                  {isOfficeProduct ? (
+                    <div className="space-y-3">
+                      <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
+                        <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
+                          Workstation Performance & Architecture
+                        </h4>
+                        <p className="text-xs text-stone-700 leading-relaxed">
+                          {officeSpecs ||
+                            "Precision engineered for professional creative and executive workflows, combining premium materials and enduring ergonomics."}
+                        </p>
+                      </div>
+                      {officeWarranty && (
+                        <div className="p-3 rounded-lg bg-stone-50 border border-stone-200/80">
+                          <span className="text-xs font-semibold text-stone-900">
+                            Warranty & Coverage:{" "}
+                          </span>
+                          <span className="text-xs text-stone-600">
+                            {officeWarranty}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : isGiftProduct ? (
                     <div className="space-y-3">
                       <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-100">
                         <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider mb-1">
@@ -813,17 +896,19 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-stone-900 hover:bg-stone-50 transition-colors"
               >
                 <span>
-                  {isGiftProduct
-                    ? "Materials & Artisan Origin"
-                    : isBodyProduct
-                      ? "Botanical Provenance & Notes"
-                      : isHairProduct
-                        ? "Botanical Origin"
-                        : isCeremonyProduct
-                          ? "Materials & Craft"
-                          : isSnackProduct
-                            ? "Grain Provenance & Dietary"
-                            : "Origin"}
+                  {isOfficeProduct
+                    ? "Materials & Origin"
+                    : isGiftProduct
+                      ? "Materials & Artisan Origin"
+                      : isBodyProduct
+                        ? "Botanical Provenance & Notes"
+                        : isHairProduct
+                          ? "Botanical Origin"
+                          : isCeremonyProduct
+                            ? "Materials & Craft"
+                            : isSnackProduct
+                              ? "Grain Provenance & Dietary"
+                              : "Origin"}
                 </span>
                 {expandedSections.terroir ? (
                   <ChevronUp className="w-4 h-4 text-stone-500" />
@@ -834,7 +919,38 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
 
               {expandedSections.terroir && (
                 <div className="px-5 pb-5 pt-2 border-t border-stone-100 text-stone-700 text-sm">
-                  {isGiftProduct ? (
+                  {isOfficeProduct ? (
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Origin / Manufacture
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {officeOrigin ||
+                            "Apple California / Ethiopian Highlands"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-medium text-stone-500">
+                          Primary Materials
+                        </dt>
+                        <dd className="text-xs font-bold text-stone-900">
+                          {officeMaterials ||
+                            "Aerospace Titanium / Native Hardwood / Full-Grain Leather"}
+                        </dd>
+                      </div>
+                      {officeDimensions && (
+                        <div className="col-span-1 sm:col-span-2">
+                          <dt className="text-xs font-medium text-stone-500">
+                            Dimensions & Weight
+                          </dt>
+                          <dd className="text-xs font-bold text-stone-900">
+                            {officeDimensions}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  ) : isGiftProduct ? (
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
                       <div>
                         <dt className="text-xs font-medium text-stone-500">

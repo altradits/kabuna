@@ -199,12 +199,130 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   "brass-kohl": ["/images/gifts/brass-kohl-flask.jpg"],
   "harari-woven-trinket-box": ["/images/gifts/harari-woven-trinket-box.jpg"],
   "harari-trinket-box": ["/images/gifts/harari-woven-trinket-box.jpg"],
+
+  // Executive Office Collection
+  "iphone-16-pro-max": ["/images/office/iphone-16-pro-max.jpg"],
+  "iphone-16-pro": ["/images/office/iphone-16-pro.jpg"],
+  "macbook-pro-m-series": ["/images/office/macbook-pro-m-series.jpg"],
+  "macbook-air-m-series": ["/images/office/macbook-air-m-series.jpg"],
+  "highland-leather-notebook": ["/images/office/highland-leather-notebook.jpg"],
+  "tibeb-hardcover-notebook": ["/images/office/tibeb-hardcover-notebook.jpg"],
+  "axum-brass-rollerball-pen": ["/images/office/axum-brass-rollerball-pen.jpg"],
+  "lalibela-golden-fountain-pen": [
+    "/images/office/lalibela-golden-fountain-pen.jpg",
+  ],
+  "executive-leather-document-file": [
+    "/images/office/executive-leather-document-file.jpg",
+  ],
+  "highland-archival-expanding-file": [
+    "/images/office/highland-archival-expanding-file.jpg",
+  ],
+  "ethiopian-leather-laptop-bag": [
+    "/images/office/ethiopian-leather-laptop-bag.jpg",
+  ],
+  "highland-commuter-laptop-bag": [
+    "/images/office/highland-commuter-laptop-bag.jpg",
+  ],
+  "ergonomic-executive-office-chair": [
+    "/images/office/ergonomic-executive-office-chair.jpg",
+  ],
+  "highland-leather-executive-chair": [
+    "/images/office/highland-leather-executive-chair.jpg",
+  ],
+  "wanza-hardwood-executive-desk": [
+    "/images/office/wanza-hardwood-executive-desk.jpg",
+  ],
+  "ergonomic-wanza-standing-desk": [
+    "/images/office/ergonomic-wanza-standing-desk.jpg",
+  ],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (!slugOrName) return null;
   const s = slugOrName.toLowerCase().trim();
   if (COFFEE_IMAGE_GALLERIES[s]) return s;
+
+  // 0. Executive Office Products (Exact device, furniture & supply checks)
+  if (
+    s.includes("iphone-16-pro-max") ||
+    (s.includes("iphone") && (s.includes("max") || s.includes("pro-max")))
+  )
+    return "iphone-16-pro-max";
+  if (s.includes("iphone-16-pro") || s.includes("iphone"))
+    return "iphone-16-pro";
+  if (
+    s.includes("macbook-pro") ||
+    (s.includes("macbook") &&
+      (s.includes("pro") || s.includes("max") || s.includes("workstation")))
+  )
+    return "macbook-pro-m-series";
+  if (s.includes("macbook-air") || s.includes("macbook"))
+    return "macbook-air-m-series";
+  if (
+    s.includes("highland-leather-notebook") ||
+    (s.includes("leather") && s.includes("notebook"))
+  )
+    return "highland-leather-notebook";
+  if (
+    s.includes("tibeb-hardcover-notebook") ||
+    (s.includes("tibeb") && (s.includes("notebook") || s.includes("journal")))
+  )
+    return "tibeb-hardcover-notebook";
+  if (
+    s.includes("axum-brass-rollerball-pen") ||
+    (s.includes("brass") && (s.includes("pen") || s.includes("rollerball")))
+  )
+    return "axum-brass-rollerball-pen";
+  if (
+    s.includes("lalibela-golden-fountain-pen") ||
+    (s.includes("fountain") && s.includes("pen"))
+  )
+    return "lalibela-golden-fountain-pen";
+  if (
+    s.includes("executive-leather-document-file") ||
+    (s.includes("leather") && (s.includes("file") || s.includes("folio")))
+  )
+    return "executive-leather-document-file";
+  if (
+    s.includes("highland-archival-expanding-file") ||
+    s.includes("expanding-file") ||
+    (s.includes("archival") && s.includes("file"))
+  )
+    return "highland-archival-expanding-file";
+  if (
+    s.includes("ethiopian-leather-laptop-bag") ||
+    (s.includes("leather") && s.includes("laptop-bag"))
+  )
+    return "ethiopian-leather-laptop-bag";
+  if (
+    s.includes("highland-commuter-laptop-bag") ||
+    s.includes("laptop-bag") ||
+    s.includes("briefcase")
+  )
+    return "highland-commuter-laptop-bag";
+  if (
+    s.includes("ergonomic-executive-office-chair") ||
+    (s.includes("ergonomic") && s.includes("chair"))
+  )
+    return "ergonomic-executive-office-chair";
+  if (
+    s.includes("highland-leather-executive-chair") ||
+    (s.includes("leather") && s.includes("chair")) ||
+    s.includes("office-chair") ||
+    s.includes("desk-chair")
+  )
+    return "highland-leather-executive-chair";
+  if (
+    s.includes("wanza-hardwood-executive-desk") ||
+    (s.includes("wanza") && s.includes("desk")) ||
+    s.includes("office-desk")
+  )
+    return "wanza-hardwood-executive-desk";
+  if (
+    s.includes("ergonomic-wanza-standing-desk") ||
+    s.includes("standing-desk")
+  )
+    return "ergonomic-wanza-standing-desk";
 
   // 1. Authentic Ethiopian Artisan Gifts & Heirlooms (High-priority exact specificity)
   if (
@@ -963,12 +1081,55 @@ export const CAT_GIFTS = createCategory(
   "/images/heroes/gifts-hero.jpg",
 );
 
+export const CAT_OFFICE_DEVICES = createCategory(
+  "cat_office_devices",
+  "iPhones & MacBooks",
+  "office/devices",
+  "High-performance Apple technology for executive leadership — flagship iPhones and MacBook Pro and Air M-series silicon workstations.",
+);
+
+export const CAT_OFFICE_STATIONERY = createCategory(
+  "cat_office_stationery",
+  "Notebooks, Pens & Folios",
+  "office/stationery",
+  "Heirloom writing instruments, acid-free notebooks, and executive document organizer files — full-grain leather journals, solid brass rollerball pens, and archival expanding files.",
+);
+
+export const CAT_OFFICE_BAGS = createCategory(
+  "cat_office_bags",
+  "Laptop Bags & Briefcases",
+  "office/bags",
+  "Handcrafted Ethiopian full-grain leather and waxed canvas laptop bags, messenger bags, and commuter briefcases.",
+);
+
+export const CAT_OFFICE_FURNITURE = createCategory(
+  "cat_office_furniture",
+  "Office Chairs & Desks",
+  "office/furniture",
+  "Ergonomic executive desk chairs with adaptive lumbar support and handcrafted solid Ethiopian Wanza hardwood writing and standing desks.",
+);
+
+export const CAT_OFFICE = createCategory(
+  "cat_office",
+  "Office",
+  "office",
+  "Executive workstations, high-performance Apple devices, handcrafted Ethiopian Wanza furniture, and fine stationery — iPhones, MacBook M-series, full-grain leather notebooks, solid brass pens, archival files, laptop bags, ergonomic office chairs, and executive desks.",
+  [
+    CAT_OFFICE_DEVICES,
+    CAT_OFFICE_STATIONERY,
+    CAT_OFFICE_BAGS,
+    CAT_OFFICE_FURNITURE,
+  ],
+  "/images/heroes/office-hero.jpg",
+);
+
 export const KABUNA_CATEGORIES: Category[] = [
   CAT_COFFEE,
   CAT_SNACKS,
   CAT_HAIR,
   CAT_BODY,
   CAT_GIFTS,
+  CAT_OFFICE,
 ];
 
 interface CoffeeSpecProps {
@@ -1766,6 +1927,151 @@ function buildGiftProduct({
     seller_id: null,
     primary_media: primaryMedia,
     media: gallery.length > 0 ? gallery : [primaryMedia],
+    variants: [variant],
+    default_variant: variant,
+    option_types: [],
+    option_values: [],
+    categories: productCategories,
+    custom_fields: customFields,
+    prior_price: null,
+  };
+}
+
+interface OfficeProductProps {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  baseCents: number;
+  compareAtCents?: number;
+  imageUrl: string;
+  sku: string;
+  weight: number;
+  tags: string[];
+  categories?: Category[];
+  specs: {
+    itemType: string;
+    specifications: string;
+    materials: string;
+    dimensions: string;
+    origin: string;
+    warrantyOrCare: string;
+  };
+}
+
+function buildOfficeProduct({
+  id,
+  name,
+  slug,
+  subtitle,
+  description,
+  baseCents,
+  compareAtCents,
+  imageUrl,
+  sku,
+  weight,
+  tags,
+  categories = [CAT_OFFICE],
+  specs,
+}: OfficeProductProps): Product {
+  const price = createPrice(baseCents, compareAtCents);
+  const primaryMedia = createMedia(
+    `media_${id}_1`,
+    imageUrl,
+    `${name} - Executive Office Workstation`,
+    1,
+  );
+  const gallery = [primaryMedia];
+  const variant = createVariant(
+    `var_${id}_default`,
+    sku,
+    baseCents,
+    [],
+    "Standard",
+    weight,
+  );
+
+  const customFields: CustomField[] = [
+    createCustomField(
+      `cf_${id}_type`,
+      "Product Category",
+      "type",
+      specs.itemType,
+    ),
+    createCustomField(
+      `cf_${id}_specifications`,
+      "Technical Specs & Features",
+      "specifications",
+      specs.specifications,
+    ),
+    createCustomField(
+      `cf_${id}_specs`,
+      "Technical Specs & Features",
+      "specs",
+      specs.specifications,
+    ),
+    createCustomField(
+      `cf_${id}_materials`,
+      "Materials & Craft",
+      "materials",
+      specs.materials,
+    ),
+    createCustomField(
+      `cf_${id}_dimensions`,
+      "Dimensions & Sizing",
+      "dimensions",
+      specs.dimensions,
+    ),
+    createCustomField(
+      `cf_${id}_origin`,
+      "Provenance & Supply",
+      "origin",
+      specs.origin,
+    ),
+    createCustomField(
+      `cf_${id}_warranty`,
+      "Warranty & Care",
+      "warranty",
+      specs.warrantyOrCare,
+    ),
+  ];
+
+  const productCategories = categories.some((c) => c.id === "cat_office")
+    ? categories
+    : [CAT_OFFICE, ...categories];
+
+  return {
+    id,
+    name,
+    slug,
+    meta_title: `${name} | Executive Office Workstation | Kabuna`,
+    meta_description: subtitle,
+    meta_keywords: `Office supplies, ${name}, ${tags.join(", ")}, Apple workstation, ergonomic furniture`,
+    variant_count: 1,
+    available_on: "2024-01-01T00:00:00.000Z",
+    preorder_ships_at: null,
+    purchasable: true,
+    preorder: false,
+    in_stock: true,
+    backorderable: false,
+    available: true,
+    description: `${subtitle}\n\n${description}`,
+    description_html: `<p><strong>${subtitle}</strong></p><p>${description}</p>`,
+    default_variant_id: variant.id,
+    buy_box_variant_id: variant.id,
+    thumbnail_url: imageUrl,
+    tags: [
+      "Executive Office",
+      "Modern Workstation",
+      "Office Essentials",
+      ...tags,
+    ],
+    price,
+    original_price: compareAtCents ? createPrice(compareAtCents) : price,
+    seller_id: null,
+    primary_media: primaryMedia,
+    media: gallery,
     variants: [variant],
     default_variant: variant,
     option_types: [],
@@ -3334,6 +3640,586 @@ export const KABUNA_PRODUCTS: Product[] = [
         "Coiled sweetgrass technique requiring over 10 days of precision needle-weaving",
       careOrUse:
         "Keep in a dry environment; dust lightly with a dry soft brush. Ideal for storing jewelry and keepsakes.",
+    },
+  }),
+
+  // 49. Apple iPhone 16 Pro Max
+  buildOfficeProduct({
+    id: "prod_office_iphone_16_pro_max",
+    name: "Apple iPhone 16 Pro Max",
+    slug: "iphone-16-pro-max",
+    subtitle:
+      "Grade 5 Titanium Chassis, A18 Pro Bionic, Super Retina XDR OLED & Pro Camera Array",
+    description:
+      "The ultimate executive flagship smartphone engineered for high-mobility corporate leadership and creative production. Built with an aerospace-grade Grade 5 titanium enclosure, edge-to-edge 6.9-inch Super Retina XDR display with ProMotion 120Hz, and the groundbreaking A18 Pro silicon. Features 4K 120fps Dolby Vision video capture, USB-C 10Gbps transfer speeds, and all-day executive battery endurance.",
+    baseCents: 119900,
+    compareAtCents: 129900,
+    imageUrl: "/images/office/iphone-16-pro-max.jpg",
+    sku: "KBN-OFF-IPHONE-16-PROMAX",
+    weight: 0.227,
+    tags: [
+      "iPhone",
+      "iPhone 16 Pro Max",
+      "Apple Silicon",
+      "Executive Tech",
+      "Titanium Smartphone",
+      "Mobile Workstation",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_DEVICES],
+    specs: {
+      itemType: "Flagship Executive Smartphone",
+      specifications:
+        "Apple A18 Pro 6-Core CPU with 6-Core GPU and 16-Core Neural Engine • 256GB NVMe",
+      materials:
+        "Aerospace-Grade Grade 5 Titanium Band, Textured Matte Glass Back, Ceramic Shield Front",
+      dimensions:
+        "6.9-inch Super Retina XDR Display • 163mm × 77.6mm × 8.25mm • 227g",
+      origin: "Apple Enterprise Corporate Supply Channel",
+      warrantyOrCare:
+        "1-Year Official International Apple Limited Warranty and 90-day technical support.",
+    },
+  }),
+
+  // 50. Apple iPhone 16 Pro
+  buildOfficeProduct({
+    id: "prod_office_iphone_16_pro",
+    name: "Apple iPhone 16 Pro",
+    slug: "iphone-16-pro",
+    subtitle:
+      "6.3-inch Super Retina XDR OLED, Titanium Enclosure, A18 Pro Chip & Camera Control",
+    description:
+      "A precision executive powerhouse in an ergonomic palm-fitting footprint. Encased in featherweight natural titanium with ultra-thin display borders, powered by the A18 Pro chip for instantaneous multitasking, encrypted on-device communications, and studio-grade audio recording.",
+    baseCents: 99900,
+    compareAtCents: 109900,
+    imageUrl: "/images/office/iphone-16-pro.jpg",
+    sku: "KBN-OFF-IPHONE-16-PRO",
+    weight: 0.199,
+    tags: [
+      "iPhone",
+      "iPhone 16 Pro",
+      "Apple Device",
+      "Pro Smartphone",
+      "Executive Mobile",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_DEVICES],
+    specs: {
+      itemType: "Compact Pro Smartphone",
+      specifications:
+        "A18 Pro Silicon, 128GB High-Speed Storage, 48MP Fusion Triple Camera with 5x Telephoto",
+      materials: "Grade 5 Titanium Frame with Micro-Blasted Matte Texture",
+      dimensions:
+        "6.3-inch Super Retina XDR Display • 149.6mm × 71.5mm × 8.25mm • 199g",
+      origin: "Apple Enterprise Corporate Supply Channel",
+      warrantyOrCare: "1-Year Official International Apple Limited Warranty.",
+    },
+  }),
+
+  // 51. Apple MacBook Pro 16" M-Series
+  buildOfficeProduct({
+    id: "prod_office_macbook_pro_m_series",
+    name: 'Apple MacBook Pro 16" M-Series Workstation',
+    slug: "macbook-pro-m-series",
+    subtitle:
+      "Space Black M-Series Max Silicon, 36GB Unified Memory, Liquid Retina XDR & 1TB SSD",
+    description:
+      "The definitive laptop workstation for developers, designers, and business leaders. Engineered with high-bandwidth M-series Max architecture, offering unthrottled performance whether plugged in or operating on battery. Features an expansive 16.2-inch Liquid Retina XDR display with 1,600 nits peak HDR brightness, 22-hour battery life, studio-quality 6-speaker spatial audio system, and full connectivity ports.",
+    baseCents: 249900,
+    compareAtCents: 269900,
+    imageUrl: "/images/office/macbook-pro-m-series.jpg",
+    sku: "KBN-OFF-MACBOOK-PRO-16",
+    weight: 2.16,
+    tags: [
+      "MacBook Pro",
+      "M Series",
+      "Apple Laptop",
+      "Executive Workstation",
+      "M3 Max",
+      "Space Black",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_DEVICES],
+    specs: {
+      itemType: "Pro Studio Laptop Workstation",
+      specifications:
+        "Apple M-Series Max (14-Core CPU, 30-Core GPU, 16-Core Neural Engine) • 36GB Unified Memory • 1TB SSD",
+      materials:
+        "100% Recycled Space Black Anodized Aluminum with Anodization Seal",
+      dimensions:
+        "16.2-inch Liquid Retina XDR (3456 × 2234 at 120Hz) • 35.57cm × 24.81cm × 1.68cm • 2.16kg",
+      origin: "Apple Enterprise Workstation Channel",
+      warrantyOrCare:
+        "1-Year Official International AppleCare Hardware Warranty.",
+    },
+  }),
+
+  // 52. Apple MacBook Air 15" M-Series
+  buildOfficeProduct({
+    id: "prod_office_macbook_air_m_series",
+    name: 'Apple MacBook Air 15" M-Series Ultra-Thin',
+    slug: "macbook-air-m-series",
+    subtitle:
+      'Midnight Blue Aluminum, Fanless Silent M-Series Silicon, 15.3" Liquid Retina & 18hr Battery',
+    description:
+      "Impossibly thin, completely fanless, and whisper quiet. The 15-inch MacBook Air combines expansive screen real estate with effortless portability. Driven by energy-efficient Apple M-series silicon for lightning-quick productivity, video calls, spreadsheets, and creative presentations on an 18-hour single charge.",
+    baseCents: 129900,
+    compareAtCents: 139900,
+    imageUrl: "/images/office/macbook-air-m-series.jpg",
+    sku: "KBN-OFF-MACBOOK-AIR-15",
+    weight: 1.51,
+    tags: [
+      "MacBook Air",
+      "M Series",
+      "Apple Laptop",
+      "Ultra-Thin Notebook",
+      "Fanless Laptop",
+      "Midnight Blue",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_DEVICES],
+    specs: {
+      itemType: "Ultra-Portable Executive Laptop",
+      specifications:
+        "Apple M-Series 8-Core CPU & 10-Core GPU • 16GB Unified RAM • 512GB SSD",
+      materials: "Durable Anodized Midnight Aluminum Uni-Body Construction",
+      dimensions:
+        "15.3-inch Liquid Retina Display (2880 × 1864) • 34.04cm × 23.76cm × 1.15cm • 1.51kg",
+      origin: "Apple Enterprise Workstation Channel",
+      warrantyOrCare:
+        "1-Year Official International AppleCare Manufacturer Warranty.",
+    },
+  }),
+
+  // 53. Highland Full-Grain Leather Executive Notebook
+  buildOfficeProduct({
+    id: "prod_office_leather_notebook",
+    name: "Highland Full-Grain Leather Executive Notebook",
+    slug: "highland-leather-notebook",
+    subtitle:
+      "Refillable Vegetable-Tanned Ethiopian Leather Journal with 240 Ivory Bleedproof Pages",
+    description:
+      "An heirloom executive notebook handcrafted by generational leather artisans in Addis Ababa. Fashioned from supple, rich chestnut-tan Ethiopian highland cowhide tanned using traditional plant extracts and beeswax. Contains 240 fountain-pen friendly, bleedproof 100gsm ivory pages with lay-flat binding, an interior document pocket, and an elasticized closure strap.",
+    baseCents: 4800,
+    compareAtCents: 5800,
+    imageUrl: "/images/office/highland-leather-notebook.jpg",
+    sku: "KBN-OFF-LEATHER-NOTEBOOK",
+    weight: 0.42,
+    tags: [
+      "Leather Notebook",
+      "Executive Journal",
+      "Ethiopian Leather",
+      "Refillable Notebook",
+      "Fountain Pen Friendly",
+      "Stationery",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_STATIONERY],
+    specs: {
+      itemType: "Refillable Leather Executive Notebook",
+      specifications:
+        "240 Lined Pages of 100gsm Acid-Free Ivory Paper • Lay-Flat 180° Binding",
+      materials:
+        "100% Ethiopian Full-Grain Vegetable-Tanned Cowhide, Silk Ribbon, Brass Rivets",
+      dimensions:
+        "A5 Executive Size (22cm × 15.5cm × 2.5cm) • Fits Standard A5 Refills",
+      origin: "Artisan Leather Craftsmen Guild, Addis Ababa, Ethiopia",
+      warrantyOrCare:
+        "Nourish leather once annually with natural beeswax or leather balm.",
+    },
+  }),
+
+  // 54. Embroidered Tibeb Hardcover Archival Notebook
+  buildOfficeProduct({
+    id: "prod_office_tibeb_hardcover_notebook",
+    name: "Embroidered Tibeb Hardcover Archival Notebook",
+    slug: "tibeb-hardcover-notebook",
+    subtitle:
+      "Handwoven Natural Cotton Cover with Jewel-Tone Geometric Tibeb Border & Dot-Grid Pages",
+    description:
+      "A harmonious blend of cultural Ethiopian textile heritage and modern executive organization. Bound in pure unbleached hand-spun Habesha cotton fabric accented with a vibrant royal burgundy and gold geometric Tibeb woven border. Features 192 archival dot-grid pages ideal for sketching, project blueprints, bullet journaling, and meeting minutes.",
+    baseCents: 3200,
+    compareAtCents: 4000,
+    imageUrl: "/images/office/tibeb-hardcover-notebook.jpg",
+    sku: "KBN-OFF-TIBEB-NOTEBOOK",
+    weight: 0.35,
+    tags: [
+      "Hardcover Notebook",
+      "Tibeb Journal",
+      "Dot Grid Notebook",
+      "Habesha Textile",
+      "Executive Stationery",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_STATIONERY],
+    specs: {
+      itemType: "Hardcover Archival Fabric Notebook",
+      specifications:
+        "192 Numbered Dot-Grid Pages (120gsm Heavyweight Paper) • Dual Ribbon Bookmarks",
+      materials:
+        "100% Hand-Spun Ethiopian Cotton Textile Cover with Silk-Cotton Tibeb Inlay",
+      dimensions: "A5 Standard Format (21.5cm × 14.5cm × 2cm) • 350g",
+      origin: "Shiro Meda Weavers & Bookbinding Guild, Addis Ababa, Ethiopia",
+      warrantyOrCare:
+        "Keep dry; wipe fabric gently with a dry lint-free cloth.",
+    },
+  }),
+
+  // 55. Axum Hand-Turned Solid Brass Rollerball Pen
+  buildOfficeProduct({
+    id: "prod_office_brass_rollerball_pen",
+    name: "Axum Hand-Turned Solid Brass Rollerball Pen",
+    slug: "axum-brass-rollerball-pen",
+    subtitle:
+      "Weight-Balanced Solid Brass & African Ebony Wood Executive Pen with German Ceramic Tip",
+    description:
+      "Expertly turned from solid C36000 golden brass stock and aged African ebony hardwood by metalsmiths in Tigray. Perfectly weighted to create a natural momentum that glides effortlessly across paper without writing fatigue. Fitted with a precision German Schmidt ceramic rollerball cartridge producing crisp, fast-drying archival black lines.",
+    baseCents: 5400,
+    compareAtCents: 6500,
+    imageUrl: "/images/office/axum-brass-rollerball-pen.jpg",
+    sku: "KBN-OFF-AXUM-BRASS-PEN",
+    weight: 0.052,
+    tags: [
+      "Brass Pen",
+      "Rollerball Pen",
+      "Executive Pen",
+      "Solid Brass",
+      "Ebony Wood",
+      "Fine Writing Instrument",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_STATIONERY],
+    specs: {
+      itemType: "Handcrafted Luxury Rollerball Pen",
+      specifications:
+        "German Schmidt 888 Ceramic Safety Rollerball Refill (0.7mm Fine Line, Archival Black)",
+      materials:
+        "Solid Lead-Free Architectural Brass Billet, Hand-Turned African Ebony Hardwood",
+      dimensions: "138mm Length × 12.5mm Barrel Diameter • 52g Total Weight",
+      origin: "Axum Metalsmiths & Woodturners Collective, Ethiopia",
+      warrantyOrCare:
+        "Brass develops an organic golden patina over time; buff with microfiber cloth.",
+    },
+  }),
+
+  // 56. Heritage Lalibela Engraved Golden Fountain Pen
+  buildOfficeProduct({
+    id: "prod_office_lalibela_fountain_pen",
+    name: "Heritage Lalibela Engraved Golden Fountain Pen",
+    slug: "lalibela-golden-fountain-pen",
+    subtitle:
+      "Hand-Chiseled Lalibela Cross Knotwork Barrel, 24k Gold Accents & Titanium-Iridium Nib",
+    description:
+      "A prestigious signing instrument created for executive contract signings and personal correspondence. The solid brass barrel is hand-chiseled with intricate interlocking Lalibela cross geometric knotwork and layered in radiant 24k gold. Fitted with a velvety smooth medium titanium-coated iridium nib and includes a piston ink converter and five international black cartridges.",
+    baseCents: 6800,
+    compareAtCents: 8200,
+    imageUrl: "/images/office/lalibela-golden-fountain-pen.jpg",
+    sku: "KBN-OFF-LALIBELA-FOUNTAIN-PEN",
+    weight: 0.048,
+    tags: [
+      "Fountain Pen",
+      "Golden Pen",
+      "Lalibela Engraving",
+      "Executive Pen",
+      "Calligraphy & Signing",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_STATIONERY],
+    specs: {
+      itemType: "Executive Collector Fountain Pen",
+      specifications:
+        "Medium (0.6mm) Titanium-Coated Stainless-Iridium Nib • Piston Converter & Cartridge Compatible",
+      materials:
+        "Hand-Engraved Brass Body, 24k Hard Gold Electroplating, Acrylic Grip Section",
+      dimensions: "142mm Length (Capped) × 13mm Diameter • 48g Weight",
+      origin: "Lalibela Artisan Guild & Addis Metalsmiths, Ethiopia",
+      warrantyOrCare:
+        "Flush nib with lukewarm distilled water every 3 months for peak flow.",
+    },
+  }),
+
+  // 57. Executive Full-Grain Leather Document File Folder
+  buildOfficeProduct({
+    id: "prod_office_leather_document_file",
+    name: "Executive Full-Grain Leather Document File Folder",
+    slug: "executive-leather-document-file",
+    subtitle:
+      "A4 Executive Document Portfolio Folio with Magnetic Closure & Business Card Slots",
+    description:
+      "Command respect in executive boardrooms and client presentations with this immaculate leather document folder. Handcrafted from vegetable-tanned Ethiopian calfskin with burnished edges and suede microfiber interior lining. Comfortably accommodates up to 100 sheets of A4 contracts, certificates, tablet devices, pens, and credentials in pristine security.",
+    baseCents: 6200,
+    compareAtCents: 7500,
+    imageUrl: "/images/office/executive-leather-document-file.jpg",
+    sku: "KBN-OFF-LEATHER-DOC-FILE",
+    weight: 0.38,
+    tags: [
+      "Leather File",
+      "Document Folder",
+      "Executive Folio",
+      "A4 Organizer",
+      "Ethiopian Calfskin",
+      "Boardroom Accessories",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_STATIONERY],
+    specs: {
+      itemType: "Executive Leather Document Portfolio",
+      specifications:
+        'Fits 100 A4 / US Letter Sheets • Padded Tablet Pocket (up to 11") • 4 Business Card Slots • Pen Loop',
+      materials:
+        "100% Ethiopian Full-Grain Calfskin Leather, Microfiber Suede Lining, Concealed Neodymium Magnets",
+      dimensions: "33cm × 24.5cm × 2cm • 380g",
+      origin: "Bole Leather Artisans Collective, Addis Ababa, Ethiopia",
+      warrantyOrCare:
+        "Condition annually with natural leather cream; store flat in a dry environment.",
+    },
+  }),
+
+  // 58. Highland Multi-Pocket Archival Expanding Folio File
+  buildOfficeProduct({
+    id: "prod_office_archival_expanding_file",
+    name: "Highland Multi-Pocket Archival Expanding Folio File",
+    slug: "highland-archival-expanding-file",
+    subtitle:
+      "6-Pocket Accordion Document Organizer in Waxed Canvas with Vegetable-Tanned Leather Trim",
+    description:
+      "Keep confidential contracts, financial archives, and corporate records meticulously sorted. Constructed from rugged 16oz weather-treated waxed canvas reinforced with chestnut Ethiopian leather gussets and antiqued brass snap closures. Features six expanding accordion partitions with blank customizable index labels.",
+    baseCents: 4200,
+    compareAtCents: 5200,
+    imageUrl: "/images/office/highland-archival-expanding-file.jpg",
+    sku: "KBN-OFF-EXPANDING-FILE",
+    weight: 0.45,
+    tags: [
+      "Expanding File",
+      "Archival Organizer",
+      "Document Folio",
+      "Waxed Canvas File",
+      "Accordion Folder",
+      "Office Storage",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_STATIONERY],
+    specs: {
+      itemType: "Archival Expanding Document File",
+      specifications:
+        "6 Expanding Accordion Compartments (Holds up to 400 A4 Sheets) • Customizable Index Tabs Included",
+      materials:
+        "16oz Heavy-Duty Water-Repellent Waxed Cotton Canvas, Full-Grain Leather Gussets, Solid Brass Snaps",
+      dimensions: "34cm Width × 25cm Height × 3cm–12cm Expanding Depth • 450g",
+      origin: "Highland Canvas & Leather Workshops, Shewa, Ethiopia",
+      warrantyOrCare:
+        "Spot clean with cold water; rewax canvas as needed every few years.",
+    },
+  }),
+
+  // 59. Handcrafted Ethiopian Leather Executive Laptop Bag
+  buildOfficeProduct({
+    id: "prod_office_ethiopian_leather_laptop_bag",
+    name: "Handcrafted Ethiopian Leather Executive Laptop Bag",
+    slug: "ethiopian-leather-laptop-bag",
+    subtitle:
+      'Full-Grain Saddle Tan Highland Leather Briefcase with Padded 16" MacBook Sleeve',
+    description:
+      'The definitive professional briefcase crafted from legendary Ethiopian highland cowhide—cherished internationally for its superior fiber density, supple hand-feel, and remarkable longevity. Features a dedicated high-density padded compartment for up to 16" laptops, reinforced top carry handles, solid brass hardware, and an ergonomic detachable shoulder strap.',
+    baseCents: 18500,
+    compareAtCents: 22000,
+    imageUrl: "/images/office/ethiopian-leather-laptop-bag.jpg",
+    sku: "KBN-OFF-LEATHER-LAPTOP-BAG",
+    weight: 1.45,
+    tags: [
+      "Laptop Bag",
+      "Leather Briefcase",
+      "Messenger Bag",
+      "Ethiopian Leather",
+      "Full-Grain Cowhide",
+      "Executive Commute",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_BAGS],
+    specs: {
+      itemType: "Executive Leather Laptop Briefcase",
+      specifications:
+        'Padded Sleeve for 16" MacBook Pro / Laptop • Dual Main Dividers • Luggage Trolley Pass-Through Sleeve',
+      materials:
+        "100% Ethiopian Full-Grain Vegetable-Tanned Cowhide, Solid Antiqued Brass Hardware, 10oz Cotton Canvas Lining",
+      dimensions:
+        "41.5cm Width × 31cm Height × 10.5cm Depth • Shoulder Strap 125cm Adjustable",
+      origin: "Shiro Meda Master Leathercraft Guild, Addis Ababa, Ethiopia",
+      warrantyOrCare:
+        "Condition twice yearly with natural leather balm; store in included cotton dust bag.",
+    },
+  }),
+
+  // 60. Highland Commuter Canvas & Leather Laptop Bag
+  buildOfficeProduct({
+    id: "prod_office_canvas_leather_laptop_bag",
+    name: "Highland Commuter Canvas & Leather Laptop Bag",
+    slug: "highland-commuter-laptop-bag",
+    subtitle:
+      'Weather-Resistant Waxed Canvas Messenger with Dark Chocolate Leather Accents & 15" Sleeve',
+    description:
+      "Designed for the dynamic executive navigating urban transit and high-energy coffee shops. Blends water-resistant 18oz olive waxed canvas with chocolate-brown Ethiopian pull-up leather flap and trim. Features quick-access magnetic buckle closures, padded laptop protection, and multiple internal device organizers.",
+    baseCents: 12500,
+    compareAtCents: 15000,
+    imageUrl: "/images/office/highland-commuter-laptop-bag.jpg",
+    sku: "KBN-OFF-COMMUTER-BAG",
+    weight: 1.15,
+    tags: [
+      "Laptop Bag",
+      "Messenger Bag",
+      "Waxed Canvas Bag",
+      "Leather & Canvas",
+      "Commuter Briefcase",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_BAGS],
+    specs: {
+      itemType: "Everyday Executive Commuter Laptop Bag",
+      specifications:
+        'Dedicated Suspended 15" Laptop Compartment • Tablet Slip Pocket • Exterior Zippered Passport Pocket',
+      materials:
+        "18oz Waxed Army Duck Canvas, Genuine Ethiopian Pull-Up Leather, Heavy Cast Brass Buckles",
+      dimensions: "39cm Width × 29cm Height × 9cm Depth • 1.15kg",
+      origin: "Highland Artisan Guilds, Addis Ababa, Ethiopia",
+      warrantyOrCare:
+        "Wipe clean with a damp cloth; avoid machine wash to maintain waterproof wax barrier.",
+    },
+  }),
+
+  // 61. Ergonomic Executive Mesh & Leather Office Desk Chair
+  buildOfficeProduct({
+    id: "prod_office_ergonomic_desk_chair",
+    name: "Ergonomic Executive Mesh & Leather Office Desk Chair",
+    slug: "ergonomic-executive-office-chair",
+    subtitle:
+      "Adaptive Dynamic Lumbar System, 4D Multi-Way Armrests & Breathable High-Tensile Mesh",
+    description:
+      "Engineered to provide unmatched spinal alignment and zero-pressure comfort during marathon 12+ hour workdays. Incorporates an adaptive dynamic lumbar support system that automatically flexes with posture changes, a 4-position synchro-tilt mechanism (90°–135°), multi-directional 4D armrests, and an aerospace-grade die-cast aluminum 5-star wheelbase with silent floor-safe casters.",
+    baseCents: 49500,
+    compareAtCents: 59500,
+    imageUrl: "/images/office/ergonomic-executive-office-chair.jpg",
+    sku: "KBN-OFF-ERGO-CHAIR-MESH",
+    weight: 19.5,
+    tags: [
+      "Office Chair",
+      "Ergonomic Chair",
+      "Executive Desk Chair",
+      "Lumbar Support",
+      "4D Armrests",
+      "Workstation Seating",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_FURNITURE],
+    specs: {
+      itemType: "High-Performance Ergonomic Office Chair",
+      specifications:
+        "Self-Adjusting Dynamic Lumbar Support • 4D Multi-Way Armrests • 135° Recline Lock • BIFMA Certified Class-4 Gas Lift",
+      materials:
+        "Breathable German Elastomer Mesh Back, High-Density Molded Foam Seat with Leather Trim, Die-Cast Polished Aluminum Base",
+      dimensions:
+        "68cm Width × 68cm Depth × 118cm–128cm Adjustable Height • 150kg Weight Capacity",
+      origin: "Precision Ergonomic Workstation Engineering",
+      warrantyOrCare:
+        "5-Year Comprehensive Mechanical & Frame Manufacturer Warranty.",
+    },
+  }),
+
+  // 62. Highland Top-Grain Leather High-Back Executive Chair
+  buildOfficeProduct({
+    id: "prod_office_high_back_leather_chair",
+    name: "Highland Top-Grain Leather High-Back Executive Chair",
+    slug: "highland-leather-executive-chair",
+    subtitle:
+      "Presidential Boardroom Leather Chair with Hand-Carved Wanza Wood Accents & Synchro-Tilt",
+    description:
+      "The pinnacle of executive prestige. Upholstered by hand in deep cognac top-grain Ethiopian leather over multi-layered ergonomic pressure-relief foam. Features hand-carved Ethiopian Wanza hardwood padded armrests, integrated high-back headrest support, pneumatic smooth height adjustment, and effortless 360-degree silent swivel.",
+    baseCents: 65000,
+    compareAtCents: 78000,
+    imageUrl: "/images/office/highland-leather-executive-chair.jpg",
+    sku: "KBN-OFF-LEATHER-HIGHBACK-CHAIR",
+    weight: 23.0,
+    tags: [
+      "Office Chair",
+      "Leather Executive Chair",
+      "High Back Chair",
+      "Wanza Wood Accent",
+      "Boardroom Seating",
+      "Luxury Furniture",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_FURNITURE],
+    specs: {
+      itemType: "Luxury High-Back Executive Boardroom Chair",
+      specifications:
+        "Pneumatic Height Adjustment (48cm–58cm Seat Height) • 360° Smooth Swivel • Dual-Paddle Synchro-Tilt Mechanism",
+      materials:
+        "100% Ethiopian Top-Grain Cowhide Leather, Hand-Carved Wanza Hardwood Arm Accents, Heavy Steel Reinforced Frame",
+      dimensions:
+        "72cm Width × 74cm Depth × 124cm–134cm Total Height • 180kg Max Load",
+      origin:
+        "Entoto Mountain Furniture Collective & Master Upholsterers, Ethiopia",
+      warrantyOrCare:
+        "Nourish leather once per year with leather conditioner; 5-Year Structural Frame Warranty.",
+    },
+  }),
+
+  // 63. Handcrafted Ethiopian Wanza Hardwood Executive Office Desk
+  buildOfficeProduct({
+    id: "prod_office_wanza_hardwood_desk",
+    name: "Handcrafted Ethiopian Wanza Hardwood Executive Office Desk",
+    slug: "wanza-hardwood-executive-desk",
+    subtitle:
+      "Solid Native Cordia Africana Writing Desk with Soft-Close Drawers & Brass Wire Grommet",
+    description:
+      "A monumental centerpiece for discerning executives, hand-built from solid Ethiopian Wanza (Cordia africana)—the legendary native dark hardwood renowned for its amber chatoyancy, rich swirling grain, and extraordinary lifetime stability. Constructed with traditional mortise-and-tenon joinery, two whisper-quiet soft-close side drawers, a concealed velvet-lined center laptop drawer, and integrated solid brass cable management grommets.",
+    baseCents: 115000,
+    compareAtCents: 135000,
+    imageUrl: "/images/office/wanza-hardwood-executive-desk.jpg",
+    sku: "KBN-OFF-WANZA-DESK-SOLID",
+    weight: 58.0,
+    tags: [
+      "Office Desk",
+      "Wanza Hardwood",
+      "Executive Desk",
+      "Solid Wood Desk",
+      "Cordia Africana",
+      "Handcrafted Furniture",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_FURNITURE],
+    specs: {
+      itemType: "Executive Solid Hardwood Office Desk",
+      specifications:
+        "160cm Wide Desktop with Beveled Edges • 2 Soft-Close Drawers • 1 Wide Lap Drawer • Integrated Brass Cable Port",
+      materials:
+        "100% Sustainably Foraged Ethiopian Wanza (Cordia africana) Hardwood, Solid Brushed Brass Hardware",
+      dimensions:
+        "160cm Length × 80cm Width × 76cm Height • Desktop Thickness 3.5cm • 58kg",
+      origin: "Entoto Mountain Master Woodcrafters Guild, Shewa, Ethiopia",
+      warrantyOrCare:
+        "Finished with organic Koseret oil & natural beeswax; dust with soft cloth and buff annually.",
+    },
+  }),
+
+  // 64. Ergonomic Dual-Motor Wanza Wood Executive Standing Desk
+  buildOfficeProduct({
+    id: "prod_office_ergonomic_standing_desk",
+    name: "Ergonomic Dual-Motor Wanza Wood Executive Standing Desk",
+    slug: "ergonomic-wanza-standing-desk",
+    subtitle:
+      "Solid Native Wanza Hardwood Top with Dual Ultra-Quiet Motors & 4 Memory Presets",
+    description:
+      "The flawless synthesis of timeless Ethiopian native hardwood and modern workplace ergonomics. A solid, hand-planed 3cm-thick Wanza hardwood desktop mounted onto a heavy-duty three-stage dual-motor steel lifting frame. Transitions smoothly and silently from sitting to standing height (62cm to 128cm) with the tap of a touch-sensitive digital memory keypad.",
+    baseCents: 89000,
+    compareAtCents: 105000,
+    imageUrl: "/images/office/ergonomic-wanza-standing-desk.jpg",
+    sku: "KBN-OFF-WANZA-STANDING-DESK",
+    weight: 46.0,
+    tags: [
+      "Standing Desk",
+      "Office Desk",
+      "Ergonomic Desk",
+      "Electric Sit-Stand",
+      "Wanza Wood",
+      "Dual Motor Desk",
+    ],
+    categories: [CAT_OFFICE, CAT_OFFICE_FURNITURE],
+    specs: {
+      itemType: "Electric Height-Adjustable Standing Desk",
+      specifications:
+        "Dual Ultra-Quiet Motors (<45dB) • Digital LED Touch Keypad with 4 Memory Presets • Anti-Collision Sensor",
+      materials:
+        "Solid Ethiopian Wanza Hardwood Desktop (3cm Solid Plank), Heavy-Gauge Powder-Coated Steel Frame",
+      dimensions:
+        "140cm Length × 75cm Width • Height Range 62cm to 128cm • 120kg Lifting Capacity",
+      origin: "Highland Artisan Hardwoods & Precision Ergonomics Assembly",
+      warrantyOrCare:
+        "5-Year Motor, Electrical & Structural Warranty. Wipe tabletop with damp cloth.",
     },
   }),
 ];

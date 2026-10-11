@@ -1000,6 +1000,233 @@ export async function CategoryBanner({
         },
       ],
     };
+  } else if (
+    permalink === "office" ||
+    permalink.startsWith("office/") ||
+    permalink.includes("/office") ||
+    permalink.includes("office")
+  ) {
+    if (
+      permalink.includes("device") ||
+      permalink.includes("iphone") ||
+      permalink.includes("macbook")
+    ) {
+      heroProps = {
+        badge: "PRO COMPUTING & MOBILE",
+        titleLine1: "Apple M-Series & iPhone",
+        titleLine2: "Executive Technology",
+        description:
+          "High-performance Apple workstations and flagship titanium iPhones tailored for modern creators, architects, and business leaders in Ethiopia and beyond.",
+        bgImageSrc: "/images/heroes/office-hero.jpg",
+        bgImageAlt: "Modern executive workstation with MacBook and iPhone",
+        focalImageSrc: "/images/office/macbook-pro-m-series.jpg",
+        focalImageAlt: "MacBook Pro 16-inch M-Series Workstation",
+        focalImageIsCutout: false,
+        ctaText: "Shop Devices",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Office",
+        secondaryCtaHref: `${basePath}/c/office`,
+        pillarsTitle: "Pro Workstation Architecture",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Apple Silicon",
+            titleLine2: "M-Series Performance",
+            description:
+              "Exceptional computational throughput, unified memory architecture, and quiet all-day battery endurance.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Grade 5 Titanium &",
+            titleLine2: "Liquid Retina XDR",
+            description:
+              "Aerospace-grade materials and reference-grade color precision calibrated for demanding creative workflows.",
+          },
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Direct Global",
+            titleLine2: "Warranty Coverage",
+            description:
+              "Full manufacturer warranty support, pristine sealed packaging, and express white-glove logistics.",
+          },
+        ],
+      };
+    } else if (
+      permalink.includes("stationery") ||
+      permalink.includes("notebook") ||
+      permalink.includes("pen") ||
+      permalink.includes("file")
+    ) {
+      heroProps = {
+        badge: "FINE DESK STATIONERY",
+        titleLine1: "Artisan Leather Journals",
+        titleLine2: "& Brass Writing Instruments",
+        description:
+          "Hand-stitched Ethiopian full-grain leather notebooks, Lalibela engraved brass pens, and executive document folios crafted for purposeful reflection and executive correspondence.",
+        bgImageSrc: "/images/heroes/office-hero.jpg",
+        bgImageAlt:
+          "Luxury stationery with Ethiopian leather journal and brass pen",
+        focalImageSrc: "/images/office/highland-leather-notebook.jpg",
+        focalImageAlt: "Highland Full-Grain Leather Executive Notebook",
+        focalImageIsCutout: false,
+        ctaText: "Shop Stationery",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Office",
+        secondaryCtaHref: `${basePath}/c/office`,
+        pillarsTitle: "Ancestral Leather & Metallurgy",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Highland Calfskin",
+            titleLine2: "Vegetable-Tanned",
+            description:
+              "Supple Ethiopian full-grain leather that burnishes with age, creating a rich personalized patina.",
+          },
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Solid Golden Brass",
+            titleLine2: "Precision Balance",
+            description:
+              "Machined heavy brass bodies engraved with traditional Ethiopian knotwork for weighted writing balance.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Archival Acid-Free",
+            titleLine2: "Fountain Pen Friendly",
+            description:
+              "Heavyweight 120gsm ivory paper designed to prevent feathering, bleed-through, and ghosting.",
+          },
+        ],
+      };
+    } else if (permalink.includes("bag") || permalink.includes("briefcase")) {
+      heroProps = {
+        badge: "EXECUTIVE LEATHER ACCESSORIES",
+        titleLine1: "Handcrafted Ethiopian",
+        titleLine2: "Leather Laptop Folios & Bags",
+        description:
+          "Sustainably vegetable-tanned highland leather briefcases and commuter laptop bags built with padded device sleeves, antique brass hardware, and lifetime durability.",
+        bgImageSrc: "/images/heroes/office-hero.jpg",
+        bgImageAlt: "Handcrafted Ethiopian leather executive laptop briefcase",
+        focalImageSrc: "/images/office/ethiopian-leather-laptop-bag.jpg",
+        focalImageAlt: "Handcrafted Ethiopian Leather Laptop Briefcase",
+        focalImageIsCutout: false,
+        ctaText: "Shop Laptop Bags",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Office",
+        secondaryCtaHref: `${basePath}/c/office`,
+        pillarsTitle: "Highland Leathercraft Standards",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Full-Grain Highland",
+            titleLine2: "Ethiopian Leather",
+            description:
+              "Renowned globally for natural tensile strength, fine grain density, and buttery hand feel.",
+          },
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Padded Protection",
+            titleLine2: "Up to 16-Inch Laptops",
+            description:
+              "High-density neoprene protective compartment safeguarding Pro laptops from transit shocks.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Solid Brass Hardware",
+            titleLine2: "YKK Metal Zippers",
+            description:
+              "Reinforced stress points, heavy-duty stitching, and detachable ergonomic shoulder straps.",
+          },
+        ],
+      };
+    } else if (
+      permalink.includes("furniture") ||
+      permalink.includes("chair") ||
+      permalink.includes("desk")
+    ) {
+      heroProps = {
+        badge: "EXECUTIVE FURNITURE & ERGONOMICS",
+        titleLine1: "Wanza Hardwood Desks",
+        titleLine2: "& Ergonomic Workstation Seating",
+        description:
+          "Hand-carved solid Cordia africana (Wanza) executive desks, dual-motor electric sit-stand workstations, and high-back lumbar executive chairs designed for peak cognitive endurance.",
+        bgImageSrc: "/images/heroes/office-hero.jpg",
+        bgImageAlt: "Executive Wanza hardwood desk and ergonomic office chair",
+        focalImageSrc: "/images/office/wanza-hardwood-executive-desk.jpg",
+        focalImageAlt: "Handcrafted Wanza Hardwood Executive Desk",
+        focalImageIsCutout: false,
+        ctaText: "Shop Furniture",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Office",
+        secondaryCtaHref: `${basePath}/c/office`,
+        pillarsTitle: "Ergonomics & Indigenous Timber",
+        pillars: [
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Solid Ethiopian Wanza",
+            titleLine2: "Cordia Africana Timber",
+            description:
+              "Sustainably harvested highland hardwood with lustrous golden-honey grain and natural acoustic damping.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Ergonomic Lumbar",
+            titleLine2: "Multi-Axis Support",
+            description:
+              "Breathable elastomeric mesh and pneumatic tilt adjustments supporting sustained spinal alignment.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Dual-Motor Electric",
+            titleLine2: "Smooth Sit-to-Stand",
+            description:
+              "Whisper-quiet dual motors with memory presets for fluid posture transitions throughout the workday.",
+          },
+        ],
+      };
+    } else {
+      heroProps = {
+        badge: "EXECUTIVE SUITE & WORKSTATION",
+        titleLine1: "The Modern Ethiopian",
+        titleLine2: "Executive Office Suite",
+        description:
+          "A curated workstation synthesis uniting flagship Apple technology with centuries of Ethiopian artisan craftsmanship — iPhones, MacBook M-Series laptops, vegetable-tanned leather notebooks, solid brass pens, handcrafted laptop bags, and ergonomic Wanza hardwood furniture.",
+        bgImageSrc: "/images/heroes/office-hero.jpg",
+        bgImageAlt:
+          "Executive modern office suite with MacBook, leather goods, and hardwood desk",
+        focalImageSrc: "/images/office/macbook-pro-m-series.jpg",
+        focalImageAlt: "Executive Office Suite Collection",
+        focalImageIsCutout: false,
+        ctaText: "Explore Office Collection",
+        ctaHref: "#category-products",
+        secondaryCtaText: "Specialty Coffees",
+        secondaryCtaHref: `${basePath}/c/coffee`,
+        pillarsTitle: "The Modern Ethiopian Workstation Synergy",
+        pillars: [
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "Pro Computing &",
+            titleLine2: "Titanium Mobile",
+            description:
+              "Apple M-Series silicon and iPhone 16 Pro hardware calibrated for seamless productivity.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Highland Leather &",
+            titleLine2: "Brass Stationery",
+            description:
+              "Full-grain calfskin folios, handwoven Tibeb journals, and hand-chiseled brass pens.",
+          },
+          {
+            icon: <Mountain className="w-6 h-6" />,
+            titleLine1: "Solid Wanza Hardwood",
+            titleLine2: "& Ergonomic Comfort",
+            description:
+              "Indigenous timber executive desks and multi-axis ergonomic seating for supreme focus.",
+          },
+        ],
+      };
+    }
   } else if (permalink.includes("single-origin")) {
     if (permalink.includes("yirgacheffe")) {
       heroProps = {
