@@ -302,6 +302,11 @@ async function cachedListCategoryProducts(
     catLower.includes("polish") ||
     catLower === "cat_body_scrubs";
 
+  const isBodyIncense =
+    catLower.includes("incense") ||
+    catLower.includes("itan") ||
+    catLower === "cat_body_incense";
+
   const isCeremonyCategory =
     catLower.includes("ceremony") ||
     catLower.includes("buna") ||
@@ -433,6 +438,9 @@ async function cachedListCategoryProducts(
     }
     if (isBodyScrubs) {
       return p.categories?.some((c) => c.id === "cat_body_scrubs");
+    }
+    if (isBodyIncense) {
+      return p.categories?.some((c) => c.id === "cat_body_incense");
     }
     if (isCeremonyCategory) {
       return p.categories?.some(

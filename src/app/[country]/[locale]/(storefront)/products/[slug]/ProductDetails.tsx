@@ -221,7 +221,11 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_koseret_body") ||
       product.id?.startsWith("prod_korarima") ||
       product.id?.startsWith("prod_tenadam") ||
-      product.id?.startsWith("prod_volcanic"),
+      product.id?.startsWith("prod_volcanic") ||
+      product.id?.startsWith("prod_tigray") ||
+      product.id?.startsWith("prod_ogaden") ||
+      product.id?.startsWith("prod_borena") ||
+      product.id?.startsWith("prod_ceremony_itan"),
   );
 
   const isCeremonyProduct = Boolean(

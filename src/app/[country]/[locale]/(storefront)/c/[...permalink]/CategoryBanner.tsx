@@ -870,13 +870,54 @@ export async function CategoryBanner({
           },
         ],
       };
+    } else if (permalink.includes("incense") || permalink.includes("itan")) {
+      heroProps = {
+        badge: "SACRED HIGHLAND RESINS",
+        titleLine1: "Sacred Ethiopian Incense",
+        titleLine2: "Highland Itan & Ancient Resins",
+        description:
+          "Pure aromatic tears hand-harvested from wild highland trees — Tigray Boswellia papyrifera, Ogaden Commiphora myrrh, and Borena black frankincense for the sacred Buna Tetu coffee ceremony and evening meditation.",
+        bgImageSrc: "/images/heroes/body-hero.jpg",
+        bgImageAlt: "Sacred Ethiopian frankincense and natural incense resins",
+        focalImageSrc: "/images/body/tigray-frankincense.jpg",
+        focalImageAlt: "Tigray White Frankincense (Itan)",
+        focalImageIsCutout: false,
+        ctaText: "Shop Incense",
+        ctaHref: "#category-products",
+        secondaryCtaText: "All Body",
+        secondaryCtaHref: `${basePath}/c/body`,
+        pillarsTitle: "Ancestral Incense Rituals",
+        pillars: [
+          {
+            icon: <Flame className="w-6 h-6" />,
+            titleLine1: "Wild Highland Harvest",
+            titleLine2: "Tigray & Ogaden",
+            description:
+              "Hand-gathered by generational pastoralists from wild highland cliffs and arid sacred woodlands.",
+          },
+          {
+            icon: <Sparkles className="w-6 h-6" />,
+            titleLine1: "100% Pure Natural Tears",
+            titleLine2: "Zero Chemical Additives",
+            description:
+              "Unadulterated raw resin gum tears free of toxic binders, charcoal fillers, and synthetic scents.",
+          },
+          {
+            icon: <HeartHandshake className="w-6 h-6" />,
+            titleLine1: "Sacred Buna Tetu Ritual",
+            titleLine2: "Aromatic Companion",
+            description:
+              "Essential spiritual smoke that accompanies Ethiopian coffee ceremonies to bless homes and welcome guests.",
+          },
+        ],
+      };
     } else {
       heroProps = {
         badge: undefined,
         titleLine1: "Authentic Ethiopian",
         titleLine2: "Organic Body",
         description:
-          "Highland scents, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) perfume oils, warming Korarima salves, fresh Koseret cleansers, Tenadam mists, and volcanic clay polishes.",
+          "Highland scents, restorative ointments, sacred incenses, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) resins and perfume oils, warming Korarima salves, fresh Koseret cleansers, Tenadam mists, and volcanic clay polishes.",
         bgImageSrc: "/images/heroes/body-hero.jpg",
         bgImageAlt: "Ethiopian highland body sanctuary and native scents",
         focalImageSrc: "/images/body/itan-perfume.jpg",

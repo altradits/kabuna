@@ -163,6 +163,12 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   "korarima-ointment": ["/images/body/korarima-ointment.jpg"],
   "tenadam-mist": ["/images/body/tenadam-mist.jpg"],
   "volcanic-clay-scrub": ["/images/body/volcanic-clay-scrub.jpg"],
+
+  // Sacred Ethiopian Incense & Itan Resins
+  "tigray-frankincense": ["/images/body/tigray-frankincense.jpg"],
+  "ogaden-myrrh": ["/images/body/ogaden-myrrh.jpg"],
+  "borena-black-incense": ["/images/body/borena-black-incense.jpg"],
+  "ceremony-itan-blend": ["/images/body/ceremony-itan-blend.jpg"],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
@@ -203,6 +209,30 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("shuruba") || s.includes("mask") || s.includes("conditioning"))
     return "shuruba-mask";
   if (s.includes("wanza") || s.includes("comb")) return "wanza-comb";
+
+  // Specific Ethiopian Incense & Sacred Itan Resins
+  if (
+    s.includes("tigray") ||
+    (s.includes("frankincense") &&
+      !s.includes("borena") &&
+      !s.includes("black"))
+  )
+    return "tigray-frankincense";
+  if (s.includes("ogaden") || s.includes("myrrh") || s.includes("karam"))
+    return "ogaden-myrrh";
+  if (
+    s.includes("borena") ||
+    s.includes("black-incense") ||
+    s.includes("black-frankincense") ||
+    s.includes("neglecta")
+  )
+    return "borena-black-incense";
+  if (
+    s.includes("ceremony-itan") ||
+    s.includes("itan-blend") ||
+    (s.includes("ceremony") && s.includes("itan"))
+  )
+    return "ceremony-itan-blend";
 
   // Specific Ethiopian Organic Body & Scents
   if (s.includes("itan") || s.includes("perfume") || s.includes("boswellia"))
@@ -769,17 +799,27 @@ export const CAT_BODY_SCRUBS = createCategory(
   "Exfoliating mineral polishes blending Great Rift Valley volcanic obsidian clay, micro-milled Teff, and alpine rosemary.",
 );
 
+export const CAT_BODY_INCENSE = createCategory(
+  "cat_body_incense",
+  "Sacred Incense & Itan Resins",
+  "body/incense",
+  "Ancestral raw incense resins wild-harvested across Ethiopia — sacred Tigray Boswellia frankincense (Itan), Ogaden sweet myrrh (Karam), Borena black frankincense, and sacred Buna ceremony resin blends.",
+  [],
+  "/images/body/tigray-frankincense.jpg",
+);
+
 export const CAT_BODY = createCategory(
   "cat_body",
   "Organic Body",
   "body",
-  "Highland scents, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan) perfume oils, warming Korarima salves, Koseret enset cleansers, and Tenadam mists.",
+  "Highland scents, sacred incense resins, restorative ointments, and botanical body washes native to Ethiopia — wild Boswellia frankincense (Itan), Ogaden myrrh, warming Korarima salves, Koseret enset cleansers, and Tenadam mists.",
   [
     CAT_BODY_FRAGRANCE,
     CAT_BODY_OINTMENTS,
     CAT_BODY_WASH,
     CAT_BODY_MISTS,
     CAT_BODY_SCRUBS,
+    CAT_BODY_INCENSE,
   ],
   "/images/body/itan-perfume.jpg",
 );
@@ -2470,6 +2510,143 @@ export const KABUNA_PRODUCTS: Product[] = [
         "Earthy warm volcanic stone, crisp piney mountain rosemary, fresh highland rain",
       use: "Buff gently in circular motions over damp skin in the bath or shower 2-3 times per week. Rinse thoroughly.",
       format: "200ml Artisanal Terracotta Ceramic Jar with Wooden Lid",
+    },
+  }),
+
+  // 33. Tigray White Boswellia Papyrifera Incense (Grade 1 Pure Highland Itan)
+  buildBodyProduct({
+    id: "prod_tigray_frankincense",
+    name: "Tigray White Boswellia Papyrifera Incense",
+    slug: "tigray-frankincense-itan",
+    subtitle:
+      "Grade 1 Translucent Frankincense Tears (Pure Highland Itan) from Ancient Tigray Escarpments",
+    description:
+      "Harvested from wild Boswellia papyrifera trees clinging to the high limestone cliffs of Tigray. Revered for millennia as the world's most aromatic sacred resin, these grade 1 translucent golden-white tears are dried naturally under highland sunshine. When placed on warm charcoal or an incense burner, they release an ethereal citrus-pine, honeyed balsamic smoke that purifies space and induces meditative tranquility.",
+    baseCents: 2800,
+    compareAtCents: 3400,
+    imageUrl: "/images/body/tigray-frankincense.jpg",
+    sku: "KBN-BODY-TIGRAY-ITAN",
+    weight: 0.18,
+    tags: [
+      "Tigray Frankincense",
+      "Boswellia Papyrifera",
+      "White Itan",
+      "Sacred Resin",
+      "Natural Incense",
+      "Highland Tears",
+    ],
+    categories: [CAT_BODY, CAT_BODY_INCENSE],
+    specs: {
+      ingredients:
+        "100% Pure Wild-Harvested Ethiopian Boswellia Papyrifera Resin Tears (Grade 1)",
+      origin: "Tigray Highland Escarpments, Northern Ethiopia",
+      scent:
+        "Crystalline citrus, sacred temple pine, sweet balsamic warmth, clean purifying smoke",
+      use: "Place 1-2 small crystal tears upon hot natural charcoal in a Girgira burner or electric resin diffuser.",
+      format:
+        "150g Artisanal Resealable Kraft Pouch with Traditional Habesha Foil Stamp",
+    },
+  }),
+
+  // 34. Ogaden Wild Commiphora Myrrha Resin (Sacred Karam Tears)
+  buildBodyProduct({
+    id: "prod_ogaden_myrrh",
+    name: "Ogaden Wild Commiphora Myrrha Resin",
+    slug: "ogaden-sacred-myrrh",
+    subtitle:
+      "Sacred Karam Aromatic Resin Tears Harvested from Wild Acacia-Commiphora Woodlands",
+    description:
+      "Gathered by traditional harvesters from wild thorny Commiphora myrrha trees in the arid eastern plateaus of Ogaden. Characterized by glistening deep mahogany and ruby-amber crystal droplets rich in natural essential oils. Releases a deeply grounding, woody, warm-spicy smoke treasured for cleansing rituals, spiritual centering, and sacred gatherings.",
+    baseCents: 3200,
+    compareAtCents: 4000,
+    imageUrl: "/images/body/ogaden-myrrh.jpg",
+    sku: "KBN-BODY-OGADEN-MYRRH",
+    weight: 0.16,
+    tags: [
+      "Ogaden Myrrh",
+      "Commiphora Myrrha",
+      "Karam",
+      "Sacred Resin",
+      "Ancient Aromatics",
+      "Grounding Incense",
+    ],
+    categories: [CAT_BODY, CAT_BODY_INCENSE],
+    specs: {
+      ingredients:
+        "100% Wild-Foraged Ethiopian Commiphora Myrrha (Karam) Resin Tears",
+      origin: "Ogaden Arid Escarpments, Eastern Ethiopia",
+      scent:
+        "Deep earthy resin, smoky mahogany, warm bitter-spicy balsamic undertones",
+      use: "Burn alone on glowing charcoal or blend with Boswellia frankincense for a balanced sacred aroma.",
+      format: "120g Heavy Amber Glass Apothecary Jar with Airtight Seal",
+    },
+  }),
+
+  // 35. Borena Black Frankincense (Tikur Itan / Boswellia Neglecta)
+  buildBodyProduct({
+    id: "prod_borena_black_incense",
+    name: "Borena Black Frankincense (Tikur Itan)",
+    slug: "borena-black-frankincense",
+    subtitle:
+      "Rare Dark Boswellia Neglecta Resin Tears Foraged by Pastoralists in Southern Bushlands",
+    description:
+      "An exceptionally rare and mystical variety of Ethiopian incense gathered in the acacia scrublands of southern Borena. Unlike highland white itan, Boswellia neglecta exudes dark charcoal-colored glossy tears with earthy, herbaceous undertones. Delivers an intensely rich, calming, forest-like aromatic smoke long utilized in ancestral pastoral purification rites.",
+    baseCents: 2600,
+    compareAtCents: 3200,
+    imageUrl: "/images/body/borena-black-incense.jpg",
+    sku: "KBN-BODY-BORENA-BLACK",
+    weight: 0.16,
+    tags: [
+      "Borena Black Incense",
+      "Tikur Itan",
+      "Boswellia Neglecta",
+      "Dark Frankincense",
+      "Ancestral Incense",
+      "Pastoral Aromatics",
+    ],
+    categories: [CAT_BODY, CAT_BODY_INCENSE],
+    specs: {
+      ingredients:
+        "100% Pure Wild Ethiopian Boswellia Neglecta (Tikur Itan) Dark Resin Tears",
+      origin: "Borena Semi-Arid Woodlands, Southern Ethiopia",
+      scent:
+        "Herbaceous pine, dark earthy musk, roasted forest wood, meditative balsam",
+      use: "Gently place on glowing charcoal embers for evening grounding and reflective relaxation.",
+      format: "120g Hand-Stamped Sustainable Kraft Paper Pouch",
+    },
+  }),
+
+  // 36. Sacred Buna Ceremony Itan Blend (Girgira Aromatics)
+  buildBodyProduct({
+    id: "prod_ceremony_itan_blend",
+    name: "Sacred Buna Ceremony Itan Blend",
+    slug: "buna-ceremony-itan-blend",
+    subtitle:
+      "Master Artisanal Resin Blend of Tigray Frankincense, Ogaden Myrrh & Highland Aromatics",
+    description:
+      "The quintessential aromatic fragrance of the sacred Ethiopian Buna Tetu (coffee ceremony). Hand-blended by highland elders using golden Tigray Frankincense tears, dark Ogaden Myrrh, sweet fragrant Hagar opoponax, and freshly stone-crushed Korarima cardamom pods. Fills the home with an inviting, hospitable aura that honors gathered guests during the preparation and pouring of the coffee.",
+    baseCents: 2400,
+    compareAtCents: 3000,
+    imageUrl: "/images/body/ceremony-itan-blend.jpg",
+    sku: "KBN-BODY-CEREMONY-ITAN",
+    weight: 0.18,
+    tags: [
+      "Ceremony Itan Blend",
+      "Girgira Aromatics",
+      "Buna Incense",
+      "Sacred Blend",
+      "Frankincense & Myrrh",
+      "Habesha Hospitality",
+    ],
+    categories: [CAT_BODY, CAT_BODY_INCENSE, CAT_CEREMONY],
+    specs: {
+      ingredients:
+        "Wild Tigray Boswellia Papyrifera Tears, Ogaden Commiphora Myrrha, Sweet Hagar Opoponax, Stone-Crushed Ethiopian Korarima Pods, Mountain Rosemary",
+      origin: "Artisanal Highland Guilds, Ethiopia",
+      scent:
+        "Warm ceremonial frankincense, sweet myrrh, spicy cardamom, uplifting wild mountain herbs",
+      use: "Sprinkle a pinch onto the hot charcoal of the terracotta Girgira right before brewing each round of Buna.",
+      format: "150g Embroidered Habesha Linen Bag with Inner Protective Pouch",
     },
   }),
 ];

@@ -149,15 +149,16 @@ describe("Coffee Category & Scalable Taxonomy", () => {
   it("lists ceremony items under Ceremony category via both buna-ceremony and coffee/ceremony", async () => {
     const res = await getCategoryProducts("buna-ceremony");
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(7);
+    expect(res.data.length).toBe(8);
 
     const resSub = await getCategoryProducts("coffee/ceremony");
     expect(resSub.data).toBeDefined();
-    expect(resSub.data.length).toBe(7);
+    expect(resSub.data.length).toBe(8);
 
     const productNames = res.data.map((p) => p.name);
     expect(productNames).toContain("Jebena");
     expect(productNames).toContain("Jebena Ceremony Kit");
+    expect(productNames).toContain("Sacred Buna Ceremony Itan Blend");
     expect(productNames).not.toContain("Chelbesa");
     expect(productNames).not.toContain("YeTsehur Kibe");
   });
@@ -242,7 +243,7 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(bodyCategory.id).toBe("cat_body");
     expect(bodyCategory.name).toBe("Organic Body");
     expect(bodyCategory.children).toBeDefined();
-    expect(bodyCategory.children?.length).toBe(5);
+    expect(bodyCategory.children?.length).toBe(6);
 
     const childNames = bodyCategory.children?.map((c) => c.name);
     expect(childNames).toContain("Highland Fragrances & Perfume Oils");
@@ -250,12 +251,13 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(childNames).toContain("Botanical Body Washes & Cleansers");
     expect(childNames).toContain("Herbal Scents & Botanical Mists");
     expect(childNames).toContain("Volcanic Clay & Body Polishes");
+    expect(childNames).toContain("Sacred Incense & Itan Resins");
   });
 
   it("lists all body & scent products when Body category is selected", async () => {
     const res = await getCategoryProducts("cat_body");
     expect(res.data).toBeDefined();
-    expect(res.data.length).toBe(5);
+    expect(res.data.length).toBe(9);
 
     const productNames = res.data.map((p) => p.name);
     expect(productNames).toEqual(
@@ -265,6 +267,10 @@ describe("Coffee Category & Scalable Taxonomy", () => {
         "Korarima & Black Cumin Warming Ointment",
         "Tenadam & Citrus Blossom Botanical Mist",
         "Rift Valley Volcanic Clay & Rosemary Body Polish",
+        "Tigray White Boswellia Papyrifera Incense",
+        "Ogaden Wild Commiphora Myrrha Resin",
+        "Borena Black Frankincense (Tikur Itan)",
+        "Sacred Buna Ceremony Itan Blend",
       ]),
     );
 
@@ -302,5 +308,13 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(scrubRes.data[0].name).toBe(
       "Rift Valley Volcanic Clay & Rosemary Body Polish",
     );
+
+    const incenseRes = await getCategoryProducts("body/incense");
+    expect(incenseRes.data.length).toBe(4);
+    const incenseNames = incenseRes.data.map((p) => p.name);
+    expect(incenseNames).toContain("Tigray White Boswellia Papyrifera Incense");
+    expect(incenseNames).toContain("Ogaden Wild Commiphora Myrrha Resin");
+    expect(incenseNames).toContain("Borena Black Frankincense (Tikur Itan)");
+    expect(incenseNames).toContain("Sacred Buna Ceremony Itan Blend");
   });
 });
