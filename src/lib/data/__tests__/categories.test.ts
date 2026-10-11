@@ -4,6 +4,7 @@ import {
   getCategory,
   getCategoryProducts,
 } from "@/lib/data/categories";
+import { getProduct } from "@/lib/data/products";
 
 vi.mock("next/cache", () => ({
   cacheLife: vi.fn(),
@@ -11,6 +12,8 @@ vi.mock("next/cache", () => ({
 }));
 
 vi.mock("@/lib/spree", () => ({
+  DEFAULT_SURFACE: "dtc",
+  cacheTagSuffix: vi.fn(() => ""),
   getClient: vi.fn(() => ({
     categories: {
       list: vi.fn().mockRejectedValue(new Error("offline")),
@@ -18,6 +21,12 @@ vi.mock("@/lib/spree", () => ({
     },
     products: {
       list: vi.fn().mockRejectedValue(new Error("offline")),
+    },
+  })),
+  getClientForSurface: vi.fn(() => ({
+    products: {
+      list: vi.fn().mockRejectedValue(new Error("offline")),
+      get: vi.fn().mockRejectedValue(new Error("offline")),
     },
   })),
   getLocaleOptions: vi.fn().mockResolvedValue({ locale: "en", country: "us" }),
@@ -356,5 +365,120 @@ describe("Coffee Category & Scalable Taxonomy", () => {
     expect(productNames).not.toContain("Highland Heritage Kolo");
     expect(productNames).not.toContain("YeTsehur Kibe");
     expect(productNames).not.toContain("Itan Boswellia Highland Perfume Oil");
+  });
+
+  it("reveals exact gift details and specs when each of the 12 gifts is looked up by slug", async () => {
+    const giftSlugs = [
+      {
+        slug: "gondar-parchment-art",
+        name: "Gondar Hand-Painted Parchment Icon Art",
+        img: "/images/gifts/gondar-parchment-art.jpg",
+        origin: "Gondar Artisan & Icon Guilds, Northern Ethiopia",
+      },
+      {
+        slug: "lalibela-processional-cross",
+        name: "Lalibela Lost-Wax Cast Handheld Brass Cross",
+        img: "/images/gifts/lalibela-processional-cross.jpg",
+        origin: "Lalibela Sanctuary Metalsmiths, Wollo, Ethiopia",
+      },
+      {
+        slug: "axum-silver-filigree-cuff",
+        name: "Axum Hand-Hammered Silver Filigree Cuff",
+        img: "/images/gifts/axum-silver-filigree-cuff.jpg",
+        origin: "Axumite Silversmith Guilds, Tigray, Ethiopia",
+      },
+      {
+        slug: "lalibela-cross-signet-ring",
+        name: "Lalibela Solomonic Cross Signet Ring",
+        img: "/images/gifts/lalibela-cross-signet-ring.jpg",
+        origin: "Addis Ababa & Lalibela Metalsmith Collectives, Ethiopia",
+      },
+      {
+        slug: "habesha-hair-jewelry-set",
+        name: "Habesha Silver Shuruba Hair Jewelry Set",
+        img: "/images/gifts/habesha-hair-jewelry-set.jpg",
+        origin: "Gondar & Addis Ababa Filigree Workshops, Ethiopia",
+      },
+      {
+        slug: "harari-amber-coral-bangle",
+        name: "Harari Trade Amber & Coral Bangle",
+        img: "/images/gifts/harari-amber-coral-bangle.jpg",
+        origin: "Harar Jugol Walled City Crafts Guild, Eastern Ethiopia",
+      },
+      {
+        slug: "shemma-cotton-towel",
+        name: "Shemma Handwoven Cotton Bath Towel",
+        img: "/images/gifts/shemma-cotton-towel.jpg",
+        origin:
+          "Chencha & Dorze Weaving Villages, Southern Highlands, Ethiopia",
+      },
+      {
+        slug: "tibeb-handkerchief-set",
+        name: "Artisanal Tibeb Embroidered Handkerchief Set",
+        img: "/images/gifts/tibeb-handkerchief-set.jpg",
+        origin: "Shiro Meda Master Weavers Guild, Addis Ababa, Ethiopia",
+      },
+      {
+        slug: "ethiopian-gabi-throw",
+        name: "Four-Layer Ethiopian Gabi Cloud Cotton Throw",
+        img: "/images/gifts/ethiopian-gabi-throw.jpg",
+        origin: "Gonder & Dorze Artisan Cooperatives, Ethiopia",
+      },
+      {
+        slug: "wanza-vanity-mirror",
+        name: "Wanza Carved Handheld Vanity Mirror",
+        img: "/images/gifts/wanza-vanity-mirror.jpg",
+        origin: "Entoto Mountain Woodcarvers Guild, Shewa, Ethiopia",
+      },
+      {
+        slug: "brass-kohl-flask",
+        name: "Antique Ethiopian Brass Kohl & Scent Flask",
+        img: "/images/gifts/brass-kohl-flask.jpg",
+        origin: "Historic Harar Jugol & Wollo Coppersmiths, Ethiopia",
+      },
+      {
+        slug: "harari-woven-trinket-box",
+        name: "Harari Handwoven Mesob Trinket Box",
+        img: "/images/gifts/harari-woven-trinket-box.jpg",
+        origin: "Harari Women Weavers Guild, Harar, Eastern Ethiopia",
+      },
+    ];
+
+    for (const item of giftSlugs) {
+      const product = await getProduct(item.slug);
+      expect(product).toBeDefined();
+      expect(product.name).toBe(item.name);
+      expect(product.slug).toBe(item.slug);
+      expect(product.thumbnail_url).toBe(item.img);
+      expect(product.primary_media?.original_url).toBe(item.img);
+      expect(product.media?.[0]?.original_url).toBe(item.img);
+
+      // Verify custom fields
+      const originField = product.custom_fields?.find(
+        (cf) => cf.key === "origin",
+      );
+      expect(originField?.value).toBe(item.origin);
+
+      const materialsField = product.custom_fields?.find(
+        (cf) => cf.key === "materials",
+      );
+      expect(materialsField?.value).toBeTruthy();
+
+      const dimensionsField = product.custom_fields?.find(
+        (cf) => cf.key === "dimensions",
+      );
+      expect(dimensionsField?.value).toBeTruthy();
+
+      const craftsmanshipField = product.custom_fields?.find(
+        (cf) => cf.key === "craftsmanship",
+      );
+      expect(craftsmanshipField?.value).toBeTruthy();
+
+      const careField = product.custom_fields?.find((cf) => cf.key === "care");
+      expect(careField?.value).toBeTruthy();
+
+      // Verify categories
+      expect(product.categories?.some((c) => c.id === "cat_gifts")).toBe(true);
+    }
   });
 });

@@ -171,36 +171,132 @@ export const COFFEE_IMAGE_GALLERIES: Record<string, string[]> = {
   "ceremony-itan-blend": ["/images/body/ceremony-itan-blend.jpg"],
 
   // Authentic Ethiopian Artisan Gifts & Heirlooms
+  "gondar-parchment-art": ["/images/gifts/gondar-parchment-art.jpg"],
   "gondar-parchment": ["/images/gifts/gondar-parchment-art.jpg"],
+  "lalibela-processional-cross": [
+    "/images/gifts/lalibela-processional-cross.jpg",
+  ],
   "lalibela-cross": ["/images/gifts/lalibela-processional-cross.jpg"],
+  "axum-silver-filigree-cuff": ["/images/gifts/axum-silver-filigree-cuff.jpg"],
   "axum-cuff": ["/images/gifts/axum-silver-filigree-cuff.jpg"],
+  "lalibela-cross-signet-ring": [
+    "/images/gifts/lalibela-cross-signet-ring.jpg",
+  ],
   "lalibela-ring": ["/images/gifts/lalibela-cross-signet-ring.jpg"],
+  "habesha-hair-jewelry-set": ["/images/gifts/habesha-hair-jewelry-set.jpg"],
   "habesha-hair-jewelry": ["/images/gifts/habesha-hair-jewelry-set.jpg"],
+  "harari-amber-coral-bangle": ["/images/gifts/harari-amber-coral-bangle.jpg"],
   "harari-bangle": ["/images/gifts/harari-amber-coral-bangle.jpg"],
+  "shemma-cotton-towel": ["/images/gifts/shemma-cotton-towel.jpg"],
   "shemma-towel": ["/images/gifts/shemma-cotton-towel.jpg"],
+  "tibeb-handkerchief-set": ["/images/gifts/tibeb-handkerchief-set.jpg"],
   "tibeb-handkerchief": ["/images/gifts/tibeb-handkerchief-set.jpg"],
+  "ethiopian-gabi-throw": ["/images/gifts/ethiopian-gabi-throw.jpg"],
   "ethiopian-gabi": ["/images/gifts/ethiopian-gabi-throw.jpg"],
+  "wanza-vanity-mirror": ["/images/gifts/wanza-vanity-mirror.jpg"],
   "wanza-mirror": ["/images/gifts/wanza-vanity-mirror.jpg"],
+  "brass-kohl-flask": ["/images/gifts/brass-kohl-flask.jpg"],
   "brass-kohl": ["/images/gifts/brass-kohl-flask.jpg"],
+  "harari-woven-trinket-box": ["/images/gifts/harari-woven-trinket-box.jpg"],
   "harari-trinket-box": ["/images/gifts/harari-woven-trinket-box.jpg"],
 };
 
 export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (!slugOrName) return null;
-  const s = slugOrName.toLowerCase();
-  if (s.includes("chelbesa")) return "chelbesa";
-  if (s.includes("hamasho")) return "hamasho";
-  if (s.includes("dimtu") || s.includes("tora")) return "dimtu-tora";
-  if (s.includes("benti") || s.includes("neka")) return "benti-neka";
-  if (s.includes("worku") || s.includes("buche")) return "worku-buche";
-  if (s.includes("uraga")) return "uraga";
-  if (s.includes("harrar") || s.includes("harar")) return "harrar";
-  if (s.includes("kaffa") || s.includes("limu")) return "kaffa";
-  if (s.includes("djimmah") || s.includes("jimma")) return "djimmah";
-  if (s.includes("green") || s.includes("raw")) return "green-coffee";
+  const s = slugOrName.toLowerCase().trim();
+  if (COFFEE_IMAGE_GALLERIES[s]) return s;
 
-  // Specific Ethiopian Ceremony Accessories
-  if (s.includes("kit") || s.includes("buna-ceremony-kit"))
+  // 1. Authentic Ethiopian Artisan Gifts & Heirlooms (High-priority exact specificity)
+  if (
+    s.includes("gondar-parchment") ||
+    (s.includes("gondar") && (s.includes("art") || s.includes("parchment")))
+  )
+    return "gondar-parchment-art";
+  if (
+    s.includes("lalibela-cross-signet-ring") ||
+    s.includes("signet") ||
+    s.includes("ring") ||
+    (s.includes("lalibela") && s.includes("ring"))
+  )
+    return "lalibela-cross-signet-ring";
+  if (
+    s.includes("lalibela-processional-cross") ||
+    s.includes("lalibela-cross") ||
+    (s.includes("lalibela") && (s.includes("cross") || s.includes("meskel")))
+  )
+    return "lalibela-processional-cross";
+  if (
+    s.includes("axum-silver-filigree-cuff") ||
+    s.includes("axum-cuff") ||
+    s.includes("axum") ||
+    s.includes("filigree-cuff")
+  )
+    return "axum-silver-filigree-cuff";
+  if (
+    s.includes("habesha-hair-jewelry") ||
+    s.includes("hair-jewelry") ||
+    (s.includes("shuruba") &&
+      (s.includes("jewelry") || s.includes("cuff") || s.includes("bead")))
+  )
+    return "habesha-hair-jewelry-set";
+  if (
+    s.includes("harari-amber-coral-bangle") ||
+    s.includes("harari-bangle") ||
+    (s.includes("harar") &&
+      (s.includes("bangle") || s.includes("amber") || s.includes("coral")))
+  )
+    return "harari-amber-coral-bangle";
+  if (
+    s.includes("harari-woven-trinket-box") ||
+    s.includes("harari-trinket-box") ||
+    s.includes("trinket") ||
+    (s.includes("harar") && (s.includes("box") || s.includes("mesob")))
+  )
+    return "harari-woven-trinket-box";
+  if (
+    s.includes("wanza-vanity-mirror") ||
+    s.includes("wanza-mirror") ||
+    s.includes("vanity-mirror") ||
+    s.includes("mirror") ||
+    (s.includes("wanza") && s.includes("mirror"))
+  )
+    return "wanza-vanity-mirror";
+  if (
+    s.includes("shemma-cotton-towel") ||
+    s.includes("shemma-towel") ||
+    s.includes("shemma") ||
+    s.includes("towel")
+  )
+    return "shemma-cotton-towel";
+  if (
+    s.includes("tibeb-handkerchief-set") ||
+    s.includes("tibeb-handkerchief") ||
+    s.includes("handkerchief") ||
+    (s.includes("tibeb") && s.includes("pocket"))
+  )
+    return "tibeb-handkerchief-set";
+  if (
+    s.includes("ethiopian-gabi-throw") ||
+    s.includes("ethiopian-gabi") ||
+    s.includes("gabi") ||
+    s.includes("throw")
+  )
+    return "ethiopian-gabi-throw";
+  if (
+    s.includes("brass-kohl-flask") ||
+    s.includes("brass-kohl") ||
+    s.includes("kohl") ||
+    s.includes("flask") ||
+    s.includes("mekula")
+  )
+    return "brass-kohl-flask";
+
+  // 2. Specific Ethiopian Ceremony Accessories
+  if (
+    s.includes("buna-ceremony-kit") ||
+    s.includes("ceremony-kit") ||
+    (s.includes("ceremony") && s.includes("kit"))
+  )
     return "ceremony-kit";
   if (s.includes("jebena")) return "jebena";
   if (s.includes("cini")) return "cini";
@@ -208,9 +304,10 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("girgira")) return "girgira";
   if (s.includes("menkeskesha")) return "menkeskesha";
   if (s.includes("mukecha") || s.includes("zenezena")) return "mukecha";
-  if (s.includes("ceremony") || s.includes("buna")) return "ceremony-kit";
+  if (s.includes("ceremony") || s.includes("buna-ceremony"))
+    return "ceremony-kit";
 
-  // Specific Ethiopian Organic Hair Care Botanicals
+  // 3. Specific Ethiopian Organic Hair Care Botanicals
   if (s.includes("yetsehur") || s.includes("kibe")) return "yetsehur-kibe";
   if (
     (s.includes("koseret") &&
@@ -224,7 +321,7 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
     return "shuruba-mask";
   if (s.includes("wanza") || s.includes("comb")) return "wanza-comb";
 
-  // Specific Ethiopian Incense & Sacred Itan Resins
+  // 4. Specific Ethiopian Incense & Sacred Itan Resins
   if (
     s.includes("tigray") ||
     (s.includes("frankincense") &&
@@ -248,7 +345,7 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   )
     return "ceremony-itan-blend";
 
-  // Specific Ethiopian Organic Body & Scents
+  // 5. Specific Ethiopian Organic Body & Scents
   if (s.includes("itan") || s.includes("perfume") || s.includes("boswellia"))
     return "itan-perfume";
   if (
@@ -267,48 +364,32 @@ export function getCoffeeImageKey(slugOrName?: string | null): string | null {
   if (s.includes("volcanic") || s.includes("scrub") || s.includes("polish"))
     return "volcanic-clay-scrub";
 
-  // Specific Ethiopian Organic Snacks
+  // 6. Specific Ethiopian Organic Snacks
   if (s.includes("dabo-kolo") || s.includes("dabo")) return "dabo-kolo";
   if (s.includes("heritage-kolo") || s.includes("kolo")) return "heritage-kolo";
   if (s.includes("beso")) return "beso-clusters";
   if (s.includes("telba") || s.includes("crisps")) return "telba-crisps";
   if (s.includes("shimbra")) return "smoked-shimbra";
 
-  // Authentic Ethiopian Artisan Gifts & Heirlooms
-  if (s.includes("gondar") || s.includes("parchment"))
-    return "gondar-parchment";
+  // 7. Ethiopian Coffee Single-Origins & Regions
+  if (s.includes("chelbesa")) return "chelbesa";
+  if (s.includes("hamasho")) return "hamasho";
+  if (s.includes("dimtu") || s.includes("tora")) return "dimtu-tora";
+  if (s.includes("benti") || s.includes("neka")) return "benti-neka";
+  if (s.includes("worku") || s.includes("buche")) return "worku-buche";
+  if (s.includes("uraga")) return "uraga";
   if (
-    s.includes("lalibela-cross") ||
-    (s.includes("lalibela") && s.includes("cross"))
+    (s.includes("harrar") || s.includes("harar")) &&
+    !s.includes("harari") &&
+    !s.includes("bangle") &&
+    !s.includes("box") &&
+    !s.includes("trinket") &&
+    !s.includes("mesob")
   )
-    return "lalibela-cross";
-  if (s.includes("axum") || s.includes("filigree-cuff")) return "axum-cuff";
-  if (s.includes("signet") || (s.includes("lalibela") && s.includes("ring")))
-    return "lalibela-ring";
-  if (
-    s.includes("hair-jewelry") ||
-    (s.includes("shuruba") && s.includes("jewelry"))
-  )
-    return "habesha-hair-jewelry";
-  if (
-    s.includes("harari-bangle") ||
-    (s.includes("amber") && s.includes("coral"))
-  )
-    return "harari-bangle";
-  if (s.includes("shemma") || s.includes("towel")) return "shemma-towel";
-  if (s.includes("handkerchief") || s.includes("tibeb-handkerchief"))
-    return "tibeb-handkerchief";
-  if (s.includes("gabi") || s.includes("throw")) return "ethiopian-gabi";
-  if (s.includes("mirror") || s.includes("vanity-mirror"))
-    return "wanza-mirror";
-  if (s.includes("kohl") || s.includes("flask") || s.includes("mekula"))
-    return "brass-kohl";
-  if (
-    s.includes("trinket") ||
-    (s.includes("harari") && (s.includes("box") || s.includes("mesob")))
-  )
-    return "harari-trinket-box";
-
+    return "harrar";
+  if (s.includes("kaffa") || s.includes("limu")) return "kaffa";
+  if (s.includes("djimmah") || s.includes("jimma")) return "djimmah";
+  if (s.includes("green") || s.includes("raw")) return "green-coffee";
   if (s.includes("yirgacheffe")) return "chelbesa";
   if (s.includes("sidama") || s.includes("sidamo")) return "hamasho";
   if (s.includes("guji")) return "dimtu-tora";
@@ -1601,13 +1682,13 @@ function buildGiftProduct({
   specs,
 }: GiftProductProps): Product {
   const price = createPrice(baseCents, compareAtCents);
-  const gallery = getCoffeeGallery(
-    slug,
+  const primaryMedia = createMedia(
+    `media_${id}_1`,
+    imageUrl,
     `${name} - Ethiopian Heirloom Gift`,
-    id,
+    1,
   );
-  const primaryMedia =
-    gallery[0] || createMedia(`media_${id}_1`, imageUrl, name);
+  const gallery = [primaryMedia];
   const variant = createVariant(
     `var_${id}_default`,
     sku,

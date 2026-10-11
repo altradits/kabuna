@@ -190,7 +190,7 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
       product.id?.startsWith("prod_koseret_scalp") ||
       product.id?.startsWith("prod_endod") ||
       product.id?.startsWith("prod_shuruba") ||
-      product.id?.startsWith("prod_wanza"),
+      product.id === "prod_wanza_comb",
   );
 
   const isSnackProduct = Boolean(
@@ -489,6 +489,68 @@ export function ProductDetails({ product, basePath }: ProductDetailsProps) {
                 {ceremonyDimensions && (
                   <span className="text-xs bg-amber-900 text-amber-50 px-3 py-1 rounded-full font-medium shadow-2xs">
                     {ceremonyDimensions}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Gift Artifact & Heirloom Highlight Box */}
+          {isGiftProduct && (
+            <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-amber-900">
+                Authentic Ethiopian Artisan Gift
+              </div>
+              {giftCraftsmanship && (
+                <div className="text-sm font-semibold text-stone-900 mt-1">
+                  {giftCraftsmanship}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {giftMaterials && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {giftMaterials}
+                  </span>
+                )}
+                {giftDimensions && (
+                  <span className="text-xs bg-amber-900 text-amber-50 px-3 py-1 rounded-full font-medium shadow-2xs">
+                    {giftDimensions}
+                  </span>
+                )}
+                {giftOrigin && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {giftOrigin}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Body & Native Scents Profile Box */}
+          {isBodyProduct && (
+            <div className="mt-4 p-4 rounded-xl bg-rose-50/80 border border-rose-200/70">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-rose-900">
+                Native Highland Botanical & Fragrance Profile
+              </div>
+              {bodyScent && (
+                <div className="text-sm font-semibold text-stone-900 mt-1">
+                  {bodyScent}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-2.5">
+                {bodyFormat && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {bodyFormat}
+                  </span>
+                )}
+                {bodyOrigin && (
+                  <span className="text-xs bg-rose-900 text-rose-50 px-3 py-1 rounded-full font-medium shadow-2xs">
+                    Origin: {bodyOrigin}
+                  </span>
+                )}
+                {bodyIngredients && (
+                  <span className="text-xs bg-white text-stone-800 px-3 py-1 rounded-full border border-stone-200/90 font-medium shadow-2xs">
+                    {bodyIngredients}
                   </span>
                 )}
               </div>
