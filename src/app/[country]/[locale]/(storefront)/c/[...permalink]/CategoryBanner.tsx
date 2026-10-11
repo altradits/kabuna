@@ -8,6 +8,7 @@ import {
   SunMedium,
   Wind,
 } from "lucide-react";
+import { cacheLife, cacheTag } from "next/cache";
 import { PageHeroSection } from "@/components/layout/PageHeroSection";
 
 interface CategoryBannerProps {
