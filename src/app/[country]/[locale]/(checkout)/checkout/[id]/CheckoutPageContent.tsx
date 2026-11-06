@@ -449,6 +449,20 @@ function CheckoutPageContentInner({
 
       setError(null);
 
+      // Lightning: the invoice is already paid and verified server-side
+      // (the status route flips the Kabuna order only after LUD-21 says
+      // settled). The Kabuna order is the record — it lives in Kabuna's
+      // own order store, with or without a Spree backend.
+      if (result.type === "bitcoin") {
+        try {
+          trackAddPaymentInfo(currentOrder);
+        } catch {
+          // Analytics should never break checkout flow
+        }
+        routerRef.current.push(`${basePath}/order-placed/${result.orderId}`);
+        return;
+      }
+
       try {
         // For session-based payments, complete the payment session first
         if (result.type === "session") {
