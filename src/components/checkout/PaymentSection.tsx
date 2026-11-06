@@ -25,6 +25,7 @@ import {
   AdyenPaymentForm,
   type AdyenPaymentFormHandle,
 } from "@/components/checkout/AdyenPaymentForm";
+import { BitcoinPaymentForm } from "@/components/checkout/BitcoinPaymentForm";
 import {
   PayPalPaymentForm,
   type PayPalPaymentFormHandle,
@@ -37,6 +38,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCountryStates } from "@/hooks/useCountryStates";
+import { getPaymentFlags } from "@/lib/bitcoin/config";
 import { getCreditCards } from "@/lib/data/credit-cards";
 import {
   createCheckoutPaymentSession,
@@ -55,7 +57,11 @@ import { resolveGatewayId } from "@/lib/utils/payment-gateway";
 
 export type PaymentCompleteResult =
   | { type: "session"; sessionId: string; sessionResult?: string }
-  | { type: "direct" };
+  | { type: "direct" }
+  | { type: "bitcoin"; orderId: string };
+
+/** Synthetic method id for Kabuna's Lightning payment option. */
+export const LIGHTNING_METHOD_ID = "kabuna-lightning";
 
 export interface PaymentSectionHandle {
   submit: () => Promise<{ error?: string }>;
@@ -93,19 +99,61 @@ export function PaymentSection({
 }: PaymentSectionProps) {
   const t = useTranslations("checkout");
 
-  // ── Payment methods from Spree ──────────────────────────────────────
-  const paymentMethods = cart.payment_methods ?? [];
-  const hasMultipleMethods = paymentMethods.length > 1;
+  // ── Payment methods ───────────────────────────────────────────────
+  // Lightning is Kabuna's main way to pay (first option, default); the card
+  // processors stay in the codebase but are switched off unless their
+  // feature flag is set (see getPaymentFlags).
+  const flags = getPaymentFlags();
+  const showBitcoin = flags.bitcoinEnabled;
+  const paymentMethods = useMemo(() => {
+    const all = cart.payment_methods ?? [];
+    return all.filter((pm) => {
+      if (!pm.session_required) return true;
+      switch (resolveGatewayId(pm.type)) {
+        case "stripe":
+          return flags.stripeEnabled;
+        case "paypal":
+          return flags.paypalEnabled;
+        case "adyen":
+          return flags.adyenEnabled;
+        default:
+          return true;
+      }
+    });
+  }, [
+    cart.payment_methods,
+    flags.stripeEnabled,
+    flags.paypalEnabled,
+    flags.adyenEnabled,
+  ]);
+  const hasMultipleMethods = paymentMethods.length + (showBitcoin ? 1 : 0) > 1;
 
-  // Default to the first method; fall back if the stored ID becomes stale
+  // Default to Lightning; fall back if the stored ID becomes stale
   // (e.g. cart.payment_methods changes after a shipping update).
-  const [selectedMethodId, setSelectedMethodId] = useState<string>(
-    () => paymentMethods[0]?.id ?? "",
+  const [selectedMethodId, setSelectedMethodId] = useState<string>(() =>
+    showBitcoin ? LIGHTNING_METHOD_ID : (paymentMethods[0]?.id ?? ""),
   );
+  const isLightningSelected =
+    showBitcoin && selectedMethodId === LIGHTNING_METHOD_ID;
   const selectedMethod: PaymentMethod | undefined =
     paymentMethods.find((pm) => pm.id === selectedMethodId) ??
     paymentMethods[0];
-  const effectiveSelectedMethodId = selectedMethod?.id ?? "";
+  const effectiveSelectedMethodId = isLightningSelected
+    ? LIGHTNING_METHOD_ID
+    : (selectedMethod?.id ?? "");
+
+  // Kabuna Lightning order id once the invoice is paid (verified
+  // server-side), plus the cart total it was priced at. A total change
+  // after payment makes the order stale — it must not complete, and the
+  // form tells the customer to contact the shop instead of paying again.
+  const [lightningOrderId, setLightningOrderId] = useState<string | null>(null);
+  const [lightningPaidTotal, setLightningPaidTotal] = useState<string | null>(
+    null,
+  );
+  const lightningStale =
+    lightningOrderId !== null &&
+    lightningPaidTotal !== null &&
+    lightningPaidTotal !== cart.total;
   // Zero-amount check. A null amount (money fields are nullable for
   // prices-hidden guests) must NOT read as zero — that would complete
   // checkout with no payment. Only a real numeric 0 is a free order;
@@ -115,9 +163,12 @@ export function PaymentSection({
     rawAmountDue == null ? Number.NaN : parseFloat(rawAmountDue);
   const isZeroAmount = Number.isFinite(amountDue) && amountDue === 0;
 
-  // Free orders are always treated as non-session (no payment needed)
+  // Free orders are always treated as non-session (no payment needed);
+  // Lightning is approval-driven like PayPal, not a Spree session.
   const isSessionBased =
-    !isZeroAmount && (selectedMethod?.session_required ?? false);
+    !isZeroAmount &&
+    !isLightningSelected &&
+    (selectedMethod?.session_required ?? false);
 
   // Notify parent when session method changes (for button text)
   const onSessionMethodChangeRef = useRef(onSessionMethodChange);
@@ -383,6 +434,18 @@ export function PaymentSection({
     if (methodId === selectedMethodId) return;
     setSelectedMethodId(methodId);
 
+    // Switching to Lightning: drop any gateway session state (same as
+    // switching to a direct method below).
+    if (methodId === LIGHTNING_METHOD_ID) {
+      sessionRequestIdRef.current += 1;
+      setSessionExternalData(null);
+      setPaymentSessionId(null);
+      setGatewayError(null);
+      gatewayHandleRef.current = null;
+      setLoading(false);
+      return;
+    }
+
     const newMethod = paymentMethods.find((pm) => pm.id === methodId);
     if (!newMethod) return;
 
@@ -490,6 +553,18 @@ export function PaymentSection({
     ],
   );
 
+  // ── Lightning payment confirmed (verified server-side) ────────────
+  // Records the paid Kabuna order; the order itself completes when the
+  // customer clicks Place Order, so address/delivery requirements are
+  // still validated first.
+  const handleLightningPaid = useCallback(
+    (orderId: string) => {
+      setLightningOrderId(orderId);
+      setLightningPaidTotal(cart.total);
+    },
+    [cart.total],
+  );
+
   // ── Submit ──────────────────────────────────────────────────────────
   useImperativeHandle(
     ref,
@@ -528,7 +603,7 @@ export function PaymentSection({
             }
           }
 
-          if (!selectedMethod) {
+          if (!selectedMethod && !isLightningSelected) {
             return { error: t("selectPaymentMethod") };
           }
 
@@ -555,6 +630,31 @@ export function PaymentSection({
             }
 
             // 2. Process payment based on method type
+            if (isLightningSelected) {
+              // Lightning: the invoice must already be paid (verified
+              // server-side against the LUD-21 URL) before completing.
+              if (!lightningOrderId) {
+                setProcessing(false);
+                return { error: t("bitcoinWaitingToSubmit") };
+              }
+              if (lightningStale) {
+                setProcessing(false);
+                return { error: t("bitcoinStale") };
+              }
+              await onPaymentComplete({
+                type: "bitcoin",
+                orderId: lightningOrderId,
+              });
+              return {};
+            }
+
+            // Unreachable in practice (the early guard above returns for a
+            // missing non-Lightning method) — narrows the type below.
+            if (!selectedMethod) {
+              setProcessing(false);
+              return { error: t("selectPaymentMethod") };
+            }
+
             if (selectedMethod.session_required) {
               // Session-based flow (Stripe, Adyen, etc.)
               if (!paymentSessionId || !sessionExternalData) {
@@ -643,6 +743,9 @@ export function PaymentSection({
     }),
     [
       isZeroAmount,
+      isLightningSelected,
+      lightningOrderId,
+      lightningStale,
       selectedMethod,
       paymentSessionId,
       sessionExternalData,
@@ -703,7 +806,7 @@ export function PaymentSection({
   }
 
   // ── No payment methods available ────────────────────────────────────
-  if (paymentMethods.length === 0) {
+  if (!showBitcoin && paymentMethods.length === 0) {
     return (
       <div>
         <h2 className="text-lg font-bold text-gray-900">
@@ -744,6 +847,49 @@ export function PaymentSection({
         onValueChange={handleMethodSelect}
         className="rounded-sm border overflow-hidden gap-0 mt-3"
       >
+        {showBitcoin && (
+          <div>
+            {hasMultipleMethods ? (
+              <label
+                className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-colors ${
+                  isLightningSelected
+                    ? "bg-blue-50"
+                    : "bg-white hover:bg-gray-50"
+                }`}
+              >
+                <RadioGroupItem value={LIGHTNING_METHOD_ID} />
+                <span className="text-sm font-medium text-gray-900">
+                  {t("bitcoinMethodName")}
+                </span>
+              </label>
+            ) : (
+              <div className="flex items-center justify-between px-4 py-3.5 bg-blue-50">
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem value={LIGHTNING_METHOD_ID} />
+                  <span className="text-sm font-medium text-gray-900">
+                    {t("bitcoinMethodName")}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {isLightningSelected && (
+              <div className="border-t bg-gray-50">
+                <p className="text-xs text-gray-500 px-4 pt-3">
+                  {t("bitcoinMethodHint")}
+                </p>
+                <BitcoinPaymentForm
+                  key={cart.id}
+                  cartId={cart.id}
+                  email={cart.email}
+                  cartTotal={cart.total}
+                  onPaid={handleLightningPaid}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         {paymentMethods.map((pm, index) => {
           const isSelected = pm.id === effectiveSelectedMethodId;
           const pmGatewayId = pm.session_required
@@ -757,7 +903,7 @@ export function PaymentSection({
                 <label
                   className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-colors ${
                     isSelected ? "bg-blue-50" : "bg-white hover:bg-gray-50"
-                  } ${index > 0 ? "border-t" : ""}`}
+                  } ${index > 0 || showBitcoin ? "border-t" : ""}`}
                 >
                   <RadioGroupItem value={pm.id} />
                   <span className="text-sm font-medium text-gray-900">
