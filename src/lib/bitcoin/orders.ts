@@ -62,8 +62,12 @@ const ORDER_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
 
 function orderDir(): string {
   // resolve() honors absolute dirs (tests, containers) and roots relative
-  // ones at the project directory.
-  return resolve(process.cwd(), getBitcoinConfig().orderDir);
+  // ones at the project directory. The order dir is runtime data, not
+  // bundled code, so it stays out of the build trace by design.
+  return resolve(
+    /*turbopackIgnore: true*/ process.cwd(),
+    getBitcoinConfig().orderDir,
+  );
 }
 
 function orderPath(orderId: string): string {
