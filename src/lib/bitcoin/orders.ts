@@ -58,7 +58,12 @@ export const ORDER_TTL_MS = 10 * 60 * 1000;
 const ORDER_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
 
 function orderDir(): string {
-  return join(process.cwd(), getBitcoinConfig().orderDir);
+  // The order dir is runtime data, not bundled code, so it stays out of
+  // the build trace by design.
+  return join(
+    /*turbopackIgnore: true*/ process.cwd(),
+    getBitcoinConfig().orderDir,
+  );
 }
 
 function orderPath(orderId: string): string {
