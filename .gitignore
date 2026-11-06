@@ -51,4 +51,10 @@ next-env.d.ts
 # claude code
 .claude/
 
+# kabuna standalone order store (local files, never commit)
+.data/
+
+# pnpm local store (machine cache, never commit)
+.pnpm-store/
+
 .env*

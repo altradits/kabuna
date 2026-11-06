@@ -7,12 +7,17 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { use, useEffect, useRef, useState } from "react";
 import { AddressBlock } from "@/components/order/AddressBlock";
+import { BitcoinOrderReceipt } from "@/components/order/BitcoinOrderReceipt";
 import { OrderTotals } from "@/components/order/OrderTotals";
 import { PaymentInfo } from "@/components/order/PaymentInfo";
 import { Button } from "@/components/ui/button";
 import { ProductImage } from "@/components/ui/product-image";
 import { useCheckout } from "@/contexts/CheckoutContext";
 import { trackPurchase } from "@/lib/analytics/gtm";
+import {
+  getKabunaOrder,
+  type PublicKabunaOrder,
+} from "@/lib/data/bitcoin-orders";
 import { getCompletedOrder } from "@/lib/data/checkout";
 import { getCachedCompletedOrder } from "@/lib/utils/completed-order-cache";
 import { extractBasePath } from "@/lib/utils/path";
@@ -34,6 +39,9 @@ export default function OrderPlacedPage({ params }: OrderPlacedPageProps) {
   const tc = useTranslations("common");
 
   const [order, setOrder] = useState<Cart | null>(null);
+  const [kabunaOrder, setKabunaOrder] = useState<PublicKabunaOrder | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<"orderNotFound" | "failedToLoad" | null>(
     null,
@@ -54,6 +62,19 @@ export default function OrderPlacedPage({ params }: OrderPlacedPageProps) {
 
     async function loadOrder() {
       try {
+        // Kabuna Lightning orders live in Kabuna's own order store.
+        if (cartId.startsWith("kbn_")) {
+          const kabunaData = await getKabunaOrder(cartId);
+          if (cancelled) return;
+          loadedRef.current = true;
+          if (kabunaData) {
+            setKabunaOrder(kabunaData);
+          } else {
+            setError("orderNotFound");
+          }
+          setLoading(false);
+          return;
+        }
         // Try cached order first (from the completion response),
         // fall back to API for page refreshes.
         const cached = getCachedCompletedOrder(cartId) as Cart | null;
@@ -98,6 +119,10 @@ export default function OrderPlacedPage({ params }: OrderPlacedPageProps) {
         <div className="h-64 bg-gray-200 rounded mt-8" />
       </div>
     );
+  }
+
+  if (kabunaOrder) {
+    return <BitcoinOrderReceipt order={kabunaOrder} basePath={basePath} />;
   }
 
   if (error || !order) {

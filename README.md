@@ -2,185 +2,158 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
 
-# Spree Storefront
+# Kabuna
 
-A production-ready, headless ecommerce storefront for [Spree Commerce](https://spreecommerce.org), built with Next.js 16, React 19, and the [Spree REST API](https://spreecommerce.org/docs/api-reference). Open source (MIT) and free to customize.
+Kabuna is an online shop for Ethiopian coffee and gifts, built with Next.js 16
+and React 19. It started as a fork of the Spree storefront starter and is
+being rebuilt around what the shop actually needs: a local product catalog
+and Bitcoin (Lightning) payments that go straight to the shop owner.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/spree/storefront)
+The catalog lives in the repo (`src/lib/data/kabuna-coffee-data.ts`):
+Ethiopian single-origin coffees alongside buna ceremony goods, pantry snacks,
+body care, artisan gifts, and office goods.
 
-[Live Demo](https://demo.spreecommerce.org) | [Quickstart Docs](https://spreecommerce.org/docs/developer/storefront/nextjs/quickstart) | [TypeScript SDK](https://www.npmjs.com/package/@spree/sdk)
+## Payments: Bitcoin (Lightning)
 
-> **You are on `6-0-dev`.** This branch tracks the unreleased Spree 6.0 Store API and SDK, so it can break as those change. For a stable storefront to fork or deploy, use `main`. This branch merges into `main` at the 6.0 release.
+Pay with Bitcoin (Lightning) is the main — and currently the only enabled —
+way to pay at checkout.
 
-## Why This Storefront
+How a payment flows, end to end:
 
-**TypeScript SDK.** [@spree/sdk](https://www.npmjs.com/package/@spree/sdk) is an official typed client for every Store API endpoint (OpenAPI 3.0 documented). Autocomplete and type safety in your editor, no codegen step to maintain.
+1. The customer fills their address, picks delivery, and Lightning is already
+   selected as the payment method.
+2. The server converts the order total to sats (see Rates below) and requests
+   a BOLT11 invoice for exactly that amount from the shop owner's own
+   Lightning address via LNURL-pay (LUD-06/16).
+3. The customer scans the QR with any Lightning wallet (or copies the invoice,
+   or opens it in their wallet) and pays.
+4. The server polls the LUD-21 verify URL. Only when it says settled does the
+   order flip to paid. The browser saying "paid" never counts.
+5. The customer lands on the order-placed page, which shows the Lightning
+   payment hash as the receipt reference.
 
-**DTC and B2B out of the box** run both DTC and B2B (wholesale portal) from a single instance powered by [Spree Channels](https://spreecommerce.org/docs/developer/core-concepts/channels), with exclusive customer group pricing and product gating.
+Non-custodial, by construction: the invoice comes from the shop owner's own
+Lightning address, so sats go straight to the owner. Kabuna — and Altradits —
+never receive or hold customers' money. There is no Altradits wallet, account,
+or payout step in the middle.
 
-**Multi-region out of the box.** Country, currency, and language switching via URL segments (`/us/en/`, `/de/de/`, `/uk/en/`), powered by [Spree Markets](https://spreecommerce.org/docs/developer/core-concepts/markets). Distinct selling regions bundling geography, currency, and locale in a single store.
+The amount, the invoice request, and the verification all happen server-side
+(`src/lib/bitcoin/`, `src/app/api/bitcoin/`). The invoice is checked before
+it is shown (exact amount, and the LNURL metadata commitment when the
+invoice carries one), and a cart that changes after payment cannot complete
+on a stale invoice.
 
-**One-page checkout.** Guest and authenticated users, multi-shipment, coupon codes, gift cards, and store credit. Stripe, PayPal, and Adyen via Payment Sessions. Card data never touches your server. [Swap providers](https://spreecommerce.org/docs/developer/core-concepts/payments) easily.
+Card processors (Stripe, PayPal, Adyen) are still in the tree but switched
+off by default behind feature flags — see Configuration.
 
-**Transactional emails.** Order confirmation, shipping notification, password reset. Built with react-email, sent via Resend, triggered by Spree webhooks.
+## Rates
 
-**MIT licensed.** Open source and free to use.
+The BTC price is an owner-set rate: `KABUNA_BTC_USD_RATE`. This is deliberate:
 
-## Performance
+- The shop owner controls the price customers see — no mid-checkout re-quotes
+  from a volatile spot API.
+- Checkout works offline and deterministically — payment never depends on a
+  third-party rate API at the critical moment.
+- Tests stay hermetic — exact-amount assertions with no network.
 
-The live demo at [demo.spreecommerce.org](https://demo.spreecommerce.org) scores 98/100 on desktop and 88/100 on mobile for Performance on Google's Lighthouse audit, with five language versions served from the same deployment.
+An optional live fetch exists for shops that prefer it: when no owner rate is
+set and `KABUNA_ALLOW_LIVE_RATE=true`, the server fetches BTC/USD from
+Coinbase then Kraken (cached 5 minutes, last good value served stale).
+Non-USD currencies convert through USD-base fiat rates, cached an hour.
 
-| Lighthouse metric | Mobile | Desktop |
-|-------------------|--------|---------|
-| Performance | 88 | 98 |
-| Accessibility | 100 | 100 |
-| Best Practices | 100 | 100 |
-| SEO | 100 | 100 |
+## Standalone mode (no Spree backend needed)
 
-No external performance plugins. No edge-side rendering hacks. The architecture is Next.js 16 App Router with React 19 Server Components, server-side data fetching via `@spree/sdk`, and Tailwind CSS 4.
+Kabuna's checkout works without a Spree backend running. The catalog, cart,
+countries, and markets all fall back to local data when the API is
+unreachable, and Lightning orders are kept in a small order store inside
+Kabuna itself: one JSON file per order under `KABUNA_ORDER_DIR`
+(default `.data/kabuna-orders/`, git-ignored).
 
-[Run the audit yourself on PageSpeed Insights](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fdemo.spreecommerce.org)
+Plainly: this store is just enough for cart → Lightning payment → confirmed
+order. It is a local file store, ephemeral on serverless hosts — not a
+production order system. When a Spree backend is configured it remains the
+system of record for everything except Lightning payments, whose record is
+the Kabuna order.
 
-## Features
+## Configuration
 
-| Feature | Details |
-|---------|---------|
-| **Product Catalog** | Browse, search, filter products by categories, and use faceted navigation. Optional [Meilisearch integration](https://spreecommerce.org/docs/integrations/search/meilisearch) available |
-| **Product Details** | View product information with variant selection and media |
-| **Shopping Cart** | Add, update, and remove items with server-side state |
-| **One-page Checkout** | Guest visitors and signed-in users supported, multi-shipments supported natively, Coupon Codes, Gift Cards, Store Credit |
-| **Stripe/Adyen/PayPal payments** | native Stripe/Adyen/Paypal payment support with their SDKs, PCI-Compliant, 3DS-Secure, use Credit Cards, Apple Pay, Google Pay, Klarna, Affirm, SEPA payments |
-| **Customer Account** | Full account management: Profile management, Order history with detailed order view, Address book (create, edit, delete), Gift Cards and Store Credit, Saved payment methods |
-| **Wholesale portal** | Storefront gating, per-customer pricing and product availability, account approval workflows |
-| **Multi-Region Support** | Country, currency, and language switching via URL segments, powered by [Spree Markets](https://spreecommerce.org/docs/developer/core-concepts/markets) |
-| **Responsive Design** | Mobile-first Tailwind CSS styling |
-| **Google Tag Manager** and **Google Analytics 4 Ecommerce events** | tracking supported natively |
-| **Store Policies** | Policy pages fetched from Spree API, with consent checkboxes on registration and guest checkout |
-| **SEO-ready** | meta tags, JSON-LD, OpenGraph — all built in |
-| **Error Tracking** | Sentry integration for both server-side and client-side error monitoring with source maps |
+| Variable | Default | What it is |
+|----------|---------|------------|
+| `KABUNA_LIGHTNING_ADDRESS` | `kabuna@example.com` (placeholder) | **The shop owner's own Lightning address. Stanley must set this to his own Ye₿ente `handle@altradits.com` or node address before taking payments. Money goes here and nowhere else.** |
+| `KABUNA_CURRENCY` | `USD` | Checkout currency (ISO 4217). |
+| `KABUNA_BTC_USD_RATE` | _(unset)_ | Owner-set BTC price in USD (preferred rate). |
+| `KABUNA_ALLOW_LIVE_RATE` | `false` | `true` to fetch a live BTC/USD rate when no owner rate is set. |
+| `KABUNA_ORDER_DIR` | `.data/kabuna-orders` | File order store directory. |
+| `KABUNA_SUPPORT_PHONE` / `KABUNA_SUPPORT_EMAIL` | `0707172370` / `5tan@altradits.com` | Support contact shown on payment errors. |
+| `NEXT_PUBLIC_KABUNA_BITCOIN_ENABLED` | _(on)_ | Set to `false` to hide Lightning. |
+| `NEXT_PUBLIC_KABUNA_ENABLE_STRIPE` / `_PAYPAL` / `_ADYEN` | _(off)_ | Set to `true` to switch a card processor back on. |
 
-## Technology
+Test-only: `KABUNA_LNURL_ENDPOINT` points the invoice flow at a direct
+LNURL-pay URL (the e2e fake server), and `KABUNA_ALLOW_INSECURE_LNURL`
+(defaults on outside production) permits `http://` LNURL endpoints for
+localhost only.
+
+## Run it locally
+
+Prerequisites: Node.js 20+, pnpm.
+
+```bash
+pnpm install
+cp .env.example .env.local
+```
+
+Edit `.env.local`: set `KABUNA_LIGHTNING_ADDRESS` to the shop's address and
+`KABUNA_BTC_USD_RATE` to the BTC price in USD. No Spree backend is needed —
+leave `SPREE_API_URL` unset (or pointing nowhere) to run standalone.
+
+```bash
+pnpm run dev        # http://localhost:3001
+```
+
+To run against a real Spree backend instead, set `SPREE_API_URL` and
+`SPREE_PUBLISHABLE_KEY`.
+
+### Tests
+
+```bash
+pnpm test              # vitest: conversion, BOLT11, LNURL flow + verify polling
+                       # against a fake LNURL server, paid-only-after-settled
+pnpm run test:e2e:bitcoin  # headless Playwright happy path (standalone, no Spree)
+pnpm run check         # Biome lint + format
+pnpm exec tsc --noEmit # typecheck
+```
+
+The full Spree-backed Stripe e2e (`pnpm run test:e2e`) still exists but needs
+its Docker backend and Stripe keys; card payments are off by default.
+
+## Tech stack
 
 | Technology | Role |
 |------------|------|
-| **Next.js 16** | App Router, Server Actions, Turbopack |
-| **React 19** | Latest React with improved Server Components |
+| **Next.js 16** | App Router, Server Actions, route handlers |
+| **React 19** | Server Components, `use()`/`useActionState` patterns |
 | **Tailwind CSS 4** | Utility-first styling |
-| **TypeScript** | Full type safety |
-| **Sentry** | Error tracking and performance monitoring with source maps |
-| [@spree/sdk](https://spreecommerce.org/docs/developer/sdk/quickstart) | Official Spree Commerce SDK |
+| **TypeScript** | Strict, full type safety |
+| **Lightning / LNURL-pay** | BOLT11 invoices from the owner's address (LUD-06/16), settlement proof via LUD-21 verify |
+| **@spree/sdk** | Optional Spree Commerce backend (catalog/cart fallback to local data without one) |
+| **Biome** | Lint + format |
+| **Vitest / Playwright** | Unit + e2e tests |
 
-## Architecture
-
-This starter follows a **server-first pattern**:
-
-1. **Server-First Architecture** - All API calls happen server-side using Next.js Server Actions
-2. **httpOnly Cookies** - Auth tokens and cart tokens are stored securely
-3. **No Client-Side API Calls** - The Spree API key is never exposed to the browser
-4. **Cache Revalidation** - Uses Next.js cache tags for efficient updates
+## Project structure
 
 ```
-Browser → Server Action → @spree/sdk → Spree API
-         (with httpOnly cookies via src/lib/spree helpers)
+src/
+├── app/
+│   ├── api/bitcoin/            # quote / invoice / status route handlers
+│   └── [country]/[locale]/     # internationalized routes (checkout + storefront)
+├── components/checkout/        # incl. BitcoinPaymentForm (Lightning is default)
+├── lib/
+│   ├── bitcoin/                # LNURL client, rates, BOLT11 checks, order store
+│   └── data/                   # server actions (catalog, cart, checkout, orders)
+└── types/
+tests/e2e/                      # Lightning e2e + fake LNURL server
 ```
-
-Project structure, the `src/lib/data/` server actions, and the JWT-in-httpOnly-cookie auth flow are covered in the [Architecture guide](https://spreecommerce.org/docs/developer/storefront/nextjs/architecture).
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+ (required for Next.js 16)
-- A running Spree Commerce 5.4+
-
-### Installation
-
-**Recommended — scaffold a full project.** [`create-spree-app`](https://spreecommerce.org/docs/developer/create-spree-app/quickstart) sets up a Spree backend, this storefront, and the `spree` CLI together, with the storefront's environment wired to the backend automatically:
-
-```bash
-npx create-spree-app my-store
-```
-
-The storefront lands in `apps/storefront/`.
-
-**Standalone.** To run the storefront on its own against an existing Spree backend, or to work on this repo directly
-
-1. Install dependencies:
-
-    ```bash
-    pnpm install
-    ```
-
-2. Copy the environment file and configure:
-
-    ```bash
-    cp .env.local.example .env.local
-    ```
-
-3. Update `.env.local` with your Spree API credentials:
-
-    ```env
-    SPREE_API_URL=http://localhost:3000
-    SPREE_PUBLISHABLE_KEY=your_publishable_api_key_here
-    ```
-
-> Note: These are server-side only variables (no `NEXT_PUBLIC_` prefix needed).
-
-These two are all you need to boot. Optional variables cover analytics, error tracking, the wholesale portal, transactional emails, and SEO — see the [Environment Variables reference](https://spreecommerce.org/docs/developer/storefront/nextjs/environment-variables), or copy `.env.example`, which lists them all with inline comments.
-
-### Development
-
-```bash
-pnpm run dev
-```
-
-Open [http://localhost:3001](http://localhost:3001) in your browser.
-
-#### Working against a local SDK
-
-To develop against unreleased Store API features, point the storefront at a `@spree/sdk` build from a [Spree monorepo](https://github.com/spree/spree) checkout instead of the published package:
-
-```bash
-SPREE_SDK_PATH=/path/to/spree/packages/sdk pnpm install --no-frozen-lockfile
-```
-
-`.pnpmfile.cjs` redirects the dependency at the local path only when `SPREE_SDK_PATH` is set, so the default install is unaffected and nothing local ever reaches `package.json`. Two things follow from it copying the package rather than symlinking it (this project pins module resolution to its own directory, so a symlink outside it would not resolve): build the SDK first (`pnpm build` in the monorepo), and re-run the install above after each rebuild to pick the new build up. The install also rewrites `pnpm-lock.yaml` with the local path — do not commit that change.
-
-From a Spree monorepo worktree, `pnpm wt:storefront` does all of this for you, including the API URL and publishable key.
-
-#### HTTPS Development (Apple Pay / Google Pay)
-
-Testing Apple Pay / Google Pay locally needs a public HTTPS URL (Stripe verifies the payment method domain from the internet). See [Wallet Payments in Development](https://spreecommerce.org/docs/developer/storefront/nextjs/wallet-payments) for the Cloudflare Tunnel setup.
-
-### Production Build
-
-```bash
-pnpm run build
-pnpm start
-```
-
-### Testing
-
-Unit and integration tests run through Vitest (`pnpm test`); end-to-end tests run through Playwright against a real Spree backend in Docker (`pnpm run e2e:up && pnpm run test:e2e`). See the [Testing guide](https://spreecommerce.org/docs/developer/storefront/nextjs/testing) for the full E2E setup, Stripe test keys, CI, and running against your own backend.
-
-## Multi-Region
-
-Multiple countries, currencies, and languages from one deployment via `/{country}/{locale}` URL segments and edge middleware. See the [Multi-Region guide](https://spreecommerce.org/docs/developer/storefront/nextjs/multi-region).
-
-## Customization
-
-The storefront ships in your project — restyle with Tailwind CSS, swap components in `src/components/`, and adjust the server actions in `src/lib/data/`. See the [Customization guide](https://spreecommerce.org/docs/developer/storefront/nextjs/customization).
-
-## Transactional Emails
-
-The storefront can render and send its own order, shipment, and account emails with [react-email](https://react.email) and [Resend](https://resend.com), driven by Spree webhooks. See the [Transactional Emails guide](https://spreecommerce.org/docs/developer/storefront/nextjs/emails).
-
-## Deployment
-
-Deploy to Vercel, Docker (a multi-stage `Dockerfile` ships at the repo root), or any Node.js host. See the [Deployment guide](https://spreecommerce.org/docs/developer/storefront/nextjs/deployment).
 
 ## License
 
-MIT
-
-ANY PERSON IS FREE TO USE A COPY OF SOFTWARE AS THEY PLEASE WITH OR WITHOUT OWNERS DIT. OWN THE SOFTWARE AND THE RESPONSIBILITIES THAT FOLLOW WHAT YOU DO WITH IT. HAPPY CODING.
+MIT — see [LICENSE](LICENSE).
