@@ -294,6 +294,7 @@
     "bitcoinNeedHelp": "Need help? {email} · {phone}",
     "bitcoinExpiresIn": "Expires in {time}",
     "bitcoinWaitingToSubmit": "Waiting for your Lightning payment — pay the invoice, then continue.",
+    "bitcoinStale": "Your cart changed after payment — please contact the shop to complete your order. Do not pay again.",
     "policyConsentRequired": "You must agree to the store policies before placing your order",
     "iAgreeToThe": "I agree to the",
     "policySeparatorComma": ", ",
@@ -448,7 +449,11 @@
     "standardShipping": "Standard Shipping",
     "payment": "Payment",
     "giftCard": "Gift Card",
-    "confirmationSentTo": "Confirmation sent to"
+    "confirmationSentTo": "Confirmation sent to",
+    "bitcoinTitle": "Lightning payment",
+    "bitcoinAmountPaid": "Paid",
+    "bitcoinReference": "Payment reference",
+    "bitcoinDestination": "Paid to"
   },
   "coupon": {
     "placeholder": "Gift card or discount code",

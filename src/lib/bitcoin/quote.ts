@@ -99,15 +99,3 @@ export async function quoteForCart(cartId: string): Promise<CartQuote> {
     items,
   };
 }
-
-/** Display string for a minor-units amount, e.g. 4250 USD -> "$42.50". */
-export function formatFiat(cents: number, currency: string): string {
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-    }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${currency}`;
-  }
-}

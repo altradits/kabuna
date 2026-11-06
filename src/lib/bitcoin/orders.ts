@@ -14,7 +14,7 @@
  */
 
 import { mkdir, readdir, readFile, rename, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { getBitcoinConfig } from "./config";
 import type { RateSource } from "./rates";
 
@@ -34,6 +34,9 @@ export interface KabunaOrder {
   number: string;
   cartId: string;
   email: string | null;
+  /** Final addresses, snapshotted from the cart at completion time. */
+  shippingAddress: Record<string, unknown> | null;
+  billingAddress: Record<string, unknown> | null;
   items: KabunaOrderItem[];
   fiatTotalCents: number;
   currency: string;
@@ -58,7 +61,9 @@ export const ORDER_TTL_MS = 10 * 60 * 1000;
 const ORDER_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
 
 function orderDir(): string {
-  return join(process.cwd(), getBitcoinConfig().orderDir);
+  // resolve() honors absolute dirs (tests, containers) and roots relative
+  // ones at the project directory.
+  return resolve(process.cwd(), getBitcoinConfig().orderDir);
 }
 
 function orderPath(orderId: string): string {
@@ -99,6 +104,9 @@ export async function getOrder(orderId: string): Promise<KabunaOrder | null> {
     if (!order || order.id !== orderId || typeof order.status !== "string") {
       return null;
     }
+    // Forward-compat: orders written before address snapshots existed.
+    order.shippingAddress = order.shippingAddress ?? null;
+    order.billingAddress = order.billingAddress ?? null;
     return order;
   } catch {
     return null;
@@ -129,6 +137,8 @@ export async function createOrder(
     number: newOrderNumber(),
     cartId: input.cartId,
     email: input.email,
+    shippingAddress: null,
+    billingAddress: null,
     items: input.items,
     fiatTotalCents: input.fiatTotalCents,
     currency: input.currency,
@@ -207,25 +217,53 @@ export async function markOrderExpired(
 export async function findPendingOrderForCart(
   cartId: string,
 ): Promise<KabunaOrder | null> {
+  const orders = await listOrdersForCart(cartId);
+  const now = Date.now();
+  return (
+    orders.find(
+      (order) =>
+        order.status === "pending" &&
+        order.invoice &&
+        !isOrderOverdue(order, now),
+    ) ?? null
+  );
+}
+
+/**
+ * The newest paid or live-pending order for a cart, if any. The invoice
+ * route answers it instead of minting a second invoice — paying twice for
+ * one cart must be impossible.
+ */
+export async function findLatestOrderForCart(
+  cartId: string,
+): Promise<KabunaOrder | null> {
+  const orders = await listOrdersForCart(cartId);
+  const now = Date.now();
+  return (
+    orders.find(
+      (order) =>
+        order.status === "paid" ||
+        (order.status === "pending" &&
+          order.invoice &&
+          !isOrderOverdue(order, now)),
+    ) ?? null
+  );
+}
+
+async function listOrdersForCart(cartId: string): Promise<KabunaOrder[]> {
   let files: string[];
   try {
     files = await readdir(orderDir());
   } catch {
-    return null;
+    return [];
   }
-  const now = Date.now();
+  const orders: KabunaOrder[] = [];
   for (const file of files) {
     if (!file.endsWith(".json")) continue;
     const order = await getOrder(file.slice(0, -".json".length));
-    if (
-      order &&
-      order.cartId === cartId &&
-      order.status === "pending" &&
-      order.invoice &&
-      !isOrderOverdue(order, now)
-    ) {
-      return order;
-    }
+    if (order && order.cartId === cartId) orders.push(order);
   }
-  return null;
+  // Newest first (ids embed creation time, lexicographically sortable).
+  orders.sort((a, b) => (a.id < b.id ? 1 : -1));
+  return orders;
 }

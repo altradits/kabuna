@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBitcoinConfig } from "@/lib/bitcoin/config";
-import { formatFiat, QuoteError, quoteForCart } from "@/lib/bitcoin/quote";
-import { formatSats } from "@/lib/bitcoin/rates";
-
-export const runtime = "nodejs";
+import { QuoteError, quoteForCart } from "@/lib/bitcoin/quote";
+import { formatFiat, formatSats } from "@/lib/bitcoin/rates";
 
 interface QuoteBody {
   cartId?: string;

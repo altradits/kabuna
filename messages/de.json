@@ -294,6 +294,7 @@
     "bitcoinNeedHelp": "Hilfe nötig? {email} · {phone}",
     "bitcoinExpiresIn": "Läuft ab in {time}",
     "bitcoinWaitingToSubmit": "Warte auf Ihre Lightning-Zahlung — zahlen Sie die Rechnung und fahren Sie fort.",
+    "bitcoinStale": "Ihr Warenkorb hat sich nach der Zahlung geändert — bitte kontaktieren Sie den Shop. Nicht erneut zahlen.",
     "policyConsentRequired": "Sie müssen den Geschäftsrichtlinien zustimmen, bevor Sie Ihre Bestellung aufgeben",
     "iAgreeToThe": "Ich stimme zu",
     "policySeparatorComma": ", ",
@@ -448,7 +449,11 @@
     "standardShipping": "Standardversand",
     "payment": "Zahlung",
     "giftCard": "Geschenkkarte",
-    "confirmationSentTo": "Bestätigung gesendet an"
+    "confirmationSentTo": "Bestätigung gesendet an",
+    "bitcoinTitle": "Lightning-Zahlung",
+    "bitcoinAmountPaid": "Bezahlt",
+    "bitcoinReference": "Zahlungsreferenz",
+    "bitcoinDestination": "Empfänger"
   },
   "coupon": {
     "placeholder": "Geschenkkarte oder Rabattcode",

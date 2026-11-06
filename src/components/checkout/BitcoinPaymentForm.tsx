@@ -30,6 +30,8 @@ interface StatusData {
 interface BitcoinPaymentFormProps {
   cartId: string;
   email?: string | null;
+  /** Current cart total — a change re-prices (or freezes) the invoice. */
+  cartTotal: string | null;
   onPaid: (orderId: string) => void;
 }
 
@@ -38,6 +40,7 @@ type FormState =
   | { kind: "ready"; invoice: InvoiceData; verifiable: boolean }
   | { kind: "paid"; invoice: InvoiceData }
   | { kind: "expired"; invoice: InvoiceData | null }
+  | { kind: "stale"; invoice: InvoiceData }
   | {
       kind: "error";
       message: string;
@@ -57,6 +60,7 @@ function formatCountdown(expiresAt: string, now: number): string {
 export function BitcoinPaymentForm({
   cartId,
   email,
+  cartTotal,
   onPaid,
 }: BitcoinPaymentFormProps) {
   const t = useTranslations("checkout");
@@ -64,11 +68,17 @@ export function BitcoinPaymentForm({
   const [copied, setCopied] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   const [attempt, setAttempt] = useState(0);
+  // Cart total the live invoice was priced at. A change before payment
+  // re-mints the invoice; a change after payment freezes the form so the
+  // customer can never pay twice for one cart.
+  const [pricedTotal, setPricedTotal] = useState<string | null>(null);
   const pollRef = useRef<number | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
   const onPaidRef = useRef(onPaid);
   onPaidRef.current = onPaid;
+  const cartTotalRef = useRef(cartTotal);
+  cartTotalRef.current = cartTotal;
 
   // Create the invoice once, then poll our own status endpoint (which
   // verifies against the LUD-21 URL server-side) until it settles.
@@ -98,7 +108,9 @@ export function BitcoinPaymentForm({
               : prev,
           );
           onPaidRef.current(orderId);
-        } else if (data.status === "expired") {
+        } else if (data.status === "expired" || data.status === "cancelled") {
+          // Cancelled happens when the total changed and the server voided
+          // this invoice for a new one — same remedy as expiry.
           stopPolling();
           setState((prev) => ({
             kind: "expired",
@@ -133,6 +145,7 @@ export function BitcoinPaymentForm({
           return;
         }
         setState({ kind: "ready", invoice: data, verifiable: true });
+        setPricedTotal(cartTotalRef.current);
         pollRef.current = window.setInterval(() => poll(data.orderId), 3000);
         poll(data.orderId);
       } catch {
@@ -171,6 +184,24 @@ export function BitcoinPaymentForm({
       setState({ kind: "expired", invoice: state.invoice });
     }
   }, [now, state]);
+
+  // Cart total changed after the invoice was priced. Before payment the
+  // invoice is re-minted (the server voids the stale one); after payment
+  // the form freezes — the customer must not pay again, the shop resolves
+  // the difference out of band.
+  useEffect(() => {
+    if (pricedTotal === null || cartTotal === pricedTotal) return;
+    if (state.kind === "paid") {
+      if (pollRef.current !== null) {
+        window.clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+      setState({ kind: "stale", invoice: state.invoice });
+    } else if (state.kind === "ready") {
+      setState({ kind: "loading" });
+      setAttempt((a) => a + 1);
+    }
+  }, [cartTotal, pricedTotal, state]);
 
   const handleCopy = async (pr: string) => {
     try {
@@ -234,6 +265,20 @@ export function BitcoinPaymentForm({
         >
           {t("bitcoinNewInvoice")}
         </button>
+      </div>
+    );
+  }
+
+  if (state.kind === "stale") {
+    return (
+      <div className="px-4 py-6 text-center" data-testid="bitcoin-stale">
+        <p className="text-sm text-gray-700">{t("bitcoinStale")}</p>
+        <p className="mt-2 text-sm text-gray-500">
+          {t("bitcoinNeedHelp", {
+            email: state.invoice.supportEmail,
+            phone: state.invoice.supportPhone,
+          })}
+        </p>
       </div>
     );
   }

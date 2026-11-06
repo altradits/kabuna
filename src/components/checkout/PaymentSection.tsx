@@ -143,16 +143,17 @@ export function PaymentSection({
     : (selectedMethod?.id ?? "");
 
   // Kabuna Lightning order id once the invoice is paid (verified
-  // server-side), plus the cart total it was priced at — a total change
-  // after payment invalidates it so a stale invoice can't complete.
+  // server-side), plus the cart total it was priced at. A total change
+  // after payment makes the order stale — it must not complete, and the
+  // form tells the customer to contact the shop instead of paying again.
   const [lightningOrderId, setLightningOrderId] = useState<string | null>(null);
-  const lightningTotalRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (lightningOrderId && lightningTotalRef.current !== cart.total) {
-      setLightningOrderId(null);
-      lightningTotalRef.current = null;
-    }
-  }, [cart.total, lightningOrderId]);
+  const [lightningPaidTotal, setLightningPaidTotal] = useState<string | null>(
+    null,
+  );
+  const lightningStale =
+    lightningOrderId !== null &&
+    lightningPaidTotal !== null &&
+    lightningPaidTotal !== cart.total;
   // Zero-amount check. A null amount (money fields are nullable for
   // prices-hidden guests) must NOT read as zero — that would complete
   // checkout with no payment. Only a real numeric 0 is a free order;
@@ -559,7 +560,7 @@ export function PaymentSection({
   const handleLightningPaid = useCallback(
     (orderId: string) => {
       setLightningOrderId(orderId);
-      lightningTotalRef.current = cart.total;
+      setLightningPaidTotal(cart.total);
     },
     [cart.total],
   );
@@ -635,6 +636,10 @@ export function PaymentSection({
               if (!lightningOrderId) {
                 setProcessing(false);
                 return { error: t("bitcoinWaitingToSubmit") };
+              }
+              if (lightningStale) {
+                setProcessing(false);
+                return { error: t("bitcoinStale") };
               }
               await onPaymentComplete({
                 type: "bitcoin",
@@ -740,6 +745,7 @@ export function PaymentSection({
       isZeroAmount,
       isLightningSelected,
       lightningOrderId,
+      lightningStale,
       selectedMethod,
       paymentSessionId,
       sessionExternalData,
@@ -876,6 +882,7 @@ export function PaymentSection({
                   key={cart.id}
                   cartId={cart.id}
                   email={cart.email}
+                  cartTotal={cart.total}
                   onPaid={handleLightningPaid}
                 />
               </div>

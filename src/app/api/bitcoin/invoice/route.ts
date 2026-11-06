@@ -11,13 +11,11 @@ import {
 import {
   cancelOrder,
   createOrder,
-  findPendingOrderForCart,
+  findLatestOrderForCart,
   type KabunaOrder,
 } from "@/lib/bitcoin/orders";
-import { formatFiat, QuoteError, quoteForCart } from "@/lib/bitcoin/quote";
-import { formatSats } from "@/lib/bitcoin/rates";
-
-export const runtime = "nodejs";
+import { QuoteError, quoteForCart } from "@/lib/bitcoin/quote";
+import { formatFiat, formatSats } from "@/lib/bitcoin/rates";
 
 interface InvoiceBody {
   cartId?: string;
@@ -73,9 +71,14 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const quote = await quoteForCart(body.cartId);
     // Retries reuse the live invoice instead of minting a new one per click
-    // — but only when it was priced at the same total and rate.
-    const existing = await findPendingOrderForCart(body.cartId);
+    // — but only when it was priced at the same total and rate. An already
+    // paid order for this cart is answered as-is so a second payment is
+    // impossible.
+    const existing = await findLatestOrderForCart(body.cartId);
     if (existing) {
+      if (existing.status === "paid") {
+        return orderResponse(existing);
+      }
       if (
         existing.fiatTotalCents === quote.fiatTotalCents &&
         existing.currency === quote.currency &&
